@@ -1,0 +1,17 @@
+# PyCache
+*.pyc
+
+# Idea
+.idea/*
+
+# Logs
+*.log
+
+# Environments\
+.env
+.venv
+venv
+
+# Others
+cache/*
+!cache/.gitkeep
