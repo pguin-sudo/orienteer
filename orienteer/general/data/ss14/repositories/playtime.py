@@ -1,17 +1,17 @@
 from uuid import UUID
 from datetime import timedelta
 
-from ..dbhandler import DBHandler
+from ..dbconnection import DBConnectionContextManager
 
 
 async def get_playtime_timedelta(user_id: UUID, tracker: str) -> timedelta:
-    async with DBHandler() as connection:
+    async with DBConnectionContextManager() as connection:
         return await connection.fetchval(f"SELECT time_spent FROM play_time WHERE player_id = $1 and tracker = $2",
                                          user_id, tracker)
 
 
 async def add_playtime(user_id: UUID, tracker: str, minutes: int) -> None:
-    async with DBHandler() as connection:
+    async with DBConnectionContextManager() as connection:
         current_time = await connection.fetchval(
             f"SELECT time_spent FROM play_time WHERE player_id = $1 and tracker = $2", user_id, tracker)
         if current_time:
@@ -23,12 +23,12 @@ async def add_playtime(user_id: UUID, tracker: str, minutes: int) -> None:
 
 
 async def get_playtime(user_id: UUID) -> list:
-    async with DBHandler() as connection:
+    async with DBConnectionContextManager() as connection:
         return await connection.fetch("SELECT * FROM play_time WHERE player_id = $1", user_id)
 
 
 async def get_most_popular_tracker(user_id: UUID) -> dict:
-    async with DBHandler() as connection:
+    async with DBConnectionContextManager() as connection:
         query = """
             SELECT *
             FROM play_time

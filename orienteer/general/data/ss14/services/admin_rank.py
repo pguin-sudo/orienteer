@@ -1,5 +1,4 @@
 from uuid import UUID
-from ..dbhandler import DBHandler
 
 from ..repositories import admin_rank
 

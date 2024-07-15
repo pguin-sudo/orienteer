@@ -1,11 +1,11 @@
 from uuid import UUID
 from datetime import datetime, timezone
 
-from ..dbhandler import DBHandler
+from ..dbconnection import DBConnectionContextManager
 
 
 async def get_bans(user_id: UUID) -> tuple:
-    async with DBHandler() as connection:
+    async with DBConnectionContextManager() as connection:
         bans = await connection.fetch('SELECT * FROM server_ban WHERE player_user_id = $1', user_id)
 
         valid_bans = []
@@ -19,19 +19,19 @@ async def get_bans(user_id: UUID) -> tuple:
 
 
 async def get_all_bans_after(ban_id: int) -> tuple:
-    async with DBHandler() as connection:
+    async with DBConnectionContextManager() as connection:
         return await connection.fetch('SELECT * FROM server_ban WHERE server_ban_id > $1 ORDER BY server_ban_id ASC',
                                       ban_id)
 
 
 async def get_all_rolebans_after(ban_id: int) -> tuple:
-    async with DBHandler() as connection:
+    async with DBConnectionContextManager() as connection:
         return await connection.fetch(
             'SELECT * FROM server_role_ban WHERE server_role_ban_id > $1 ORDER BY server_role_ban_id ASC', ban_id)
 
 
 async def get_last_ban(user_id: UUID) -> dict | None:
-    async with DBHandler() as connection:
+    async with DBConnectionContextManager() as connection:
         ban_record = await connection.fetchrow(
             'SELECT * FROM server_ban WHERE player_user_id = $1 ORDER BY server_ban_id DESC LIMIT 1', user_id
         )
@@ -54,5 +54,5 @@ async def add_ban(user_id: UUID, reason: str):
         INSERT INTO server_ban (server_ban_id, player_user_id, banning_admin, ban_time, reason)
         VALUES (DEFAULT, $1, $2, $3, $4)
     """
-    async with DBHandler() as connection:
+    async with DBConnectionContextManager() as connection:
         await connection.execute(query, user_id, UUID('00000000-0000-0000-0000-000000000000'), current_time, reason)

@@ -1,9 +1,9 @@
 from uuid import UUID
-from ..dbhandler import DBHandler
+from ..dbconnection import DBConnectionContextManager
 
 
 async def check_dependencies(user_id: UUID, dependencies: dict) -> bool:
-    async with DBHandler() as connection:
+    async with DBConnectionContextManager() as connection:
         for tracker, time_needed in dependencies.items():
             time = await connection.fetchval("SELECT time_spent FROM play_time "
                                              "WHERE player_id = $1 and tracker = $2", user_id, tracker)

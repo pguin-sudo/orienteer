@@ -1,22 +1,22 @@
 """
 async def get_balance_raw_info(user_id: UUID) -> dict | None:
-    async with DBHandler() as connection:
+    async with DBConnectionContextManager() as connection:
         return await connection.fetchrow('SELECT * FROM orientiks WHERE user_id = $1::uuid', user_id)
 
 
 async def add_time_balancing(user_id: UUID, time_balancing: int) -> None:
-    async with DBHandler() as connection:
+    async with DBConnectionContextManager() as connection:
         return await connection.execute('INSERT INTO orientiks (user_id, time_balancing) VALUES ($1, $2)', user_id,
                                         time_balancing)
 
 
 async def set_orientiks_from_friends(user_id: UUID, amount: int) -> None:
-    async with DBHandler() as connection:
+    async with DBConnectionContextManager() as connection:
         return await connection.execute('UPDATE orientiks SET friends = $1 where user_id = $2', amount, user_id)
 
 
 async def add_spent(user_id: UUID, amount: int) -> None:
-    async with DBHandler() as connection:
+    async with DBConnectionContextManager() as connection:
         current_spent = await connection.fetchval('SELECT spent FROM orientiks WHERE user_id = $1', user_id)
 
         new_spent = current_spent + amount
