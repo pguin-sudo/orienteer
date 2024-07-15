@@ -11,7 +11,3 @@
 .env
 .venv
 venv
-
-# Others
-cache/*
-!cache/.gitkeep

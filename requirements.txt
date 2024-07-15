@@ -1,8 +1,0 @@
-DateTime~=5.5
-asyncpg~=0.29.0
-requests~=2.32.3
-discord~=2.3.2
-aiohttp~=3.9.5
-Flask~=3.0.3
-python-dotenv~=1.0.1
-qrcode~=7.4.2
