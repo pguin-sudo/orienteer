@@ -1,15 +1,19 @@
-from __future__ import annotations
-
 import sys
 import traceback
 from datetime import datetime
+
 from loguru import logger
+from loguru_discord import DiscordSink
 
 from disnake import Activity, ActivityType
 from disnake.ext import commands
 
+from orienteer.bot.utils import embeds
+from orienteer.bot.utils.content_locale import Errors
 from orienteer.bot.utils.extensions import Extensions
-from orienteer.general.config.local import BOT_NAME, BOT_TOKEN, USERS_OWNERS
+from orienteer.general.config.local import BOT_NAME, BOT_TOKEN, USERS_OWNERS, WEBHOOKS_LOGS, DEBUG_MODE
+
+logger.add(DiscordSink(WEBHOOKS_LOGS))
 
 
 class OrienteerBot(commands.InteractionBot):
@@ -20,9 +24,10 @@ class OrienteerBot(commands.InteractionBot):
     async def on_ready(self):
         logger.info(f"Logged in as {self.user} (ID: {self.user.id})")
 
-    async def on_error(self, event, *args, **kwargs):
-        logger.error(f"{event=}{args}{kwargs}")
-        logger.error(f"{''.join(traceback.format_stack())}")
+    if not DEBUG_MODE:
+        async def on_slash_command_error(self, interaction, *args, **kwargs):
+            await interaction.edit_original_message(embed=embeds.error_message(Errors.unexpected_error.value, 'Пожалуйста, обратитесь к <@536086033050107914>, мы постараемся исправить её как можно скорее.'))
+            logger.error(f"{interaction=}\n{args=}\n{kwargs=}")
 
     @property
     def start_time(self):
@@ -32,7 +37,7 @@ class OrienteerBot(commands.InteractionBot):
 def main():
     bot = OrienteerBot(
         activity=Activity(name=BOT_NAME, type=ActivityType.playing),
-        owner_ids=USERS_OWNERS,
+        owner_ids=USERS_OWNERS
     )
 
     for e in Extensions.all():

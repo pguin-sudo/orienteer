@@ -14,7 +14,7 @@ BOT_ID = os.environ.get('BOT_ID')
 BOT_PREFIX = '/'
 
 # Webhooks
-WEBHOOKS_ERRORS = os.environ.get('WEBHOOKS_ERRORS')
+WEBHOOKS_LOGS = os.environ.get('WEBHOOKS_LOGS')
 WEBHOOKS_BANS = os.environ.get('WEBHOOKS_BANS')
 WEBHOOKS_ROLEBANS = os.environ.get('WEBHOOKS_ROLEBANS')
 

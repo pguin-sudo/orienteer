@@ -1,41 +1,64 @@
+from pytz import UTC
+from datetime import datetime, timedelta, timezone
 from uuid import UUID
 
-from ...ss14.dbconnection import DBConnectionContextManager
+from orienteer.bot.utils.content_locale import Errors, Results
+from orienteer.general.data.ss14.repositories import playtime
+
+from orienteer.general.data.orienteer.repositories import promo
+from orienteer.general.data.orienteer.database import async_session
+from orienteer.general.formatting.playtime import get_job_group_and_name
+from orienteer.general.formatting.time import get_formatted_timedelta
 
 
-async def get_promo_data(code: str) -> dict:
-    async with DBConnectionContextManager() as connection:
-        return await connection.fetchrow("SELECT * FROM promos WHERE code = $1::text", code)
+async def get_creator_code(user_id) -> str | None:
+    async with async_session() as db_session:
+        return await promo.get_creator_code(db_session, user_id)
 
 
-async def get_creator_code(user_id: UUID) -> str | None:
-    async with DBConnectionContextManager() as connection:
-        creator_codes = await connection.fetch("SELECT code FROM promos WHERE creator = true")
-        for creator_code in creator_codes:
-            if await connection.fetchval("SELECT code FROM promo_cache WHERE user_id = $1 and code = $2", user_id,
-                                         creator_code[0]):
-                return str(creator_code[0])
-        return None
+async def try_promo(discord_user_id: int, user_id: UUID, code: str) -> tuple[bool, str]:
+    # TODO: Lower only to official promos
+    code = code.lower()
 
-"""     
-async def check_promo_already_used_discord(discord_user_id: int, code: str) -> bool:
-    async with DBConnectionContextManager() as connection:
-        return await connection.fetch("SELECT code FROM promo_cache "
-                                      "WHERE discord_user_id = $1 and code = $2", discord_user_id, code)
+    async with async_session() as db_session:
+        data = await promo.get_promo_data(db_session, code)
+        if not data:
+            return False, Errors.promo_not_found.value
 
+        if data.usages <= 0:
+            return False, Errors.promo_used_max_times.value
 
-async def check_promo_already_used_ss14(user_id: UUID, code: str) -> bool:
-    async with DBConnectionContextManager() as connection:
-        return await connection.fetch("SELECT code FROM promo_cache WHERE user_id = $1 and code = $2", user_id, code)
+        for tracker, time_needed in data.dependencies.items():
+            time = await playtime.get_playtime_timedelta(user_id, tracker)
+            if not time:
+                return False, Errors.no_playtime_info.value
+            elif time.total_seconds() / 60 < time_needed:
+                return False, Errors.not_enough_playtime.value
 
+        if UTC.localize(data.expiration_date) < datetime.now(timezone.utc):
+            return False, Errors.promo_overdue.value
 
-async def mark_promo_as_used(user_id: UUID, discord_user_id: int, code: str):
-    async with DBConnectionContextManager() as connection:
-        await connection.fetchval('INSERT INTO promo_cache (user_id, discord_user_id, code) VALUES ($1, $2, $3)',
-                                  user_id, discord_user_id, code)
+        if await promo.check_promo_already_used_discord(db_session, discord_user_id, code):
+            return False, Errors.promo_used_discord_account.value
 
+        if await promo.check_promo_already_used_ss14(db_session, user_id, code):
+            return False, Errors.promo_used_ss14_account.value
 
-async def decrease_promo_usages(code: str):
-    async with DBConnectionContextManager() as connection:
-        await connection.fetchval(f"UPDATE promos SET usages = usages - 1 WHERE code = $1", code)
-"""
+        creator_code = await promo.get_creator_code(db_session, user_id)
+
+        is_creators_code = data.is_creator
+        if is_creators_code and creator_code is not None:
+            return False, f'{Errors.creator_promo_used.value} ({creator_code})'
+
+        roles_text = ''
+
+        for tracker, minutes in data.jobs.items():
+            await playtime.add_playtime(user_id, tracker, minutes)
+            roles_text = f'**{get_job_group_and_name(
+                tracker)[1]}**: {get_formatted_timedelta(timedelta(minutes=minutes))}'
+
+        await promo.mark_promo_as_used(db_session, user_id, discord_user_id, code)
+        await promo.decrease_promo_usages(db_session, code)
+
+        return (True, f'{Results.you_have_received.value} {roles_text}\n'
+                f'{Results.now_you_have_support_creator.value} \"{code}\"' if is_creators_code else '')

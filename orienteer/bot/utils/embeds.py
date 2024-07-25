@@ -15,11 +15,15 @@ def _base_embed(title='', content='', color=0x38383d):
     return embed
 
 
-def error_message(title='Ошибка <:beer:1180521543390986324>', content=''):
-    return _base_embed(title=title, content=content, color=0xdb3c30)
+def error_message(title='Ошибка', content=''):
+    return _base_embed(title='<:beer:1180521543390986324> ' + title, content=content, color=0xdb3c30)
 
 
-def result_message(title='Информация :information_source:', content='', color=0x5c85d6):
+def success_message(title='Успех', content=''):
+    return _base_embed(title='✅ ' + title, content=content, color=0x3cdb30)
+
+
+def result_message(title='Результат:', content='', color=0x5c85d6):
     return _base_embed(title=title, content=content, color=color)
 
 

@@ -1,10 +1,10 @@
 class Extensions:
     __list__ = [
-        {"package": "orienteer.bot.cogs", "name": "info"},
-        # {"package": "orienteer.bot.cogs", "name": "orientiks"},
-        # {"package": "orienteer.bot.cogs", "name": "sponsors"},
-        # {"package": "orienteer.bot.cogs", "name": "creators"},
-        # {"package": "orienteer.bot.cogs", "name": "directors"},
+        {'package': 'orienteer.bot.cogs', 'name': 'info'},
+        {'package': 'orienteer.bot.cogs', 'name': 'promo'},
+        {'package': 'orienteer.bot.cogs', 'name': 'orientiks'},
+        # {'package': 'orienteer.bot.cogs', 'name': 'sponsor'},
+        {'package': 'orienteer.bot.cogs', 'name': 'owners'},
     ]
 
     @staticmethod
@@ -14,7 +14,7 @@ class Extensions:
     @staticmethod
     def get(name):
         for e in Extensions.__list__:
-            if e["name"] == name:
+            if e['name'] == name:
                 return e
         else:
             return None

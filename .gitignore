@@ -7,7 +7,10 @@
 # Logs
 *.log
 
-# Environments\
+# Environments
 .env
 .venv
 venv
+
+# Local config
+orienteer/general/config/local.py

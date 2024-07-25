@@ -85,7 +85,8 @@ class Roles(AbstractCall):
                 content=Errors.no_playtime_info.value)
             await self.interaction.edit_original_message(embed=embed)
 
-        embed = embeds.result_message(f'Наигранное время {ckey}:')
+        embed = embeds.result_message(
+            f'Наигранное время {ckey}:', f'Общее: {all_roles[10]}')
 
         '' if all_roles[0] == '' else embed.add_field(name='Сервисный отдел:', value=all_roles[0],
                                                       inline=False)
@@ -177,9 +178,9 @@ class Profile(AbstractCall):
         last_seen = await seen_time.get_last_seen_time(user_id)
         all_roles = await playtime.get_formatted_grouped_trackers(user_id)
         most_popular_role = await playtime.get_most_popular_role(user_id)
-        sponsor_level, color = await sponsors.get_sponsor_level(user_id)
+        sponsor_level, color = await sponsors.get_sponsor_status_and_color(user_id)
 
-        a_rank = await admin_rank.get_admin_rank_name(user_id)
+        a_rank = await admin_rank.get_admin_rank_name_and_time(user_id)
 
         is_in_whitelist = await whitelist.check_whitelist(user_id)
         balance_info = await orientiks.get_balance(user_id)
@@ -220,18 +221,19 @@ class Profile(AbstractCall):
             embed.add_field(name='Любимя роль:', value=f'{
                             most_popular_role}', inline=False)
         if sponsor_level is not None:
-            embed.add_field(name='Уровень подписки:',
+            embed.add_field(name='Статус спонсора:',
                             value=sponsor_level, inline=False)
         if a_rank is not None:
             embed.add_field(name='Ранг администратора:',
-                            value=a_rank, inline=False)
+                            value=f'{a_rank[0]}, стаж: {get_formatted_timedelta(a_rank[1])}', inline=False)
         if is_in_whitelist:
             embed.add_field(name='Whitelist:', value='Есть!', inline=False)
         else:
             embed.add_field(
                 name='Whitelist:', value='Нет <:EDGEHOG:1106583346835898399>', inline=False)
         if balance_info is not None:
-            embed.add_field(name='Баланс:', value=balance_info, inline=False)
+            embed.add_field(name='Баланс:', value=f'{
+                            balance_info} <:orienta:1250903370894671963>\'s', inline=False)
 
         await self.interaction.edit_original_message(embed=embed)
 

@@ -59,7 +59,7 @@ async def get_formatted_chars(user_id: UUID) -> tuple[tuple[str, str, int]]:
         if profile['facial_hair_name'] != 'FacialHairShaved':
             description += f'**Цвет растительности:** {await get_closest_color(profile['facial_hair_color'][1:-2])}\n'
         description += f'**Цвет глаз:** {await get_closest_color(profile['eye_color'][1:-2])}\n'
-        description += f'**Голос:** {profile['voice']}'
+        description += f'**Голос:** {str(profile['voice']).capitalize()}'
 
         formatted.append((title, description, int(
             profile['skin_color'][1:-2], 16)))

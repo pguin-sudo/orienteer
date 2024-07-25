@@ -56,3 +56,13 @@ async def add_ban(user_id: UUID, reason: str):
     """
     async with DBConnectionContextManager() as connection:
         await connection.execute(query, user_id, UUID('00000000-0000-0000-0000-000000000000'), current_time, reason)
+
+
+async def pardon_ban(ban_id: int):
+    current_time = datetime.now(timezone.utc)
+    query = """
+        INSERT INTO server_unban (unban_id, ban_id, unbanning_admin, unban_time)
+        VALUES (DEFAULT, $1, $2, $3)
+    """
+    async with DBConnectionContextManager() as connection:
+        await connection.execute(query, ban_id, UUID('00000000-0000-0000-0000-000000000000'), current_time)

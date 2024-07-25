@@ -58,9 +58,15 @@ async def get_last_ban_status(user_id: UUID) -> int:
     if ban is None:
         return 0
     elif ban:
-        if ban['expirationtime'] is None:
+        if ban['expiration_time'] is None:
             return 2
-        if ban['expirationtime'] > datetime.now(timezone.utc):
+        if ban['expiration_time'] > datetime.now(timezone.utc):
             return 1
-    else:
-        return 0
+
+    return 0
+
+
+async def pardon_last_ban(user_id: UUID):
+    last_ban = await bans.get_last_ban(user_id)
+    if last_ban is not None:
+        await bans.pardon_ban(last_ban['server_ban_id'])

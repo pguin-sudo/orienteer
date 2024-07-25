@@ -1,5 +1,5 @@
-import grequests
-from orienteer.config import Bot
+import aiohttp
+from orienteer.general.config.local import BOT_TOKEN
 
 
 async def add_role(user_id: int, role_id: int):
@@ -7,9 +7,10 @@ async def add_role(user_id: int, role_id: int):
         user_id}/roles/{role_id}'
 
     headers = {
-        'Authorization': f'Bot {Bot.TOKEN}',
+        'Authorization': f'Bot {BOT_TOKEN}',
         'Content-Type': 'application/json'
     }
 
-    response = grequests.put(url, headers=headers)
-    return response.status_code
+    async with aiohttp.ClientSession() as session:
+        async with session.put(url, headers=headers) as response:
+            return response.status

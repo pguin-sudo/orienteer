@@ -5,7 +5,7 @@ from .common import Base
 
 
 class SentBan(Base):
-    __tablename__ = 'SentBan'
+    __tablename__ = 'sent_bans'
 
     id = Column(Integer, primary_key=True)
     last_sent_ban_id = Column(Integer)

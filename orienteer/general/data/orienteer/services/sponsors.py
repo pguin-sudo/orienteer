@@ -1,100 +1,73 @@
+import uuid
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
 from uuid import UUID
-from datetime import timedelta, datetime
+
+from orienteer.general.data.orienteer.models.sponsors import Sponsor
+
+from ..repositories import sponsors
+from ..database import async_session
+
+from orienteer.general.formatting.time import get_formatted_datetime
 
 
-async def set_sponsor(user_id: UUID, tier: int, duration: timedelta = timedelta(days=31),
-                      ooc_color='ffffff') -> str:
-    result = ''
+async def get_sponsor_status_and_color(user_id: UUID) -> tuple[str | None, int | None]:
+    async with async_session() as db_session:
+        sponsor = await sponsors.get_sponsor(db_session, user_id)
 
-    # TODO: FIX THIS
-    if 'tier < 0 or tier > 4' is not None:
-        result += 'ERROR#1. Неверное значение уровня подписки'
-        return result
-
-    sponsor_data = SponsorData()
-
-    if sponsor_data.get_info(user_id) is not None:
-        if tier == 0:
-            result += '- очистка\n'
-
-            sponsor_data.delete_info(user_id)
-
-            await ss14.delete_from_whitelist(user_id)
-            result += f'- "whitelist удален"\n'
-
-        else:
-            result += 'ERROR#3. Существующие записи можно только удалить. Для этого указывай уровень подписки 0'
-            return result
-    else:
-        result += '- добавление\n'
-        allowed_markings = ['marking1', 'marking2']
-        ghost_theme = "dark"
-
-        if tier == 0:
-            result += 'ERROR#4. Нельзя добавить запись с уровнем подписки 0'
-            return result
-        elif tier > 1:
-            allowed_markings = ('CatEars', 'CatTail', 'HumanFacialHairHandlebar', 'HumanHairWife', 'HumanHairSpicy',
-                                'HumanHairShy', 'HumanHairQuadcurls', 'HumanHairLooseSlicked',
-                                'HumanHairLongdtails',
-                                'HumanHairFortunetellerAlt', 'HumanHairFortuneteller', 'HumanHairFingerwave',
-                                'CatEarsTorn', 'CatTailStripes', 'HumanHairCotton', 'CatEarsCurled',
-                                'CatEarsStubby',
-                                'SlimeCatEars', 'SlimeCatTail', 'SlimeCatEarsStubby', 'SlimeCatEarsCurled',
-                                'SlimeCatEarsTorn', 'SlimeCatTailStripes')
-
-            ghost_theme = "flameTheme"
-
-            if await ss14.check_whitelist(user_id):
-                result += f'- вайтлист уже был выдан давно\n'
-            else:
-                await ss14.add_to_whitelist(user_id)
-                result += f'- whitelist выдан\n'
-
-            if tier > 2:
-                ans = await add_all_time(user_id, 1)
-                result += f'- {ans}\n'
-
-            if tier == 4:
-                result += '- а теперь выдай маркинги\n'
-
-        expires_in = datetime.now() + duration
-
-        sponsor_data.add_info(user_id, tier, ooc_color,
-                              allowed_markings, ghost_theme, expires_in)
-
-    result += '- файл записал, все оке))'
-    return result
-
-
-async def get_sponsor_level(user_id: UUID) -> tuple[str | None, int | None]:
-    return 'PLACEHOLDER', 0xfd123d
-
-    tier = SponsorData().get_tier(user_id)
-    if not tier:
+    if sponsor is None:
         return None, None
 
-    tier = int(tier)
+    status = 'Активен' if sponsor.is_active else 'Временно отключен'
 
-    if tier == 0:
-        return None, None
+    return status, int(sponsor.ooc_color, 16)
 
-    if tier == 1:
-        level = 'Космический курсант'
-    elif tier == 2:
-        level = 'Капитан'
-    elif tier == 3:
-        level = 'Адмирал Orienta'
-    elif tier == 4:
-        level = 'Директор корпорации Orienta'
-    else:
-        level = 'Нет данных'
 
-    ooc_color = SponsorData().get_color(user_id)
-    color = discord.Colour.from_rgb(int(ooc_color.lstrip('#')[0:0 + 2], 16),
-                                    int(ooc_color.lstrip('#')[2:2 + 2], 16),
-                                    int(ooc_color.lstrip('#')[4:4 + 2], 16))
+async def get_sponsor_as_dict(user_id: UUID) -> dict:
+    async with async_session() as db_session:
+        sponsor: Sponsor = await sponsors.get_sponsor(db_session, user_id)
+        return {
+            user_id: {
+                "tier": 1,
+                "extraSlots": sponsor.extra_slots,
+                "oocColor": sponsor.ooc_color,
+                "allowedMarkings": sponsor.allowed_markings,
+                "ghostTheme": sponsor.ghost_theme,
+                "havePriorityJoin": sponsor.have_priority_join,
+            }}
 
-    level += f'\nИстекает: {SponsorData().get_expires_in(
-        user_id).strftime("%d.%m.%Yг. %H:%M")}'
-    return level, color
+
+async def set_colored_nick(user_id: UUID, color):
+    async with async_session() as db_session:
+        await sponsors.try_create_empty_sponsor(db_session, user_id)
+        return await sponsors.update_sponsor(db_session, user_id, ooc_color=color)
+
+
+async def set_sponsor_chat(user_id: UUID, status):
+    async with async_session() as db_session:
+        await sponsors.try_create_empty_sponsor(db_session, user_id)
+        return await sponsors.update_sponsor(db_session, user_id, have_sponsor_chat=status)
+
+
+async def set_priority_queue(user_id: UUID, status):
+    async with async_session() as db_session:
+        await sponsors.try_create_empty_sponsor(db_session, user_id)
+        return await sponsors.update_sponsor(db_session, user_id, have_queue_priority=status)
+
+
+async def add_marking(user_id: UUID, marking: str):
+    async with async_session() as db_session:
+        await sponsors.try_create_empty_sponsor(db_session, user_id)
+        return await sponsors.add_marking(db_session, user_id, marking)
+
+
+async def remove_marking(user_id: UUID, marking: str):
+    async with async_session() as db_session:
+        await sponsors.try_create_empty_sponsor(db_session, user_id)
+        return await sponsors.remove_marking(db_session, user_id, marking)
+
+
+async def set_activation(user_id: UUID, status):
+    async with async_session() as db_session:
+        await sponsors.try_create_empty_sponsor(db_session, user_id)
+        return await sponsors.update_sponsor(db_session, user_id, is_active=status)
