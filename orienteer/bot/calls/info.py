@@ -7,7 +7,7 @@ from orienteer.bot.utils.content_locale import Errors
 
 from orienteer.general.formatting.time import *
 
-from orienteer.general.data.orienteer.services import promo, sponsors, orientiks
+from orienteer.general.data.orienteer.services import discord_auth, promo, sponsors, orientiks
 from orienteer.general.data.requests import hub
 from orienteer.general.data.ss14.services import player, playtime, bans, seen_time, admin_rank, whitelist, chars
 
@@ -72,7 +72,7 @@ class Roles(AbstractCall):
                     content=Errors.no_user_id_with_ckey.value))
                 return
         else:
-            user_id = await player.get_user_id_by_discord_user_id(self.interaction.user.id)
+            user_id = await discord_auth.get_user_id_by_discord_user_id(self.interaction.user.id)
             if user_id is None:
                 await self.interaction.edit_original_message(embed=embeds.error_message(
                     content=Errors.no_user_id_with_discord.value))
@@ -124,7 +124,7 @@ class Bans(AbstractCall):
                     content=Errors.no_user_id_with_ckey.value))
                 return
         else:
-            user_id = await player.get_user_id_by_discord_user_id(self.interaction.user.id)
+            user_id = await discord_auth.get_user_id_by_discord_user_id(self.interaction.user.id)
             if user_id is None:
                 await self.interaction.edit_original_message(embed=embeds.error_message(
                     content=Errors.no_user_id_with_discord.value))
@@ -166,7 +166,7 @@ class Profile(AbstractCall):
                     content=Errors.no_user_id_with_ckey.value))
                 return
         else:
-            user_id = await player.get_user_id_by_discord_user_id(self.interaction.user.id)
+            user_id = await discord_auth.get_user_id_by_discord_user_id(self.interaction.user.id)
             if user_id is None:
                 await self.interaction.edit_original_message(embed=embeds.error_message(
                     content=Errors.no_user_id_with_discord.value))
@@ -250,7 +250,7 @@ class Chars(AbstractCall):
                     content=Errors.no_user_id_with_ckey.value))
                 return
         else:
-            user_id = await player.get_user_id_by_discord_user_id(self.interaction.user.id)
+            user_id = await discord_auth.get_user_id_by_discord_user_id(self.interaction.user.id)
             if user_id is None:
                 await self.interaction.edit_original_message(embed=embeds.error_message(
                     content=Errors.no_user_id_with_discord.value))

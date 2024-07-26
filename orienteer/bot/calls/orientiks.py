@@ -8,7 +8,7 @@ from orienteer.bot.utils.content_locale import Errors, Results, Success, Debug
 from orienteer.general.data.products.base_product import Product
 from orienteer.general.formatting.time import *
 
-from orienteer.general.data.orienteer.services import orientiks, purchases
+from orienteer.general.data.orienteer.services import discord_auth, orientiks, purchases
 from orienteer.general.data.products import products
 from orienteer.general.data.ss14.services import player, playtime, bans, seen_time, admin_rank, whitelist, chars
 
@@ -27,7 +27,7 @@ class Balance(AbstractCall):
                     content=Errors.no_user_id_with_ckey.value))
                 return
         else:
-            user_id = await player.get_user_id_by_discord_user_id(self.interaction.user.id)
+            user_id = await discord_auth.get_user_id_by_discord_user_id(self.interaction.user.id)
             if user_id is None:
                 await self.interaction.edit_original_message(embed=embeds.error_message(
                     content=Errors.no_user_id_with_discord.value))
@@ -58,7 +58,7 @@ class Transfer(AbstractCall):
                 embed=embeds.error_message(content=Errors.recipient_not_authorized.value))
             return
 
-        sender_user_id = await player.get_user_id_by_discord_user_id(self.interaction.user.id)
+        sender_user_id = await discord_auth.get_user_id_by_discord_user_id(self.interaction.user.id)
         if sender_user_id is None:
             await self.interaction.edit_original_message(
                 embed=embeds.error_message(content=Errors.no_user_id_with_discord.value))
@@ -89,9 +89,9 @@ class Transfer(AbstractCall):
 
 class Shop(AbstractCall):
     async def __call__(self):
-        user_id = await player.get_user_id_by_discord_user_id(self.interaction.user.id)
+        user_id = await discord_auth.get_user_id_by_discord_user_id(self.interaction.user.id)
         if user_id is None:
-            await self.interaction.edit_original_message(embed=embeds.error_message(content=Errors.no_user_id_with_discord))
+            await self.interaction.edit_original_message(embed=embeds.error_message(content=Errors.no_user_id_with_discord.value))
             return
 
         embed = embeds.result_message(title='Товары, доступные к покупке:')
@@ -101,7 +101,7 @@ class Shop(AbstractCall):
 
         def create_callback(product: Product):
             async def buy(interaction: Interaction):
-                responding_user_id = await player.get_user_id_by_discord_user_id(interaction.user.id)
+                responding_user_id = await discord_auth.get_user_id_by_discord_user_id(interaction.user.id)
 
                 button_view.clear_items()
 

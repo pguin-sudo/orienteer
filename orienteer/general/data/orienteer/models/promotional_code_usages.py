@@ -10,7 +10,7 @@ class PromotionalCodeUsages(Base):
     __tablename__ = 'promotional_code_usages'
 
     cache_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(UUID(as_uuid=True), nullable=False, unique=True)
+    user_id = Column(UUID(as_uuid=True), nullable=False)
     promotional_code = Column(String, ForeignKey(
         'promotional_codes.code'), nullable=False)
     discord_user_id = Column(BigInteger)
