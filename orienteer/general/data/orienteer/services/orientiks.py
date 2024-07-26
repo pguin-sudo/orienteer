@@ -1,7 +1,5 @@
 from uuid import UUID
 
-from orienteer.general.data.orienteer.repositories import purchases
-from orienteer.general.data.products.base_product import Product
 from orienteer.general.utils.calculations import calculate_fine
 
 from ..repositories import orientiks
@@ -31,7 +29,7 @@ async def get_balance(user_id: UUID) -> int:
             await _init_balance(user_id)
             raw_info = await orientiks.get_balance_raw_info(db_session, user_id=user_id)
 
-    fine = sum([await calculate_fine(ban['expiration_time'] - ban['ban_time']) for ban in
+    fine = sum([calculate_fine(ban['expiration_time'] - ban['ban_time']) for ban in
                 await bans.get_bans(user_id=user_id) if ban['expiration_time'] is not None])
 
     return int(overall.total_seconds() // 3600 * price

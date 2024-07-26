@@ -4,14 +4,14 @@ from loguru import logger
 
 from orienteer.general.data.orienteer.services import sponsors
 from orienteer.general.data.ss14.services import bans
+from orienteer.general.utils.calculations import calculate_fine
 from .base_product import Product
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 
 
 class ColoredNick(Product):
     id = 0
     name = 'Цветной ник в OOC чате на месяц'
-    price = 29
     price_tag = '<:orienta:1250903370894671963>\'s'
     description = 'Внеси краски в свою жизнь и выделись на фоне остальных игроков. '
     'За 30 <:orienta:1250903370894671963>\'s укрась свой ник в ООС чате изменив его цвет на свой выбор.'
@@ -21,6 +21,9 @@ class ColoredNick(Product):
     emoji = '🖌'
     is_subscription = True
     cooldown = timedelta(days=31)
+
+    async def calculate_price(user_id) -> int:
+        return 29
 
     async def buy(user_id: UUID):
         logger.info(f'Покупка {__name__}')
@@ -34,17 +37,19 @@ class ColoredNick(Product):
 class GigachatAccess(Product):
     id = 1
     name = 'Доступ в гигачат на месяц'
-    price = 19
     price_tag = '<:orienta:1250903370894671963>\'s'
     description = 'Прикоснись к немного более глубоким уровням взаимодействия администрации корпорации Ориента '
     'с участниками и стань членов чата спонсоров. Там ты сможешь общаться с директорами и другими '
-    'членами проекта напрямую и в более неформальной обстановке.'
+    'членами проекта напрямую и в более неформальной обстановке. (а также посмотреть кукинг)'
     image_url = 'https://media.discordapp.net/attachments/1162830763390140548/1250350925860704268/GigaChat.png'
     '?ex=666a9f8b&is=66694e0b&hm=34ebe9a7aa56ebda9924aad7d6b427ed7a522b7b514ef77e59461cfb46ae9c3c&='
     '&format=webp&quality=lossless&width=725&height=671'
     emoji = '💬'
     is_subscription = True
     cooldown = timedelta(days=31)
+
+    async def calculate_price(user_id) -> int:
+        return 19
 
     async def buy(user_id: UUID):
         logger.info(f'Покупка {__name__}')
@@ -60,7 +65,6 @@ class GigachatAccess(Product):
 class PriorityQueue(Product):
     id = 2
     name = 'Приоритет в очереди на сервер на месяц'
-    price = 19
     price_tag = '<:orienta:1250903370894671963>\'s'
     description = 'Если тебе (внезапно) неприятно долго ожидать в очереди чтобы зайти на сервер ты можешь купить '
     'этот товар и заходить на него быстрее других игроков.'
@@ -70,6 +74,9 @@ class PriorityQueue(Product):
     emoji = '⏩'
     is_subscription = True
     cooldown = timedelta(days=31)
+
+    async def calculate_price(user_id) -> int:
+        return 19
 
     async def buy(user_id: UUID):
         logger.info(f'Покупка {__name__}')
@@ -84,15 +91,17 @@ class PriorityQueue(Product):
 class Orientalink(Product):
     id = 3
     name = 'Orientalink на месяц'
-    price = 19
     price_tag = '<:orienta:1250903370894671963>\'s'
-    description = 'Пустое описание Orientalink\'а'
+    description = 'Да, да, тот самый Orientalink с кучей раз\'а'
     image_url = 'https://media.discordapp.net/attachments/1162830763390140548/1250350926716473465/Queue.png'
     '?ex=666a9f8b&is=66694e0b&hm=1bff6892241431d60d80ec58f24fe78b7bc8407dd5ec3d0740271f940c45ef1f&='
     '&format=webp&quality=lossless&width=725&height=671'
-    emoji = '⏩'
+    emoji = '📻'
     is_subscription = True
     cooldown = timedelta(days=31)
+
+    async def calculate_price(user_id) -> int:
+        return 19
 
     async def buy(user_id: UUID):
         logger.info(f'Покупка {__name__}')
@@ -107,8 +116,7 @@ class Orientalink(Product):
 class BanAnnulment(Product):
     id = 4
     name = 'Аннулирование бана'
-    price = 12
-    price_tag = '<:orienta:1250903370894671963>\'s за 1 день бана'
+    price_tag = '<:orienta:1250903370894671963>\'s за ваш последний бан'
     description = 'По глупой случайности нарушил правила и очень раскаиваешься но администрация не согласилась '
     'удовлетворить твое обжалование? С этим товаром ты сможешь закончить свое наказание настолько раньше '
     'насколько вздумается.\n'
@@ -119,6 +127,27 @@ class BanAnnulment(Product):
     emoji = '🔓'
     is_subscription = False
     cooldown = timedelta(days=14)
+
+    async def calculate_price(user_id) -> int:
+        last_ban = await bans.get_last_ban(user_id)
+
+        if last_ban is None:
+            return 1
+
+        expiration_time = last_ban['expiration_time']
+        ban_time = last_ban['ban_time']
+
+        if expiration_time is None:
+            return 999
+
+        return (await calculate_fine(expiration_time - ban_time))*2.5
+
+    async def can_buy(user_id: UUID) -> bool:
+        last_ban = await bans.get_last_ban(user_id)
+        if last_ban is None or last_ban['expiration_time'] is None:
+            return False
+        else:
+            return True
 
     async def buy(user_id: UUID):
         logger.info(f'Покупка {__name__}')

@@ -9,7 +9,6 @@ from loguru import logger
 class Product:
     id: int
     name: str = 'Продукт'
-    price: int = '12'
     price_tag: str = ' ориентиков за неделю'
     description: str = 'Описани'
     image_url: str = 'https://media.discordapp.net/attachments/1162830763390140548/1250350926124941312/OOC.png'
@@ -18,6 +17,9 @@ class Product:
     emoji: str = '🖌'
     is_subscription: bool = False
     cooldown: timedelta | None = timedelta(days=31)
+
+    async def calculate_price(user_id) -> int:
+        return 99
 
     async def can_buy(user_id: UUID) -> bool:
         return True

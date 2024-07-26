@@ -121,17 +121,18 @@ class Shop(AbstractCall):
                         embed=embeds.error_message(content=f'{Errors.product_is_in_cooldown_for.value} {get_formatted_timedelta(purchase_cooldown)}'), view=button_view)
                     return
 
-                if await orientiks.get_balance(responding_user_id) < product.price:
+                price = await product.calculate_price(user_id)
+                if await orientiks.get_balance(responding_user_id) < price:
                     await self.interaction.edit_original_message(
                         embed=embeds.error_message(content=Errors.not_enough_money.value), view=button_view)
                     return
 
                 product_info = f'{
-                    product.description}\n**Цена:** {product.price} {product.price_tag}'
+                    product.description}\n**Цена:** {price} {product.price_tag}'
 
                 await product.buy(responding_user_id)
-                await purchases.create_purchase(responding_user_id, product)
-                await orientiks.spent(responding_user_id, product.price)
+                await purchases.create_purchase(responding_user_id, product.id, price)
+                await orientiks.spent(responding_user_id, price)
 
                 await self.interaction.edit_original_message(
                     embed=embeds.error_message(title=f'{Results.you_have_bought_product.value} **{product.name}**:',
@@ -144,8 +145,9 @@ class Shop(AbstractCall):
                 continue
 
             i += 1
+            price = await product.calculate_price(user_id)
             product_info = f'{
-                product.description}\n**Цена:** {product.price} {product.price_tag}'
+                product.description}\n**Цена:** {price} {product.price_tag}'
             embed.add_field(name=f'{product.emoji} {
                             product.name}', inline=False, value=product_info)
 

@@ -7,9 +7,9 @@ from orienteer.general.data.products.base_product import Product
 from ..database import async_session
 
 
-async def create_purchase(user_id: UUID, product: Product):
+async def create_purchase(user_id: UUID, product_id, product_price):
     async with async_session() as db_session:
-        purchase = await purchases.create_purchase(db_session, product.id, user_id, product.price)
+        purchase = await purchases.create_purchase(db_session, product_id, user_id, product_price)
         return purchase
 
 

@@ -31,7 +31,7 @@ async def get_formatted_bans_and_total_stats(user_id: UUID) -> tuple[tuple[str, 
             expiration_time_str = get_formatted_datetime(expiration_time)
             ban_time = expiration_time - ban_time
             total_time += ban_time
-            fine = await calculate_fine(ban_time)
+            fine = calculate_fine(ban_time)
             total_fine += fine
 
         title = f'**Бан** {server_ban_id}'
@@ -44,6 +44,10 @@ async def get_formatted_bans_and_total_stats(user_id: UUID) -> tuple[tuple[str, 
 
         formatted.append((title, description))
     return formatted, total_time, total_fine
+
+
+async def get_last_ban(user_id: UUID) -> dict:
+    return await bans.get_last_ban(user_id)
 
 
 async def get_last_ban_status(user_id: UUID) -> int:
