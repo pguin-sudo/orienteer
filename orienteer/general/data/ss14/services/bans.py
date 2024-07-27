@@ -74,3 +74,11 @@ async def pardon_last_ban(user_id: UUID):
     last_ban = await bans.get_last_ban(user_id)
     if last_ban is not None:
         await bans.pardon_ban(last_ban['server_ban_id'])
+
+
+async def get_all_bans_after(ban_id) -> tuple[dict]:
+    return await bans.get_all_bans_after(ban_id)
+
+
+async def get_all_rolebans_after(ban_id) -> dict:
+    return await bans.get_all_rolebans_after(ban_id)

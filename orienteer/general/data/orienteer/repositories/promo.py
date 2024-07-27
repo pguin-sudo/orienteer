@@ -1,4 +1,3 @@
-import sqlalchemy as sa
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 

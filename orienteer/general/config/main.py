@@ -16,7 +16,6 @@ BOT_PREFIX = '/'
 # Webhooks
 WEBHOOKS_LOGS = os.environ.get('WEBHOOKS_LOGS')
 WEBHOOKS_BANS = os.environ.get('WEBHOOKS_BANS')
-WEBHOOKS_ROLEBANS = os.environ.get('WEBHOOKS_ROLEBANS')
 
 # OAuth2 settings
 AUTH_API_ENDPOINT = 'https://discord.com/api/v10'

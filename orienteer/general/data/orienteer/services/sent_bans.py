@@ -1,37 +1,23 @@
-from sqlalchemy.orm import Session
 
-from ..models.sent_bans import SentBan
-
-
-def create(self, last_sent_ban: int, last_seen_rolebans: int):
-    new_entry = SentBan(last_sent_ban=last_sent_ban,
-                        last_seen_rolebans=last_seen_rolebans)
-    self.session.add(new_entry)
-    self.session.commit()
-    return new_entry
+from orienteer.general.data.orienteer.repositories import sent_bans
+from ..database import async_session
 
 
-def get_last_sent_ban(self) -> int:
-    return self.session.query(SentBan).first().last_sent_ban_id
+async def get_last_sent_ban_id() -> int:
+    async with async_session() as db_session:
+        await sent_bans.get_last_sent_ban_id(db_session)
 
 
-def get_last_sent_roleban(self) -> int:
-    return self.session.query(SentBan).first().last_sent_roleban_id
+async def get_last_sent_roleban_id() -> int:
+    async with async_session() as db_session:
+        await sent_bans.get_last_sent_roleban_id(db_session)
 
 
-def set_last_sent_ban(self, id: int) -> SentBan | None:
-    entry = self.self.session.query(SentBan)
-    if entry:
-        entry.last_sent_ban = id
-        self.session.commit()
-        return entry
-    return None
+async def set_last_sent_ban_id(id: int) -> None:
+    async with async_session() as db_session:
+        await sent_bans.set_last_sent_ban_id(db_session, id)
 
 
-def set_last_sent_roleban(self, id: int) -> SentBan | None:
-    entry = self.self.session.query(SentBan)
-    if entry:
-        entry.last_sent_roleban = id
-        self.session.commit()
-        return entry
-    return None
+async def set_last_sent_roleban_id(id: int) -> None:
+    async with async_session() as db_session:
+        await sent_bans.set_last_sent_roleban_id(db_session, id)
