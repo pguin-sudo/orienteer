@@ -26,11 +26,11 @@ class ColoredNick(Product):
         return 29
 
     async def buy(user_id: UUID):
-        logger.info(f'Покупка {__name__}')
+        logger.info(f'Покупка {ColoredNick.name}')
         await sponsors.set_colored_nick(user_id, '87cefa')
 
     async def retrieve(user_id: UUID):
-        logger.info(f'Возврат {__name__}')
+        logger.info(f'Возврат {ColoredNick.name}')
         await sponsors.set_colored_nick(user_id, None)
 
 
@@ -52,12 +52,12 @@ class GigachatAccess(Product):
         return 19
 
     async def buy(user_id: UUID):
-        logger.info(f'Покупка {__name__}')
+        logger.info(f'Покупка {GigachatAccess.name}')
         await sponsors.set_sponsor_chat(user_id, True)
         await sponsors.set_activation(user_id, True)
 
     async def retrieve(user_id: UUID):
-        logger.info(f'Возврат {__name__}')
+        logger.info(f'Возврат {GigachatAccess.name}')
         await sponsors.set_sponsor_chat(user_id, False)
         # TODO: SOMETIMES HOLD ACTIVE
 
@@ -79,12 +79,12 @@ class PriorityQueue(Product):
         return 19
 
     async def buy(user_id: UUID):
-        logger.info(f'Покупка {__name__}')
+        logger.info(f'Покупка {PriorityQueue.name}')
         await sponsors.set_priority_queue(user_id, True)
         await sponsors.set_activation(user_id, True)
 
     async def retrieve(user_id: UUID):
-        logger.info(f'Возврат {__name__}')
+        logger.info(f'Возврат {PriorityQueue.name}')
         await sponsors.set_priority_queue(user_id, False)
 
 
@@ -104,12 +104,12 @@ class Orientalink(Product):
         return 19
 
     async def buy(user_id: UUID):
-        logger.info(f'Покупка {__name__}')
+        logger.info(f'Покупка {Orientalink.name}')
         await sponsors.add_marking(user_id, 'Orientalink')
         await sponsors.set_activation(user_id, True)
 
     async def retrieve(user_id: UUID):
-        logger.info(f'Возврат {__name__}')
+        logger.info(f'Возврат {Orientalink.name}')
         await sponsors.remove_marking(user_id, 'Orientalink')
 
 
@@ -150,11 +150,11 @@ class BanAnnulment(Product):
             return True
 
     async def buy(user_id: UUID):
-        logger.info(f'Покупка {__name__}')
+        logger.info(f'Покупка {BanAnnulment.name}')
         await bans.pardon_last_ban(user_id)
 
     async def retrieve(user_id: UUID):
-        logger.info(f'Возврат {__name__}')
+        logger.info(f'Возврат {BanAnnulment.name}')
         raise NotImplementedError
 
 

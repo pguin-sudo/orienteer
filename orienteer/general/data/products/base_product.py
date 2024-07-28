@@ -25,7 +25,7 @@ class Product:
         return True
 
     async def buy(user_id: UUID):
-        logger.info(f'Покупка {__name__}')
+        logger.info(f'Покупка {Product.name}')
 
     async def retrieve(user_id: UUID):
-        logger.info(f'Возврат {__name__}')
+        logger.info(f'Возврат {Product.name}')
