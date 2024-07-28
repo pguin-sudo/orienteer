@@ -53,7 +53,7 @@ class Transfer(AbstractCall):
                 embed=embeds.error_message(content=Errors.recipient_not_found.value))
             return
 
-        if await player.get_discord_user_id_by_user_id(recipient_user_id) is None:
+        if await discord_auth.get_discord_user_id_by_user_id(recipient_user_id) is None:
             await self.interaction.edit_original_message(
                 embed=embeds.error_message(content=Errors.recipient_not_authorized.value))
             return
