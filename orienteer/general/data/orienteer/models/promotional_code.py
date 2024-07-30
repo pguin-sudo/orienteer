@@ -22,4 +22,6 @@ class PromotionalCode(Base):
         self.is_creator = is_creator
 
     def __repr__(self):
-        return f"<PromotionalCodes(code='{self.code}', usages={self.usages}, jobs={self.jobs}, dependencies={self.dependencies}, expiration_date={self.expiration_date}, is_creator={self.is_creator})>"
+        return (f"<PromotionalCodes(code='{self.code}', usages={self.usages}, "
+                f"jobs={self.jobs}, dependencies={self.dependencies}, "
+                f"expiration_date={self.expiration_date}, is_creator={self.is_creator})>")

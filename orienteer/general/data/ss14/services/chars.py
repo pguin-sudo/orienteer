@@ -1,12 +1,11 @@
 from uuid import UUID
 
-from ..repositories import preferences, profiles
-
 from orienteer.general.formatting.color import get_closest_color
 from orienteer.general.formatting.time import get_years_form
+from ..repositories import preferences, profiles
 
 
-async def get_formatted_chars(user_id: UUID) -> tuple[tuple[str, str, int]]:
+async def get_formatted_chars(user_id: UUID) -> tuple[tuple[str, str, int], ...]:
     preference = await preferences.get_preference(user_id)
     all_profiles = await profiles.get_profiles(preference)
 
@@ -61,7 +60,6 @@ async def get_formatted_chars(user_id: UUID) -> tuple[tuple[str, str, int]]:
         description += f'**Цвет глаз:** {await get_closest_color(profile['eye_color'][1:-2])}\n'
         description += f'**Голос:** {str(profile['voice']).capitalize()}'
 
-        formatted.append((title, description, int(
-            profile['skin_color'][1:-2], 16)))
+        formatted.append((title, description, int(profile['skin_color'][1:-2], 16)))
 
     return tuple(formatted)

@@ -1,12 +1,12 @@
-from pytz import UTC
 from datetime import datetime, timedelta, timezone
 from uuid import UUID
 
-from orienteer.bot.utils.content_locale import Errors, Results
-from orienteer.general.data.ss14.repositories import playtime
+import pytz
 
-from orienteer.general.data.orienteer.repositories import promo
+from orienteer.bot.utils.content_locale import Errors, Results
 from orienteer.general.data.orienteer.database import async_session
+from orienteer.general.data.orienteer.repositories import promo
+from orienteer.general.data.ss14.repositories import playtime
 from orienteer.general.formatting.playtime import get_job_group_and_name
 from orienteer.general.formatting.time import get_formatted_timedelta
 
@@ -35,7 +35,7 @@ async def try_promo(discord_user_id: int, user_id: UUID, code: str) -> tuple[boo
             elif time.total_seconds() / 60 < time_needed:
                 return False, Errors.not_enough_playtime.value
 
-        if UTC.localize(data.expiration_date) < datetime.now(timezone.utc):
+        if pytz.UTC.localize(data.expiration_date) < datetime.now(timezone.utc):
             return False, Errors.promo_overdue.value
 
         if await promo.check_promo_already_used_discord(db_session, discord_user_id, code):
@@ -54,11 +54,10 @@ async def try_promo(discord_user_id: int, user_id: UUID, code: str) -> tuple[boo
 
         for tracker, minutes in data.jobs.items():
             await playtime.add_playtime(user_id, tracker, minutes)
-            roles_text = f'**{get_job_group_and_name(
-                tracker)[1]}**: {get_formatted_timedelta(timedelta(minutes=minutes))}'
+            roles_text = f'**{get_job_group_and_name(tracker)[1]}**: {get_formatted_timedelta(timedelta(minutes=minutes))}'
 
         await promo.mark_promo_as_used(db_session, user_id, discord_user_id, code)
         await promo.decrease_promo_usages(db_session, code)
 
         return (True, f'{Results.you_have_received.value} {roles_text}\n'
-                f'{Results.now_you_have_support_creator.value} \"{code}\"' if is_creators_code else '')
+                      f'{Results.now_you_have_support_creator.value} \"{code}\"' if is_creators_code else '')

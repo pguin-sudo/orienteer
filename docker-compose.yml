@@ -3,4 +3,4 @@ services:
   redis:
     image: redis:7.4-rc2-alpine
     ports:
-      - 6379:6379
+      - "6379:6379"

@@ -1,15 +1,13 @@
 from datetime import datetime, timezone, timedelta
 from uuid import UUID
 
-from ..repositories import bans
 from orienteer.general.data.ss14.services.player import get_ckey
-
 from orienteer.general.formatting.time import get_formatted_datetime
-
 from orienteer.general.utils.calculations import calculate_fine
+from ..repositories import bans
 
 
-async def get_formatted_bans_and_total_stats(user_id: UUID) -> tuple[tuple[str, str]]:
+async def get_formatted_bans_and_total_stats(user_id: UUID) -> tuple[list[tuple[str, str]], timedelta, int]:
     all_bans = await bans.get_bans(user_id)
     formatted = []
     total_time = timedelta(minutes=0)
@@ -38,8 +36,7 @@ async def get_formatted_bans_and_total_stats(user_id: UUID) -> tuple[tuple[str, 
         description = f'**Администратор:** {admin_name}\n'
         description += f'**Время получения:** {bantime_str}\n'
         description += f'**Время снятия:** {expiration_time_str}\n'
-        description += f'**Штраф:** {
-            fine} <:orienta:1250903370894671963>\'s\n'
+        description += f'**Штраф:** {fine} <:orienta:1250903370894671963>\'s\n'
         description += f'**Причина:** {reason}\n'
 
         formatted.append((title, description))
@@ -80,7 +77,7 @@ async def get_all_bans_after(ban_id) -> tuple[dict]:
     return await bans.get_all_bans_after(ban_id)
 
 
-async def get_all_role_bans_after(ban_id) -> dict:
+async def get_all_role_bans_after(ban_id) -> tuple[dict]:
     return await bans.get_all_role_bans_after(ban_id)
 
 

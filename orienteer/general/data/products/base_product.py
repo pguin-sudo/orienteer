@@ -6,7 +6,7 @@ from loguru import logger
 
 
 @dataclass
-class Product:
+class BaseProduct:
     id: int
     name: str = 'Продукт'
     price_tag: str = ' ориентиков за неделю'
@@ -18,14 +18,18 @@ class Product:
     is_subscription: bool = False
     cooldown: timedelta | None = timedelta(days=31)
 
-    async def calculate_price(user_id) -> int:
+    @staticmethod
+    async def calculate_price(user_id: UUID) -> int:
         return 99
 
+    @staticmethod
     async def can_buy(user_id: UUID) -> bool:
         return True
 
+    @staticmethod
     async def buy(user_id: UUID):
-        logger.info(f'Покупка {Product.name}')
+        logger.info(f'Покупка {BaseProduct.name}')
 
+    @staticmethod
     async def retrieve(user_id: UUID):
-        logger.info(f'Возврат {Product.name}')
+        logger.info(f'Возврат {BaseProduct.name}')

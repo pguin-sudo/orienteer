@@ -1,16 +1,14 @@
-import numpy as np
-import matplotlib.pyplot as plt
-
 from datetime import timedelta
+from uuid import UUID
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 from orienteer.general.utils.calculations import calculate_fine
 
-from uuid import UUID
-
 mocviu = UUID('ffc80662-6c8d-4c67-a729-658717508eb1')
 
-time_values = [timedelta(minutes=t)
-               for t in np.linspace(0, 60*24*14, 1000)]
+time_values = [timedelta(minutes=t) for t in np.linspace(0, 60 * 24 * 14, 1000)]
 
 fine_mocviu = [calculate_fine(t) for t in time_values]
 

@@ -1,11 +1,9 @@
 from uuid import UUID
 
 from orienteer.general.utils.calculations import calculate_fine
-
+from ..database import async_session
 from ..repositories import orientiks
 from ...ss14.repositories import playtime, bans
-
-from ..database import async_session
 
 price = 2
 price_for_init = 1.3  # was 1.95
@@ -29,16 +27,18 @@ async def get_balance(user_id: UUID) -> int:
             await _init_balance(user_id)
             raw_info = await orientiks.get_balance_raw_info(db_session, user_id=user_id)
 
-    fine = sum([calculate_fine(ban['expiration_time'] - ban['ban_time']) for ban in
-                await bans.get_bans(user_id=user_id) if ban['expiration_time'] is not None])
+    fine = sum(
+        [calculate_fine(ban['expiration_time'] - ban['ban_time']) for ban in await bans.get_bans(user_id=user_id) if
+         ban['expiration_time'] is not None])
 
-    return int(overall.total_seconds() // 3600 * price
-               + raw_info.sponsorship
-               + raw_info.friends
-               + raw_info.pardons
-               - raw_info.time_balancing
-               - raw_info.spent
-               - fine)
+    return int(
+        overall.total_seconds() // 3600 * price
+        + raw_info.sponsorship
+        + raw_info.friends
+        + raw_info.pardons
+        - raw_info.time_balancing
+        - raw_info.spent
+        - fine)
 
 
 async def do_transfer(sender_user_id: UUID, recipient_user_id: UUID, amount: int) -> None:

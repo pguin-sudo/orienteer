@@ -1,9 +1,8 @@
-from uuid import UUID
 from datetime import timezone, datetime, timedelta
+from uuid import UUID
 
 from orienteer.general.data.orienteer.repositories import purchases
-from orienteer.general.data.products.base_product import Product
-
+from orienteer.general.data.products.base_product import BaseProduct
 from ..database import async_session
 
 
@@ -13,7 +12,7 @@ async def create_purchase(user_id: UUID, product_id, product_price):
         return purchase
 
 
-async def get_purchase_cooldown(user_id: UUID, product: Product) -> timedelta | None:
+async def get_purchase_cooldown(user_id: UUID, product: BaseProduct) -> timedelta | None:
     if product.cooldown is None:
         return None
 

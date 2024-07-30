@@ -1,5 +1,6 @@
-import aiohttp
 import json
+
+import aiohttp
 
 
 async def _fetch_servers() -> list:

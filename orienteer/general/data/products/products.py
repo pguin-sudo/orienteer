@@ -1,3 +1,4 @@
+from datetime import timedelta
 from uuid import UUID
 
 from loguru import logger
@@ -5,11 +6,10 @@ from loguru import logger
 from orienteer.general.data.orienteer.services import sponsors
 from orienteer.general.data.ss14.services import bans
 from orienteer.general.utils.calculations import calculate_fine
-from .base_product import Product
-from datetime import datetime, timedelta, timezone
+from .base_product import BaseProduct
 
 
-class ColoredNick(Product):
+class ColoredNick(BaseProduct):
     id = 0
     name = 'Цветной ник в OOC чате на месяц'
     price_tag = '<:orienta:1250903370894671963>\'s'
@@ -22,19 +22,22 @@ class ColoredNick(Product):
     is_subscription = True
     cooldown = timedelta(days=31)
 
+    @staticmethod
     async def calculate_price(user_id) -> int:
         return 29
 
+    @staticmethod
     async def buy(user_id: UUID):
         logger.info(f'Покупка {ColoredNick.name}')
         await sponsors.set_colored_nick(user_id, '87cefa')
 
+    @staticmethod
     async def retrieve(user_id: UUID):
         logger.info(f'Возврат {ColoredNick.name}')
         await sponsors.set_colored_nick(user_id, None)
 
 
-class GigachatAccess(Product):
+class GigachatAccess(BaseProduct):
     id = 1
     name = 'Доступ в гигачат на месяц'
     price_tag = '<:orienta:1250903370894671963>\'s'
@@ -48,21 +51,23 @@ class GigachatAccess(Product):
     is_subscription = True
     cooldown = timedelta(days=31)
 
+    @staticmethod
     async def calculate_price(user_id) -> int:
         return 19
 
+    @staticmethod
     async def buy(user_id: UUID):
         logger.info(f'Покупка {GigachatAccess.name}')
         await sponsors.set_sponsor_chat(user_id, True)
         await sponsors.set_activation(user_id, True)
 
+    @staticmethod
     async def retrieve(user_id: UUID):
         logger.info(f'Возврат {GigachatAccess.name}')
-        await sponsors.set_sponsor_chat(user_id, False)
-        # TODO: SOMETIMES HOLD ACTIVE
+        await sponsors.set_sponsor_chat(user_id, False)  # TODO: SOMETIMES HOLD ACTIVE
 
 
-class PriorityQueue(Product):
+class PriorityQueue(BaseProduct):
     id = 2
     name = 'Приоритет в очереди на сервер на месяц'
     price_tag = '<:orienta:1250903370894671963>\'s'
@@ -75,20 +80,23 @@ class PriorityQueue(Product):
     is_subscription = True
     cooldown = timedelta(days=31)
 
+    @staticmethod
     async def calculate_price(user_id) -> int:
         return 19
 
+    @staticmethod
     async def buy(user_id: UUID):
         logger.info(f'Покупка {PriorityQueue.name}')
         await sponsors.set_priority_queue(user_id, True)
         await sponsors.set_activation(user_id, True)
 
+    @staticmethod
     async def retrieve(user_id: UUID):
         logger.info(f'Возврат {PriorityQueue.name}')
         await sponsors.set_priority_queue(user_id, False)
 
 
-class Orientalink(Product):
+class Orientalink(BaseProduct):
     id = 3
     name = 'Orientalink на месяц'
     price_tag = '<:orienta:1250903370894671963>\'s'
@@ -100,20 +108,23 @@ class Orientalink(Product):
     is_subscription = True
     cooldown = timedelta(days=31)
 
+    @staticmethod
     async def calculate_price(user_id) -> int:
         return 19
 
+    @staticmethod
     async def buy(user_id: UUID):
         logger.info(f'Покупка {Orientalink.name}')
         await sponsors.add_marking(user_id, 'Orientalink')
         await sponsors.set_activation(user_id, True)
 
+    @staticmethod
     async def retrieve(user_id: UUID):
         logger.info(f'Возврат {Orientalink.name}')
         await sponsors.remove_marking(user_id, 'Orientalink')
 
 
-class BanAnnulment(Product):
+class BanAnnulment(BaseProduct):
     id = 4
     name = 'Аннулирование бана'
     price_tag = '<:orienta:1250903370894671963>\'s за ваш последний бан'
@@ -128,6 +139,7 @@ class BanAnnulment(Product):
     is_subscription = False
     cooldown = timedelta(days=14)
 
+    @staticmethod
     async def calculate_price(user_id) -> int:
         last_ban = await bans.get_last_ban(user_id)
 
@@ -140,8 +152,9 @@ class BanAnnulment(Product):
         if expiration_time is None:
             return 999
 
-        return (calculate_fine(expiration_time - ban_time))*2.5
+        return int((calculate_fine(expiration_time - ban_time)) * 2.5)
 
+    @staticmethod
     async def can_buy(user_id: UUID) -> bool:
         last_ban = await bans.get_last_ban(user_id)
         if last_ban is None or last_ban['expiration_time'] is None:
@@ -149,14 +162,16 @@ class BanAnnulment(Product):
         else:
             return True
 
+    @staticmethod
     async def buy(user_id: UUID):
         logger.info(f'Покупка {BanAnnulment.name}')
         await bans.pardon_last_ban(user_id)
 
+    @staticmethod
     async def retrieve(user_id: UUID):
         logger.info(f'Возврат {BanAnnulment.name}')
         raise NotImplementedError
 
 
-def get_all_products() -> tuple[Product]:
+def get_all_products() -> tuple[BaseProduct]:
     return (ColoredNick, GigachatAccess, PriorityQueue, Orientalink, BanAnnulment)

@@ -1,5 +1,5 @@
-from uuid import UUID
 from datetime import datetime, timezone
+from uuid import UUID
 
 from ..dbconnection import DBConnectionContextManager
 
@@ -33,13 +33,10 @@ async def get_all_role_bans_after(ban_id: int) -> tuple:
 async def get_last_ban(user_id: UUID) -> dict | None:
     async with DBConnectionContextManager() as connection:
         ban_record = await connection.fetchrow(
-            'SELECT * FROM server_ban WHERE player_user_id = $1 ORDER BY server_ban_id DESC LIMIT 1', user_id
-        )
+            'SELECT * FROM server_ban WHERE player_user_id = $1 ORDER BY server_ban_id DESC LIMIT 1', user_id)
         if ban_record:
-            is_unbanned = await connection.fetchval(
-                'SELECT EXISTS(SELECT 1 FROM server_unban WHERE ban_id = $1)', ban_record[
-                    'server_ban_id']
-            )
+            is_unbanned = await connection.fetchval('SELECT EXISTS(SELECT 1 FROM server_unban WHERE ban_id = $1)',
+                ban_record['server_ban_id'])
             if not is_unbanned:
                 return dict(ban_record)
             else:

@@ -1,9 +1,7 @@
 from uuid import UUID
-from sqlalchemy.ext.asyncio import AsyncSession
 
-
-from ..repositories import discord_auth
 from ..database import async_session
+from ..repositories import discord_auth
 
 
 async def is_discord_linked(user_id: UUID) -> bool:

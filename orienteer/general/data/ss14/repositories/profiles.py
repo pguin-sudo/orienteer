@@ -1,4 +1,3 @@
-from uuid import UUID
 from ..dbconnection import DBConnectionContextManager
 
 

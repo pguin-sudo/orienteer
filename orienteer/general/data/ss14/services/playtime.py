@@ -1,25 +1,22 @@
+from typing import List, Any
 from uuid import UUID
 
 from orienteer.general.formatting.playtime import get_job_group_and_name
-
+from orienteer.general.formatting.time import get_formatted_timedelta
 from ..repositories import playtime
 
-from orienteer.general.formatting.time import get_formatted_timedelta
 
-
-async def get_formatted_grouped_trackers(user_id: UUID) -> tuple[str]:
+async def get_formatted_grouped_trackers(user_id: UUID) -> list[str | Any]:
     playtimes = await playtime.get_all_trackers(user_id)
 
     groups = ['', '', '', '', '', '', '', '', '', '', '']
 
     for _playtime in playtimes:
         if _playtime['tracker'] == 'Overall':
-            groups[10] = f'{get_formatted_timedelta(
-                _playtime['time_spent'])}\n\n'
+            groups[10] = f'{get_formatted_timedelta(_playtime['time_spent'])}\n\n'
         else:
             name = get_job_group_and_name(_playtime['tracker'])
-            groups[name[0]] += (f'- **{name[1]}**: {
-                                get_formatted_timedelta(_playtime['time_spent'])}\n')
+            groups[name[0]] += f'- **{name[1]}**: {get_formatted_timedelta(_playtime['time_spent'])}\n'
     return groups
 
 

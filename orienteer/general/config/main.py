@@ -1,6 +1,6 @@
 import os
-from dotenv import load_dotenv
 
+from dotenv import load_dotenv
 
 load_dotenv('.env')
 
@@ -14,11 +14,8 @@ BOT_ID = os.environ.get('BOT_ID')
 BOT_PREFIX = '/'
 
 # Webhooks
-WEBHOOKS_LOGS = {
-    'api': os.environ.get('WEBHOOKS_LOGS_API'),
-    'bot': os.environ.get('WEBHOOKS_LOGS_BOT'),
-    'checker': os.environ.get('WEBHOOKS_LOGS_CHECKER'),
-}
+WEBHOOKS_LOGS = {'api': os.environ.get('WEBHOOKS_LOGS_API'), 'bot': os.environ.get('WEBHOOKS_LOGS_BOT'),
+                 'checker': os.environ.get('WEBHOOKS_LOGS_CHECKER'), }
 WEBHOOKS_BANS = os.environ.get('WEBHOOKS_BANS')
 
 # OAuth2 settings

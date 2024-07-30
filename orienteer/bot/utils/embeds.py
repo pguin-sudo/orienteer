@@ -1,4 +1,5 @@
 import disnake
+
 from orienteer.general.config.local import DEBUG_MODE
 
 _debug_message_content = 'Бот запущен в тестовом режиме при обнаружении любого бага писать @mocviu'
@@ -10,8 +11,7 @@ _debug_message_img_url = ('https://cdn.discordapp.com/attachments/12472339555901
 def _base_embed(title='', content='', color=0x38383d):
     embed = disnake.Embed(title=title, description=content, color=color)
     if DEBUG_MODE:
-        embed.set_footer(text=_debug_message_content,
-                         icon_url=_debug_message_img_url)
+        embed.set_footer(text=_debug_message_content, icon_url=_debug_message_img_url)
     return embed
 
 

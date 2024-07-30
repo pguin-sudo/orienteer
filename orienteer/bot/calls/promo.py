@@ -1,11 +1,7 @@
+from orienteer.bot.calls.abstract import AbstractCall
 from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors, Results
-
-from orienteer.general.formatting.time import *
-
 from orienteer.general.data.orienteer.services import discord_auth, promo
-
-from .abstract import AbstractCall
 
 
 class Promo(AbstractCall):
@@ -18,5 +14,6 @@ class Promo(AbstractCall):
 
         success, content = await promo.try_promo(self.interaction.user.id, user_id, code)
 
-        await self.interaction.edit_original_message(embed=embeds.success_message(
-            Results.you_have_used_promo.value, content) if success else embeds.error_message(content=content))
+        await self.interaction.edit_original_message(embed=embeds.success_message(Results.you_have_used_promo.value,
+                                                                                  content) if success else embeds.error_message(
+            content=content))

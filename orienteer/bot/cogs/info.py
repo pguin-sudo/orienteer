@@ -1,10 +1,7 @@
-from disnake.ext.commands import Bot, BucketType
-from disnake.ext import commands
 from disnake import CommandInteraction
+from disnake.ext import commands
+from disnake.ext.commands import Bot, BucketType
 
-from loguru import logger
-
-from orienteer.bot.utils import checks
 from orienteer.bot.calls import info
 
 

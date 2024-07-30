@@ -1,8 +1,7 @@
-from uuid import UUID
 from datetime import timedelta
+from uuid import UUID
 
 from orienteer.general.data.orienteer.services import orientiks
-
 from ..dbconnection import DBConnectionContextManager
 
 
@@ -54,26 +53,13 @@ async def get_tracker(user_id: UUID, tracker: str) -> dict:
 
 
 async def add_all_time(user_id: UUID, percent) -> str:
-    full_time = {
-        "Overall": 2500,
-        "JobMedicalOfficer": 900,
-        "JobScientist": 900,
-        "JobStationEngineer": 900,
-        "JobCargoTechnician": 900,
-        "JobHeadOfPersonnel": 400,
-        "JobSecurityOfficer": 900,
-        "JobAtmosphericTechnician": 1000,
-        "JobWarden": 600,
-        "JobCaptain": 1700,
-        "JobMedicalDoctor": 300,
-        "JobMedicalIntern": 300,
-        "JobSalvageSpecialist": 600,
-        "JobChemist": 600
-    }
+    full_time = {"Overall": 2500, "JobMedicalOfficer": 900, "JobScientist": 900, "JobStationEngineer": 900,
+        "JobCargoTechnician": 900, "JobHeadOfPersonnel": 400, "JobSecurityOfficer": 900,
+        "JobAtmosphericTechnician": 1000, "JobWarden": 600, "JobCaptain": 1700, "JobMedicalDoctor": 300,
+        "JobMedicalIntern": 300, "JobSalvageSpecialist": 600, "JobChemist": 600}
     result = ''
     for tracker in full_time.keys():
         await add_playtime(user_id, tracker, int(full_time[tracker] * percent))
-        result += f'{tracker}: {int(full_time[tracker] * percent)}\n'
-        # TODO: WTF TIME BALANCING? IT IS REPO
+        result += f'{tracker}: {int(full_time[tracker] * percent)}\n'  # TODO: WTF TIME BALANCING? IT IS REPO
     await orientiks.add_time_balancing(full_time['Overall'])
     return result

@@ -6,7 +6,6 @@ from fastapi.templating import Jinja2Templates
 
 from orienteer.api.utils.authentication import check_linked, discord_auth_redirect, generate_auth_data
 
-
 router = APIRouter()
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -18,14 +17,9 @@ templates = Jinja2Templates(directory=templates_dir)
 async def discord_auth_redirect_route(request: Request, code: str = Query(...), state: str = Query(...)):
     try:
         result = await discord_auth_redirect(code, state)
-        return templates.TemplateResponse(request=request,
-                                          name='success.html',
-                                          context=result,
-                                          status_code=200)
+        return templates.TemplateResponse(request=request, name='success.html', context=result, status_code=200)
     except HTTPException as e:
-        return templates.TemplateResponse(request=request,
-                                          name='error.html',
-                                          context={'message': e.detail},
+        return templates.TemplateResponse(request=request, name='error.html', context={'message': e.detail},
                                           status_code=e.status_code)
 
 

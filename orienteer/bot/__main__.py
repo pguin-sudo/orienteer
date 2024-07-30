@@ -1,11 +1,9 @@
-import sys
 from datetime import datetime
-
-from loguru import logger
-from loguru_discord import DiscordSink
 
 from disnake import Activity, ActivityType
 from disnake.ext import commands
+from loguru import logger
+from loguru_discord import DiscordSink
 
 from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors
@@ -25,7 +23,9 @@ class OrienteerBot(commands.InteractionBot):
 
     if not DEBUG_MODE:
         async def on_slash_command_error(self, interaction, *args, **kwargs):
-            await interaction.edit_original_message(embed=embeds.error_message(Errors.unexpected_error.value, 'Пожалуйста, обратитесь к <@536086033050107914>, мы постараемся исправить её как можно скорее.'))
+            await interaction.edit_original_message(embed=embeds.error_message(Errors.unexpected_error.value,
+                                                    content='Пожалуйста, обратитесь к <@536086033050107914>, '
+                                                            'мы постараемся исправить её как можно скорее.'))
             logger.error(f"{interaction=}\n{args=}\n{kwargs=}")
 
     @property
@@ -34,10 +34,7 @@ class OrienteerBot(commands.InteractionBot):
 
 
 def main():
-    bot = OrienteerBot(
-        activity=Activity(name=BOT_NAME, type=ActivityType.playing),
-        owner_ids=USERS_OWNERS
-    )
+    bot = OrienteerBot(activity=Activity(name=BOT_NAME, type=ActivityType.playing), owner_ids=USERS_OWNERS)
 
     for e in Extensions.all():
         try:

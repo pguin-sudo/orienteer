@@ -1,14 +1,8 @@
-import uuid
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
 from uuid import UUID
 
 from orienteer.general.data.orienteer.models.sponsors import Sponsor
-
-from ..repositories import sponsors
 from ..database import async_session
-
-from orienteer.general.formatting.time import get_formatted_datetime
+from ..repositories import sponsors
 
 
 async def get_sponsor_status_and_color(user_id: UUID) -> tuple[str | None, int | None]:
@@ -26,15 +20,9 @@ async def get_sponsor_status_and_color(user_id: UUID) -> tuple[str | None, int |
 async def get_sponsor_as_dict(user_id: UUID) -> dict:
     async with async_session() as db_session:
         sponsor: Sponsor = await sponsors.get_sponsor(db_session, user_id)
-        return {
-            user_id: {
-                "tier": 1,
-                "extraSlots": sponsor.extra_slots,
-                "oocColor": sponsor.ooc_color,
-                "allowedMarkings": sponsor.allowed_markings,
-                "ghostTheme": sponsor.ghost_theme,
-                "havePriorityJoin": sponsor.have_priority_join,
-            }}
+        return {user_id: {"tier": 1, "extraSlots": sponsor.extra_slots, "oocColor": sponsor.ooc_color,
+                          "allowedMarkings": sponsor.allowed_markings, "ghostTheme": sponsor.ghost_theme,
+                          "havePriorityJoin": sponsor.have_priority_join, }}
 
 
 async def set_colored_nick(user_id: UUID, color):

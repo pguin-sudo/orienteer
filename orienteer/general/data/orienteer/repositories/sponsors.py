@@ -1,3 +1,5 @@
+from typing import Any
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -21,7 +23,7 @@ async def try_create_empty_sponsor(db_session: AsyncSession, user_id) -> Sponsor
     return sponsor[0]
 
 
-async def update_sponsor(db_session: AsyncSession, user_id, **kwargs) -> Sponsor:
+async def update_sponsor(db_session: AsyncSession, user_id, **kwargs) -> Any | None:
     sponsor = (await db_session.execute(select(Sponsor).filter_by(user_id=user_id))).fetchone()
     if sponsor is not None:
         sponsor = sponsor[0]

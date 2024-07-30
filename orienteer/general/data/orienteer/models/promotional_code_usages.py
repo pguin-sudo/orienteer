@@ -1,7 +1,8 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, BigInteger, DateTime
-from sqlalchemy.sql import func
-from sqlalchemy.dialects.postgresql import UUID
 import uuid
+
+from sqlalchemy import Column, ForeignKey, Integer, String, BigInteger, DateTime
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.sql import func
 
 from .common import Base
 
@@ -11,13 +12,12 @@ class PromotionalCodeUsages(Base):
 
     cache_id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(UUID(as_uuid=True), nullable=False)
-    promotional_code = Column(String, ForeignKey(
-        'promotional_codes.code'), nullable=False)
+    promotional_code = Column(String, ForeignKey('promotional_codes.code'), nullable=False)
     discord_user_id = Column(BigInteger)
 
     created_at = Column(DateTime, server_default=func.now())
 
-    def __init__(self, user_id: uuid.UUID, promotional_code: int, discord_user_id: int):
+    def __init__(self, user_id: uuid.UUID, promotional_code: str, discord_user_id: int):
         self.user_id = user_id
         self.promotional_code = promotional_code
         self.discord_user_id = discord_user_id

@@ -1,5 +1,5 @@
-from uuid import UUID
 from typing import AsyncGenerator
+from uuid import UUID
 
 from ..dbconnection import DBConnectionContextManager
 
