@@ -24,7 +24,7 @@ async def get_all_bans_after(ban_id: int) -> tuple:
                                       ban_id)
 
 
-async def get_all_rolebans_after(ban_id: int) -> tuple:
+async def get_all_role_bans_after(ban_id: int) -> tuple:
     async with DBConnectionContextManager() as connection:
         return await connection.fetch(
             'SELECT * FROM server_role_ban WHERE server_role_ban_id > $1 ORDER BY server_role_ban_id ASC', ban_id)

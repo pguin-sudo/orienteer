@@ -80,5 +80,9 @@ async def get_all_bans_after(ban_id) -> tuple[dict]:
     return await bans.get_all_bans_after(ban_id)
 
 
-async def get_all_rolebans_after(ban_id) -> dict:
-    return await bans.get_all_rolebans_after(ban_id)
+async def get_all_role_bans_after(ban_id) -> dict:
+    return await bans.get_all_role_bans_after(ban_id)
+
+
+async def add_ban(user_id: UUID, reason: str):
+    return await bans.add_ban(user_id, reason)

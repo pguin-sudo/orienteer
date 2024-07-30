@@ -1,15 +1,14 @@
 import asyncio
-import os
-import subprocess
 import platform
+import subprocess
 
 
 async def run_script(module_name: str):
     system = platform.system()
     if system == 'Windows':
-        subprocess.Popen(['start', 'cmd', '/k', 'py', module_name], shell=True)
+        subprocess.Popen(['start', 'cmd', '/k', 'poetry', 'run', 'py', '-m', module_name], shell=True)
     elif system == 'Linux':
-        subprocess.call(['gnome-terminal', '--', 'py', '-m', module_name])
+        subprocess.call(['gnome-terminal', '--', 'poetry', 'run', 'py', '-m', module_name])
     else:
         print(f'Your os ({system}) isn\'t supported yet')
 

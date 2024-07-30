@@ -59,7 +59,7 @@ def upgrade() -> None:
     op.create_table('sent_bans',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('last_sent_ban_id', sa.Integer(), nullable=True),
-    sa.Column('last_sent_roleban_id', sa.Integer(), nullable=True),
+    sa.Column('last_sent_role_ban_id', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('sponsors',

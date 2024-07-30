@@ -9,4 +9,4 @@ class SentBan(Base):
 
     id = Column(Integer, primary_key=True)
     last_sent_ban_id = Column(Integer)
-    last_sent_roleban_id = Column(Integer)
+    last_sent_role_ban_id = Column(Integer)

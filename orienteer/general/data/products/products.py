@@ -140,7 +140,7 @@ class BanAnnulment(Product):
         if expiration_time is None:
             return 999
 
-        return (await calculate_fine(expiration_time - ban_time))*2.5
+        return (calculate_fine(expiration_time - ban_time))*2.5
 
     async def can_buy(user_id: UUID) -> bool:
         last_ban = await bans.get_last_ban(user_id)

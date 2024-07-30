@@ -35,9 +35,11 @@ async def send_discord_message(message, username, embed_description, embed_title
         'Content-Type': 'application/json'
     }
 
+    status = None
     async with aiohttp.ClientSession() as session:
         async with session.post(webhook, data=json.dumps(data), headers=headers) as response:
-            if response.status == 200:
+            if response.status // 100 == 2:
                 return True
-    logger.error('Can\'t send message')
+            status = response.status
+    logger.error(f'Can\'t send message {status}')
     return False

@@ -1,21 +1,25 @@
 import asyncio
-from loguru import logger
 
-from orienteer.checker.bans_checker.__main__ import schedule_bans
-from orienteer.checker.roles_checker.__main__ import schedule_roles
-from orienteer.checker.seasons_checker.__main__ import schedule_seasons
-from orienteer.checker.subscriptions_checker.__main__ import schedule_subscriptions
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from loguru import logger
+from loguru_discord import DiscordSink
+
+from orienteer.checker.schedules.bans import setup_bans_schedule
+from orienteer.general.config.local import WEBHOOKS_LOGS
+
+logger.add(DiscordSink(WEBHOOKS_LOGS['checker']))
+
+
+async def main():
+    scheduler = AsyncIOScheduler()
+
+    setup_bans_schedule(scheduler)
+
+    scheduler.start()
+
+    while True:
+        await asyncio.sleep(1)
 
 
 if __name__ == '__main__':
-    logger.info('Running bans checker...')
-    asyncio.run(schedule_bans())
-
-    logger.info('Running roles checker...')
-    asyncio.run(schedule_roles())
-
-    logger.info('Running roles checker...')
-    asyncio.run(schedule_seasons())
-
-    logger.info('Running subscriptions checker...')
-    asyncio.run(schedule_subscriptions())
+    asyncio.run(main())

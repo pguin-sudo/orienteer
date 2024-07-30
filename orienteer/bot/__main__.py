@@ -12,7 +12,7 @@ from orienteer.bot.utils.content_locale import Errors
 from orienteer.bot.utils.extensions import Extensions
 from orienteer.general.config.local import BOT_NAME, BOT_TOKEN, USERS_OWNERS, WEBHOOKS_LOGS, DEBUG_MODE
 
-logger.add(DiscordSink(WEBHOOKS_LOGS))
+logger.add(DiscordSink(WEBHOOKS_LOGS['bot']))
 
 
 class OrienteerBot(commands.InteractionBot):
@@ -51,11 +51,4 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        if not sys.platform in ("win32", "cygwin", "cli"):
-            import uvloop
-
-            uvloop.install()
-    except ImportError:
-        logger.opt(lazy=True).info("Bot launch without speed extra.")
     main()
