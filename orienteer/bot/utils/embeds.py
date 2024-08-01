@@ -1,6 +1,6 @@
 import disnake
 
-from orienteer.general.config.local import DEBUG_MODE
+from orienteer.general.config import DEBUG_MODE
 
 _debug_message_content = 'Бот запущен в тестовом режиме при обнаружении любого бага писать @mocviu'
 _debug_message_img_url = ('https://cdn.discordapp.com/attachments/1247233955590180896/1249057919601868952/'

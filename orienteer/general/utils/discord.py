@@ -4,7 +4,7 @@ import aiohttp
 from aiohttp.client_exceptions import ClientConnectorError
 from disnake import Webhook, Embed
 
-from orienteer.general.config.local import BOT_TOKEN
+from orienteer.general.config import BOT_TOKEN
 
 
 async def add_role(user_id: int, role_id: int):

@@ -1,6 +1,6 @@
 import aiohttp
 
-from orienteer.general.config.local import AUTH_CLIENT_SECRET, AUTH_REDIRECT_URI, BOT_ID
+from orienteer.general.config import AUTH_CLIENT_SECRET, AUTH_REDIRECT_URI, BOT_ID
 
 
 async def exchange_code(code):

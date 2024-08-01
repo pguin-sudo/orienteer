@@ -8,7 +8,7 @@ from loguru_discord import DiscordSink
 
 from orienteer.api.routes import authentication, sponsors
 from orienteer.api.utils.authentication import generate_link
-from orienteer.general.config.local import WEBHOOKS_LOGS
+from orienteer.general.config import WEBHOOKS_LOGS
 
 logger.add(DiscordSink(WEBHOOKS_LOGS['api']))
 

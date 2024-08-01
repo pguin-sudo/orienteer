@@ -4,7 +4,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from loguru import logger
 
-from orienteer.general.config.local import WEBHOOKS_BANS
+from orienteer.general.config import WEBHOOKS_BANS
 from orienteer.general.data.orienteer.services import orientiks, sent_bans
 from orienteer.general.data.ss14.services import bans, player
 from orienteer.general.formatting.playtime import get_job_group_and_name

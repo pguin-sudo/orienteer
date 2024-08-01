@@ -3,7 +3,7 @@ from contextlib import AbstractAsyncContextManager
 import asyncpg
 from asyncpg.pool import Pool
 
-from orienteer.general.config.local import (POSTGRES_SS14_HOST, POSTGRES_SS14_PORT, POSTGRES_SS14_DBNAME,
+from orienteer.general.config import (POSTGRES_SS14_HOST, POSTGRES_SS14_PORT, POSTGRES_SS14_DBNAME,
                                             POSTGRES_SS14_USER, POSTGRES_SS14_PASSWORD)
 
 

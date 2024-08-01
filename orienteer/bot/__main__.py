@@ -8,7 +8,7 @@ from loguru_discord import DiscordSink
 from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors
 from orienteer.bot.utils.extensions import Extensions
-from orienteer.general.config.local import BOT_NAME, BOT_TOKEN, USERS_OWNERS, WEBHOOKS_LOGS, DEBUG_MODE
+from orienteer.general.config import BOT_NAME, BOT_TOKEN, USERS_OWNERS, WEBHOOKS_LOGS, DEBUG_MODE
 
 logger.add(DiscordSink(WEBHOOKS_LOGS['bot']))
 

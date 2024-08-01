@@ -11,7 +11,7 @@ from orienteer.general.data.orienteer.services import discord_auth
 from orienteer.general.data.ss14.services import player
 from orienteer.general.utils.discord import add_role
 
-from orienteer.general.config.local import AUTH_API_KEY, AUTH_REDIRECT_URI, BOT_ID, ROLES_PASSENGER
+from orienteer.general.config import AUTH_API_KEY, AUTH_REDIRECT_URI, BOT_ID, ROLES_PASSENGER
 
 
 async def generate_link(user_id: UUID):

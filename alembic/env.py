@@ -1,4 +1,4 @@
-from orienteer.general.config.local import (POSTGRES_ORIENTEER_DBNAME, POSTGRES_ORIENTEER_HOST,
+from orienteer.general.config import (POSTGRES_ORIENTEER_DBNAME, POSTGRES_ORIENTEER_HOST,
                                             POSTGRES_ORIENTEER_PASSWORD, POSTGRES_ORIENTEER_PORT,
                                             POSTGRES_ORIENTEER_USER)
 from logging.config import fileConfig
