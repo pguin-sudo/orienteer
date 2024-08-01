@@ -1,7 +1,8 @@
-import json
+from datetime import datetime
 
 import aiohttp
-from loguru import logger
+from aiohttp.client_exceptions import ClientConnectorError
+from disnake import Webhook, Embed
 
 from orienteer.general.config.local import BOT_TOKEN
 
@@ -16,17 +17,23 @@ async def add_role(user_id: int, role_id: int):
             return response.status
 
 
-async def send_discord_message(message, username, embed_description, embed_title, webhook, color) -> bool:
-    data = {'username': username, 'content': message,
-            'embeds': [{'title': embed_title, 'description': embed_description, 'color': color}]}
-
-    headers = {'Content-Type': 'application/json'}
-
-    status = None
+async def send_discord_message(webhook_url: str, username: str, title: str, description: str, color: int,
+                               timestamp: datetime = None, image_url: str = None, message_id: int = None) -> bool:
     async with aiohttp.ClientSession() as session:
-        async with session.post(webhook, data=json.dumps(data), headers=headers) as response:
-            if response.status // 100 == 2:
-                return True
-            status = response.status
-    logger.error(f'Can\'t send message {status}')
-    return False
+        webhook = Webhook.from_url(webhook_url, session=session)
+        if message_id:
+            embed = Embed(title=title, description=description, color=color, timestamp=timestamp)
+            embed.set_image(image_url)
+            try:
+                await webhook.edit_message(message_id, embed=embed)
+            except ClientConnectorError:
+                return False
+            return True
+        else:
+            embed = Embed(title=title, description=description, color=color, timestamp=timestamp)
+            embed.set_image(image_url)
+            try:
+                await webhook.send(username=username, embed=embed)
+            except ClientConnectorError:
+                return False
+            return True

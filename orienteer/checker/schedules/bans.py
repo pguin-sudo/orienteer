@@ -42,28 +42,26 @@ async def check_bans():
         if expiration_time is None:
             expiration_time_str = 'Никогда'
             embed_title = f'**Пермабан** {server_ban_id}'
-            color = 15224655
+            color = int('e84f4f', 16)
             fine = '∞'
         else:
             expiration_time_str = get_formatted_datetime(expiration_time)
             embed_title = f'**Бан** {server_ban_id}'
-            color = 6063574
+            color = int('5c85d6', 16)
             fine = calculate_fine(expiration_time - ban_time)
 
-        message = ''
-        embed_disc = f'**Нарушитель:** {player_name}\n'
-        embed_disc += f'**Администратор:** {admin_name}\n\n'
-        embed_disc += f'**Время получения:** {get_formatted_datetime(ban_time)}\n'
-        embed_disc += f'**Время снятия:** {expiration_time_str}\n'
-        embed_disc += f'**Штраф:** {fine} <:orienta:1250903370894671963>\'s\n\n'
-        embed_disc += f'**Причина:** {reason}\n'
+        embed_desc = f'**Нарушитель:** {player_name}\n'
+        embed_desc += f'**Администратор:** {admin_name}\n\n'
+        embed_desc += f'**Время получения:** {get_formatted_datetime(ban_time)}\n'
+        embed_desc += f'**Время снятия:** {expiration_time_str}\n'
+        embed_desc += f'**Штраф:** {fine} <:orienta:1250903370894671963>\'s\n\n'
+        embed_desc += f'**Причина:** {reason}\n'
 
-        if not await send_discord_message(message, USERNAME, embed_disc, embed_title, WEBHOOKS_BANS, color):
-            return
+        await send_discord_message(WEBHOOKS_BANS, USERNAME, embed_title, embed_desc, color)
 
         await sent_bans.set_last_sent_ban_id(server_ban_id)
 
-        logger.info('New ban with ID: ', server_ban_id)
+        logger.info('Bans >>> New ban with ID: ', server_ban_id)
 
 
 async def check_role_bans():
@@ -85,28 +83,26 @@ async def check_role_bans():
 
         if expiration_time is None:
             expiration_time = 'Никогда'
-            color = 13730733
+            color = int('d183ad', 16)
         else:
             expiration_time = get_formatted_datetime(expiration_time)
-            color = 16761035
+            color = int('cbc0ff', 16)
 
         job_description = get_job_group_and_name(str(role_id).replace(':', ''))[1]
 
-        message = ''
         embed_title = f'**Ролебан** {server_role_ban_id}'
-        embed_disc = f'**Нарушитель:** {player_name}\n'
-        embed_disc += f'**Администратор:** {admin_name}\n\n'
-        embed_disc += f'**Роль:** {job_description}\n\n'
-        embed_disc += f'**Время получения:** {get_formatted_datetime(ban_time)}\n'
-        embed_disc += f'**Время снятия:** {expiration_time}\n\n'
-        embed_disc += f'**Причина:** {reason}\n'
+        embed_desc = f'**Нарушитель:** {player_name}\n'
+        embed_desc += f'**Администратор:** {admin_name}\n\n'
+        embed_desc += f'**Роль:** {job_description}\n\n'
+        embed_desc += f'**Время получения:** {get_formatted_datetime(ban_time)}\n'
+        embed_desc += f'**Время снятия:** {expiration_time}\n\n'
+        embed_desc += f'**Причина:** {reason}\n'
 
-        if not await send_discord_message(message, USERNAME, embed_disc, embed_title, WEBHOOKS_BANS, color):
-            return
+        await send_discord_message(WEBHOOKS_BANS, USERNAME, embed_title, embed_desc, color)
 
         await sent_bans.set_last_sent_role_ban_id(server_role_ban_id)
 
-        logger.info('New role_ban with ID: ', server_role_ban_id)
+        logger.info('Bans >>> New role_ban with ID: ', server_role_ban_id)
 
 
 def setup_bans_schedule(scheduler: AsyncIOScheduler):

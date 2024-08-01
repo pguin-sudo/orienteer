@@ -17,6 +17,7 @@ BOT_PREFIX = '/'
 WEBHOOKS_LOGS = {'api': os.environ.get('WEBHOOKS_LOGS_API'), 'bot': os.environ.get('WEBHOOKS_LOGS_BOT'),
                  'checker': os.environ.get('WEBHOOKS_LOGS_CHECKER'), }
 WEBHOOKS_BANS = os.environ.get('WEBHOOKS_BANS')
+WEBHOOKS_SEASONS = os.environ.get('WEBHOOKS_SEASONS')
 
 # OAuth2 settings
 AUTH_API_ENDPOINT = 'https://discord.com/api/v10'
@@ -44,7 +45,5 @@ USERS_OWNERS = set(map(int, os.environ.get('USERS_OWNERS').split(',')))
 ROLES_PASSENGER = 1249746549937016945
 ROLES_YOUTUBER = 1246884539142246470
 
-# Celery
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
-REDIS_DB = 0
+# Seasons
+SEASON_MESSAGE_ID = 1268478529700368456

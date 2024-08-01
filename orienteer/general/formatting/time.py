@@ -6,6 +6,9 @@ def get_formatted_datetime(timestamp: datetime) -> str:
 
 
 def get_formatted_timedelta(timedelta_: timedelta) -> str:
+    if timedelta_.total_seconds() == 0:
+        return '0 ч., 0 мин.'
+
     days, hours, minutes = timedelta_.days, timedelta_.seconds // 3600, timedelta_.seconds % 3600 // 60
     days_string = '' if days == 0 else f'{int(days)} д.'
     hours_string = '' if hours == 0 else f', {int(hours)} ч.' if days > 0 else f'{int(hours)} ч.'

@@ -173,5 +173,12 @@ class BanAnnulment(BaseProduct):
         raise NotImplementedError
 
 
+def get_product(id_: int) -> BaseProduct | None:
+    for product in get_all_products():
+        if product.id == id_:
+            return product
+    return None
+
+
 def get_all_products() -> tuple[BaseProduct]:
     return (ColoredNick, GigachatAccess, PriorityQueue, Orientalink, BanAnnulment)
