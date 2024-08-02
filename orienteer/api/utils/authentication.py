@@ -36,7 +36,7 @@ async def generate_auth_data(user_id: UUID, key: str):
     if key != AUTH_API_KEY:
         raise HTTPException(status_code=401, detail='Unauthorized')
 
-    auth_url = generate_link(user_id)
+    auth_url = await generate_link(user_id)
     qrcode_data = generate_qr_code(auth_url)
     return {'Url': auth_url, 'Qrcode': qrcode_data}
 
