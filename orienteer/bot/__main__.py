@@ -34,6 +34,8 @@ class OrienteerBot(commands.InteractionBot):
 
 
 def main():
+    logger.success('<<<<<<<<<<<<<<<< Bot module is starting >>>>>>>>>>>>>>>>')
+
     bot = OrienteerBot(activity=Activity(name=BOT_NAME, type=ActivityType.playing), owner_ids=USERS_OWNERS)
 
     for e in Extensions.all():

@@ -13,6 +13,8 @@ logger.add(DiscordSink(WEBHOOKS_LOGS['checker']))
 
 
 async def main():
+    logger.success('<<<<<<<<<<<<<<<< Checker module is starting >>>>>>>>>>>>>>>>')
+
     scheduler = AsyncIOScheduler()
 
     await setup_bans_schedule(scheduler)
