@@ -45,6 +45,7 @@ class Transfer(AbstractCall):
         if amount <= 0:
             await self.interaction.edit_original_message(
                 embed=embeds.error_message(content=Errors.incorrect_amount.value))
+            return
 
         if recipient_user_id is None:
             await self.interaction.edit_original_message(
