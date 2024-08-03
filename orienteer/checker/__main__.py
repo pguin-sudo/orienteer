@@ -5,7 +5,8 @@ from loguru import logger
 from loguru_discord import DiscordSink
 
 from orienteer.checker.schedules.bans import setup_bans_schedule
-from orienteer.checker.schedules.seasons import setup_seasons_schedule, check_season_and_update
+from orienteer.checker.schedules.seasons import setup_seasons_schedule
+from orienteer.checker.schedules.subscriptions import setup_subscriptions_schedule
 from orienteer.general.config import WEBHOOKS_LOGS
 
 logger.add(DiscordSink(WEBHOOKS_LOGS['checker']))
@@ -14,9 +15,9 @@ logger.add(DiscordSink(WEBHOOKS_LOGS['checker']))
 async def main():
     scheduler = AsyncIOScheduler()
 
-    await check_season_and_update()
-    setup_bans_schedule(scheduler)
-    setup_seasons_schedule(scheduler)
+    await setup_bans_schedule(scheduler)
+    await setup_seasons_schedule(scheduler)
+    await setup_subscriptions_schedule(scheduler)
 
     scheduler.start()
 

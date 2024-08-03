@@ -12,7 +12,7 @@ class DiscordAuth(Base):
     discord_username = Column(Text, nullable=False, unique=True)
     email = Column(Text)
 
-    created_at = Column(DateTime, server_default=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     def __init__(self, user_id, discord_user_id, discord_username, email=None):
         self.user_id = user_id

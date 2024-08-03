@@ -10,7 +10,7 @@ class PromotionalCode(Base):
     usages = Column(Integer, nullable=False, default=10000)
     jobs = Column(JSON, nullable=False, default={})
     dependencies = Column(JSON, nullable=False, default={})
-    expiration_date = Column(DateTime, nullable=True)
+    expiration_date = Column(DateTime(timezone=True), nullable=True)
     is_creator = Column(Boolean, nullable=False, default=False)
 
     def __init__(self, code, usages=None, jobs=None, dependencies=None, expiration_date=None, is_creator=None):

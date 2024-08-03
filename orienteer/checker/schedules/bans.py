@@ -61,7 +61,7 @@ async def check_bans():
 
         await sent_bans.set_last_sent_ban_id(server_ban_id)
 
-        logger.info('Bans >>> New ban with ID: ', server_ban_id)
+        logger.info(f'New ban with ID: {server_ban_id}')
 
 
 async def check_role_bans():
@@ -102,9 +102,12 @@ async def check_role_bans():
 
         await sent_bans.set_last_sent_role_ban_id(server_role_ban_id)
 
-        logger.info('Bans >>> New role_ban with ID: ', server_role_ban_id)
+        logger.info(f'New role_ban with ID: {server_role_ban_id}')
 
 
-def setup_bans_schedule(scheduler: AsyncIOScheduler):
+async def setup_bans_schedule(scheduler: AsyncIOScheduler):
+    await check_bans()
+    await check_role_bans()
+
     scheduler.add_job(check_bans, CronTrigger(minute='*'))
     scheduler.add_job(check_role_bans, CronTrigger(minute='*'))

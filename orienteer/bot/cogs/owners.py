@@ -20,7 +20,6 @@ class Owners(commands.Cog):
         ----------
         interaction: Disnake interaction
         question: вопрос
-
         """
 
         async with owners.Ask(interaction) as call:

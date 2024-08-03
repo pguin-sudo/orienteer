@@ -9,7 +9,7 @@ from fastapi import HTTPException
 from orienteer.api.utils.discord import exchange_code, get_user_info
 from orienteer.general.data.orienteer.services import discord_auth
 from orienteer.general.data.ss14.services import player
-from orienteer.general.utils.discord import add_role
+from orienteer.general.utils.discord import set_role
 
 from orienteer.general.config import AUTH_API_KEY, AUTH_REDIRECT_URI, BOT_ID, ROLES_PASSENGER
 
@@ -77,6 +77,6 @@ async def discord_auth_redirect(code: str, state: str) -> dict:
 
     discord_user_id = int(user_info['id'])
     await discord_auth.link_discord(user_id, discord_user_id, user_info['username'])
-    await add_role(discord_user_id, ROLES_PASSENGER)
+    await set_role(discord_user_id, ROLES_PASSENGER)
 
     return {'discord_name': user_info['username'], 'user_name': user_name}

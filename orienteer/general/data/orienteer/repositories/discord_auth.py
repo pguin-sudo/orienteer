@@ -19,12 +19,12 @@ async def link_discord(db_session: AsyncSession, user_id: UUID, discord_user_id:
     await db_session.commit()
 
 
-async def get_discord_user_id_by_user_id(db_session: AsyncSession, user_id: UUID) -> str | None:
+async def get_discord_user_id_by_user_id(db_session: AsyncSession, user_id: UUID) -> int | None:
     query = select(DiscordAuth.discord_user_id).filter(user_id == DiscordAuth.user_id)
     result = await db_session.execute(query)
     discord_user_id = result.scalar_one_or_none()
     if discord_user_id is not None:
-        return str(discord_user_id)
+        return int(discord_user_id)
     else:
         return None
 

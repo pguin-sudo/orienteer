@@ -29,6 +29,10 @@ class Errors(Enum):
     promo_used_ss14_account = 'Промокод уже был использован для этого ckey!'
     creator_promo_used = 'Промокод креатора уже был использован!'
 
+    # Sponsors
+    ooc_color_is_none = 'У вас нет подписки на цвет спонсора'
+    incorrect_color = 'Некорректное значение цвета'
+
     # Global
     unexpected_error = 'Непредвиденная ошибка'
 

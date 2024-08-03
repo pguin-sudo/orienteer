@@ -1,8 +1,10 @@
+from abc import ABC
+
 from disnake import CommandInteraction
 from loguru import logger
 
 
-class AbstractCall:
+class AbstractCall(ABC):
     def __init__(self, interaction: CommandInteraction, ephemeral=False) -> None:
         self.interaction = interaction
         self.ephemeral = ephemeral

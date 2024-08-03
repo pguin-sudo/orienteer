@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, DateTime, String, ARRAY, JSON
+from sqlalchemy import Column, Integer, DateTime, String, ARRAY
 
 from .common import Base
 
@@ -7,7 +7,7 @@ class Season(Base):
     __tablename__ = 'seasons'
 
     season_id = Column(Integer, primary_key=True, autoincrement=True)
-    start_date = Column(DateTime, nullable=False)
+    start_date = Column(DateTime(timezone=True), nullable=False)
     title = Column(String(256), nullable=False)
     description = Column(String, nullable=False)
     color = Column(String(6), nullable=False)

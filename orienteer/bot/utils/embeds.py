@@ -15,17 +15,21 @@ def _base_embed(title='', content='', color=0x38383d):
     return embed
 
 
-def error_message(title='Ошибка', content=''):
-    return _base_embed(title='<:beer:1180521543390986324> ' + title, content=content, color=0xdb3c30)
+def error_message(title='Ошибка', content='', color=0xdb3c30):
+    color = 0xdb3c30 if color is None else color
+    return _base_embed(title='<:beer:1180521543390986324> ' + title, content=content, color=color)
 
 
-def success_message(title='Успех', content=''):
-    return _base_embed(title='✅ ' + title, content=content, color=0x3cdb30)
+def success_message(title='Успех', content='', color=0x3cdb30):
+    color = 0x3cdb30 if color is None else color
+    return _base_embed(title='✅ ' + title, content=content, color=color)
 
 
 def result_message(title='Результат:', content='', color=0x5c85d6):
+    color = 0x5c85d6 if color is None else color
     return _base_embed(title=title, content=content, color=color)
 
 
 def char_embed(title='Неизвестный персонаж', content='', color=0xfff):
+    color = 0xfff if color is None else color
     return _base_embed(title=title, content=content, color=color)

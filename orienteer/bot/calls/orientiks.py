@@ -1,14 +1,15 @@
 from disnake import Interaction
 from disnake.ui import View, Button
 
+from orienteer.bot.calls.abstract import AbstractCall
 from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors, Results, Success
+from orienteer.checker.schedules import subscriptions
 from orienteer.general.data.orienteer.services import discord_auth, orientiks, purchases
 from orienteer.general.data.products import products
-from orienteer.general.data.products.base_product import BaseProduct
+from orienteer.general.data.products.abstract_product import AbstractProduct
 from orienteer.general.data.ss14.services import player
 from orienteer.general.formatting.time import *
-from orienteer.bot.calls.abstract import AbstractCall
 
 
 class Balance(AbstractCall):
@@ -67,7 +68,7 @@ class Transfer(AbstractCall):
                 embed=embeds.error_message(content=Errors.not_enough_money.value))
             return
 
-        if await orientiks.get_balance(recipient_user_id) < amount:
+        if await orientiks.get_balance(recipient_user_id) < 0:
             await self.interaction.edit_original_message(
                 embed=embeds.error_message(content=Errors.you_can_not_transfer_to_account_with_negative_balance.value))
             return
@@ -97,7 +98,7 @@ class Shop(AbstractCall):
 
         products_array = products.get_all_products()
 
-        def create_callback(product: BaseProduct):
+        def create_callback(product_: AbstractProduct):
             async def buy(interaction: Interaction):
                 responding_user_id = await discord_auth.get_user_id_by_discord_user_id(interaction.user.id)
 
@@ -108,33 +109,34 @@ class Shop(AbstractCall):
                         embed=embeds.error_message(content=Errors.not_shop_owner.value), view=button_view)
                     return
 
-                if not (await product.can_buy(responding_user_id)):
+                if not (await product_.can_buy(responding_user_id)):
                     await self.interaction.edit_original_message(
                         embed=embeds.error_message(content=Errors.not_have_permissions.value), view=button_view)
                     return
 
-                purchase_cooldown = await purchases.get_purchase_cooldown(responding_user_id, product)
+                purchase_cooldown = await purchases.get_purchase_cooldown(responding_user_id, product_)
                 if purchase_cooldown is not None:
                     await self.interaction.edit_original_message(embed=embeds.error_message(
                         content=f'{Errors.product_is_in_cooldown_for.value} {get_formatted_timedelta(purchase_cooldown)}'),
                         view=button_view)
                     return
 
-                price = await product.calculate_price(user_id)
-                if await orientiks.get_balance(responding_user_id) < price:
+                price_ = await product_.calculate_price(user_id)
+                if await orientiks.get_balance(responding_user_id) < price_:
                     await self.interaction.edit_original_message(
                         embed=embeds.error_message(content=Errors.not_enough_money.value), view=button_view)
                     return
 
-                product_info = f'{product.description}\n**Цена:** {price} {product.price_tag}'
+                product_info_ = f'{product_.description}\n**Цена:** {price_} {product_.price_tag}'
 
-                await product.buy(responding_user_id)
-                await purchases.create_purchase(responding_user_id, product.id, price)
-                await orientiks.spent(responding_user_id, price)
+                await product_.buy(responding_user_id)
+                await purchases.create_purchase(responding_user_id, product_.id, price_)
+                await orientiks.spent(responding_user_id, price_)
 
                 await self.interaction.edit_original_message(
-                    embed=embeds.error_message(title=f'{Results.you_have_bought_product.value} **{product.name}**:',
-                                               content=product_info), view=button_view)
+                    embed=embeds.success_message(
+                        title=f'{Results.you_have_bought_product.value} **"{product_.name}"**:',
+                        content=product_info_), view=button_view)
 
             return buy
 

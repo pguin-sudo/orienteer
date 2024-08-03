@@ -22,7 +22,7 @@ async def check_season_and_update():
     description += f'### Самые активные игроки:\n'
     for i, leader in enumerate(leaderboard):
         discord_user_id = await discord_auth.get_discord_user_id_by_user_id(leader[0])
-        discord_ping = ' (<@' + discord_user_id + '>)' if discord_user_id else ''
+        discord_ping = ' (<@' + str(discord_user_id) + '>)' if discord_user_id else ''
         description += f'{i + 1}. **{await player.get_ckey(leader[0])}{discord_ping}:** {get_formatted_timedelta(leader[1])}\n'
 
     description += f'### Награды:\n'
@@ -32,10 +32,12 @@ async def check_season_and_update():
     if not await send_discord_message(WEBHOOKS_SEASONS, USERNAME, title=season.title, description=description,
                                       color=int(season.color, 16), timestamp=datetime.now(timezone.utc),
                                       image_url=season.image_url, message_id=SEASON_MESSAGE_ID):
-        logger.info('Seasons >>> Leaderboard has not updated')
+        logger.info('Leaderboard has not updated')
 
-    logger.info('Seasons >>> Leaderboard updated')
+    logger.info('Leaderboard updated')
 
 
-def setup_seasons_schedule(scheduler: AsyncIOScheduler):
+async def setup_seasons_schedule(scheduler: AsyncIOScheduler):
+    await check_season_and_update()
+
     scheduler.add_job(check_season_and_update, CronTrigger(minute='*/10'))

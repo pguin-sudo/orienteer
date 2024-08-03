@@ -1,3 +1,4 @@
+from abc import ABC
 from dataclasses import dataclass
 from datetime import timedelta
 from uuid import UUID
@@ -6,7 +7,7 @@ from loguru import logger
 
 
 @dataclass
-class BaseProduct:
+class AbstractProduct(ABC):
     id: int
     name: str = 'Продукт'
     price_tag: str = ' ориентиков за неделю'
@@ -28,8 +29,8 @@ class BaseProduct:
 
     @staticmethod
     async def buy(user_id: UUID):
-        logger.info(f'Покупка {BaseProduct.name}')
+        logger.info(f'Покупка {AbstractProduct.name}')
 
     @staticmethod
     async def retrieve(user_id: UUID):
-        logger.info(f'Возврат {BaseProduct.name}')
+        logger.info(f'Возврат {AbstractProduct.name}')
