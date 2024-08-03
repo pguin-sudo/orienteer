@@ -1,7 +1,7 @@
 from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
+from sqlalchemy import select
 
 from orienteer.general.data.orienteer.models.sponsors import Sponsor
 

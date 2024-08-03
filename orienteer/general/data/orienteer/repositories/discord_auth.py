@@ -1,7 +1,7 @@
 from uuid import UUID
 
+from sqlalchemy import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
 
 from ..models.discord_auth import DiscordAuth
 
@@ -37,3 +37,8 @@ async def get_user_id_by_discord_user_id(db_session: AsyncSession, discord_user_
         return user_id
     else:
         return None
+
+
+async def get_all_authorized(db_session: AsyncSession) -> tuple[DiscordAuth, ...]:
+    result = await db_session.execute(select(DiscordAuth).order_by(desc(DiscordAuth.created_at)))
+    return tuple(result.scalars().all())

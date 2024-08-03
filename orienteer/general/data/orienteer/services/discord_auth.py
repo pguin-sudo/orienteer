@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from ..database import async_session
+from ..models.discord_auth import DiscordAuth
 from ..repositories import discord_auth
 
 
@@ -22,3 +23,8 @@ async def get_discord_user_id_by_user_id(user_id: UUID) -> str | None:
 async def get_user_id_by_discord_user_id(discord_user_id: int) -> UUID | None:
     async with async_session() as db_session:
         return await discord_auth.get_user_id_by_discord_user_id(db_session, discord_user_id)
+
+
+async def get_all_authorized() -> tuple[DiscordAuth, ...]:
+    async with async_session() as db_session:
+        return await discord_auth.get_all_authorized(db_session)

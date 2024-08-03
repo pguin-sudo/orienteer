@@ -17,9 +17,9 @@ async def get_formatted_bans_and_total_stats(user_id: UUID) -> tuple[list[tuple[
         ban_time = ban['ban_time']
         expiration_time = ban['expiration_time']
         reason = ban['reason']
-        banningadmin = ban['banning_admin']
+        banning_admin = ban['banning_admin']
 
-        admin_name = await get_ckey(banningadmin) if banningadmin is not None else 'Неизвестно'
+        admin_name = await get_ckey(banning_admin) if banning_admin is not None else 'Неизвестно'
         bantime_str = get_formatted_datetime(ban_time)
 
         if expiration_time is None:
@@ -83,3 +83,9 @@ async def get_all_role_bans_after(ban_id) -> tuple[dict]:
 
 async def add_ban(user_id: UUID, reason: str):
     return await bans.add_ban(user_id, reason)
+
+
+async def get_fine(user_id: UUID) -> int:
+    return int(sum(
+        [calculate_fine(ban['expiration_time'] - ban['ban_time']) for ban in await bans.get_bans(user_id=user_id) if
+         ban['expiration_time'] is not None]))

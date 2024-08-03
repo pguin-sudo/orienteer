@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 
 import aiohttp
@@ -16,10 +17,14 @@ async def set_role(discord_user_id: int, role_id: int, remove: bool = False):
     async with aiohttp.ClientSession() as session:
         if remove:
             async with session.delete(url, headers=headers) as response:
-                logger.debug(response.status)
+                if response.status == 429:
+                    await asyncio.sleep(5)
+                    await set_role(discord_user_id, role_id, remove)
         else:
             async with session.put(url, headers=headers) as response:
-                logger.debug(response.status)
+                if response.status == 429:
+                    await asyncio.sleep(5)
+                    await set_role(discord_user_id, role_id, remove)
 
 
 async def send_discord_message(webhook_url: str, username: str, title: str, description: str, color: int,

@@ -150,8 +150,8 @@ class Profile(AbstractCall):
             ckey = await player.get_ckey(user_id)
 
         creator = await promo.get_creator_code(user_id)
-        first_seen = await seen_time.get_first_seen_time(user_id)
-        last_seen = await seen_time.get_last_seen_time(user_id)
+        first_seen = await seen_time.get_formatted_first_seen_time(user_id)
+        last_seen = await seen_time.get_formatted_last_seen_time(user_id)
         all_roles = await playtime.get_formatted_grouped_trackers(user_id)
         most_popular_role = await playtime.get_most_popular_role(user_id)
         sponsor_level, color = await sponsors.get_sponsor_status_and_color(user_id)
