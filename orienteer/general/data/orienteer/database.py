@@ -9,4 +9,6 @@ DATABASE_URL = (f'postgresql+asyncpg://{POSTGRES_ORIENTEER_USER}:{POSTGRES_ORIEN
 
 async_engine = create_async_engine(DATABASE_URL, echo=DEBUG_MODE, future=True)
 
-async_session = sessionmaker(bind=async_engine, class_=AsyncSession, expire_on_commit=False, )
+# async_session = AsyncSession(async_engine, expire_on_commit=False)
+
+async_session = sessionmaker(async_engine, expire_on_commit=False, class_=AsyncSession)

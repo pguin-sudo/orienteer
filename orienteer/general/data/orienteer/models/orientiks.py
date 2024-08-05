@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, UUID
+from sqlalchemy import Integer, UUID
+from sqlalchemy.orm import mapped_column
 
 from .common import Base
 
@@ -6,12 +7,12 @@ from .common import Base
 class Orientiks(Base):
     __tablename__ = 'orientiks'
 
-    user_id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
-    sponsorship = Column(Integer, default=0)
-    friends = Column(Integer, default=0)
-    pardons = Column(Integer, default=0)
-    time_balancing = Column(Integer, default=0)
-    spent = Column(Integer, default=0)
+    user_id = mapped_column(UUID(as_uuid=True), primary_key=True, nullable=False)
+    sponsorship = mapped_column(Integer, default=0)
+    friends = mapped_column(Integer, default=0)
+    pardons = mapped_column(Integer, default=0)
+    time_balancing = mapped_column(Integer, default=0)
+    spent = mapped_column(Integer, default=0)
 
     def __init__(self, user_id, sponsorship=0, friends=0, pardons=0, time_balancing=0, spent=0):
         self.user_id = user_id

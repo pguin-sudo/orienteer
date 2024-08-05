@@ -6,7 +6,7 @@ from sqlalchemy import select
 from orienteer.general.data.orienteer.models.sponsors import Sponsor
 
 
-async def get_sponsor(db_session: AsyncSession, user_id) -> Sponsor:
+async def get_sponsor(db_session: AsyncSession, user_id) -> Sponsor | None:
     sponsor = (await db_session.execute(select(Sponsor).filter_by(user_id=user_id))).fetchone()
     sponsor = sponsor[0] if sponsor is not None else None
     return sponsor
@@ -23,7 +23,7 @@ async def try_create_empty_sponsor(db_session: AsyncSession, user_id) -> Sponsor
     return sponsor[0]
 
 
-async def update_sponsor(db_session: AsyncSession, user_id, **kwargs) -> Any | None:
+async def update_sponsor(db_session: AsyncSession, user_id, **kwargs) -> Sponsor | None:
     sponsor = (await db_session.execute(select(Sponsor).filter_by(user_id=user_id))).fetchone()
     if sponsor is not None:
         sponsor = sponsor[0]

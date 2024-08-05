@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 
 
-def get_formatted_datetime(timestamp: datetime) -> str:
-    return f'<t:{int(timestamp.timestamp())}:f>'
+def get_formatted_datetime(timestamp: datetime | None) -> str:
+    return f'<t:{int(timestamp.timestamp())}:f>' if timestamp else 'Никогда'
 
 
 def get_formatted_timedelta(timedelta_: timedelta) -> str:

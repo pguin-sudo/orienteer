@@ -47,3 +47,8 @@ async def do_transfer(sender_user_id: UUID, recipient_user_id: UUID, amount: int
 async def spent(user_id: UUID, amount: int) -> None:
     async with async_session() as db_session:
         await orientiks.add_spent(db_session, user_id, amount)
+
+
+async def add_time_balancing(user_id: UUID, minutes: int) -> None:
+    async with async_session() as db_session:
+        await orientiks.add_time_balancing(db_session, user_id, minutes)

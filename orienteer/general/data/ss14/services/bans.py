@@ -43,7 +43,7 @@ async def get_formatted_bans_and_total_stats(user_id: UUID) -> tuple[list[tuple[
     return formatted, total_time, total_fine
 
 
-async def get_last_ban(user_id: UUID) -> dict:
+async def get_last_ban(user_id: UUID) -> dict | None:
     return await bans.get_last_ban(user_id)
 
 

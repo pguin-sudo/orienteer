@@ -1,7 +1,8 @@
 import uuid
 
-from sqlalchemy import Column, ForeignKey, Integer, String, BigInteger, DateTime
+from sqlalchemy import ForeignKey, Integer, String, BigInteger, DateTime
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import mapped_column
 from sqlalchemy.sql import func
 
 from .common import Base
@@ -10,12 +11,12 @@ from .common import Base
 class PromotionalCodeUsages(Base):
     __tablename__ = 'promotional_code_usages'
 
-    cache_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(UUID(as_uuid=True), nullable=False)
-    promotional_code = Column(String, ForeignKey('promotional_codes.code'), nullable=False)
-    discord_user_id = Column(BigInteger)
+    cache_id = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id = mapped_column(UUID(as_uuid=True), nullable=False)
+    promotional_code = mapped_column(String, ForeignKey('promotional_codes.code'), nullable=False)
+    discord_user_id = mapped_column(BigInteger)
 
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     def __init__(self, user_id: uuid.UUID, promotional_code: str, discord_user_id: int):
         self.user_id = user_id

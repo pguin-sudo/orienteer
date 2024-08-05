@@ -28,7 +28,7 @@ async def set_role(discord_user_id: int, role_id: int, remove: bool = False):
 
 
 async def send_discord_message(webhook_url: str, username: str, title: str, description: str, color: int,
-                               timestamp: datetime = None, image_url: str = None, message_id: int = None) -> bool:
+                               timestamp: datetime | None = None, image_url: str | None = None, message_id: int | None = None) -> bool:
     async with aiohttp.ClientSession() as session:
         webhook = Webhook.from_url(webhook_url, session=session)
         if message_id:

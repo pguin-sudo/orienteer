@@ -1,4 +1,4 @@
-async def get_closest_color(hex_code):
+def get_closest_color_name(hex_code: int) -> str:
     color_names = {
         '#000000': 'Черный',
         '#808080': 'Серый',
@@ -139,19 +139,17 @@ async def get_closest_color(hex_code):
         '#bc8f8f': 'Розово-коричневый'
     }
 
-    r = int(hex_code[1:3], 16)
-    g = int(hex_code[3:5], 16)
-    b = int(hex_code[5:], 16)
+    rgb = tuple(int(str(hex_code)[i:i+2], 16) for i in (0, 2, 4))
 
     min_diff = float('inf')
-    nearest_key = None
+    nearest_key = 'Неизвестный цвет'
 
     for key in color_names:
         r_key = int(key[1:3], 16)
         g_key = int(key[3:5], 16)
         b_key = int(key[5:], 16)
 
-        diff = ((r - r_key) ** 2 + (g - g_key) ** 2 + (b - b_key) ** 2) ** 0.5
+        diff = ((rgb[0] - r_key) ** 2 + (rgb[1] - g_key) ** 2 + (rgb[2] - b_key) ** 2) ** 0.5
 
         if diff < min_diff:
             min_diff = diff

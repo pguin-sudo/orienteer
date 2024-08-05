@@ -20,14 +20,15 @@ async def get_bans(user_id: UUID) -> tuple:
 
 async def get_all_bans_after(ban_id: int) -> tuple:
     async with DBConnectionContextManager() as connection:
-        return await connection.fetch('SELECT * FROM server_ban WHERE server_ban_id > $1 ORDER BY server_ban_id ASC',
-                                      ban_id)
+        return tuple(
+            await connection.fetch('SELECT * FROM server_ban WHERE server_ban_id > $1 ORDER BY server_ban_id ASC',
+                                   ban_id))
 
 
 async def get_all_role_bans_after(ban_id: int) -> tuple:
     async with DBConnectionContextManager() as connection:
-        return await connection.fetch(
-            'SELECT * FROM server_role_ban WHERE server_role_ban_id > $1 ORDER BY server_role_ban_id ASC', ban_id)
+        return tuple(await connection.fetch(
+            'SELECT * FROM server_role_ban WHERE server_role_ban_id > $1 ORDER BY server_role_ban_id ASC', ban_id))
 
 
 async def get_last_ban(user_id: UUID) -> dict | None:

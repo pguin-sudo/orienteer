@@ -153,7 +153,7 @@ class Profile(AbstractCall):
         first_seen = await seen_time.get_formatted_first_seen_time(user_id)
         last_seen = await seen_time.get_formatted_last_seen_time(user_id)
         all_roles = await playtime.get_formatted_grouped_trackers(user_id)
-        most_popular_role = await playtime.get_most_popular_role(user_id)
+        most_popular_role = await playtime.get_most_popular_role_name(user_id)
         sponsor_level, color = await sponsors.get_sponsor_status_and_color(user_id)
 
         a_rank = await admin_rank.get_admin_rank_name_and_time(user_id)

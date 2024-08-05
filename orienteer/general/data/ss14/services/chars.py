@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from orienteer.general.formatting.color import get_closest_color
+from orienteer.general.formatting.color import get_closest_color_name
 from orienteer.general.formatting.time import get_years_form
 from ..repositories import preferences, profiles
 
@@ -53,11 +53,11 @@ async def get_formatted_chars(user_id: UUID) -> tuple[tuple[str, str, int], ...]
         if profile['hair_name'] == 'HairBald':
             description += f'**Лысый**\n'
         else:
-            description += f'**Цвет волос:** {await get_closest_color(profile['hair_color'][1:-2])}\n'
+            description += f'**Цвет волос:** {get_closest_color_name(profile['hair_color'][1:-2])}\n'
 
         if profile['facial_hair_name'] != 'FacialHairShaved':
-            description += f'**Цвет растительности:** {await get_closest_color(profile['facial_hair_color'][1:-2])}\n'
-        description += f'**Цвет глаз:** {await get_closest_color(profile['eye_color'][1:-2])}\n'
+            description += f'**Цвет растительности:** {get_closest_color_name(profile['facial_hair_color'][1:-2])}\n'
+        description += f'**Цвет глаз:** {get_closest_color_name(profile['eye_color'][1:-2])}\n'
         description += f'**Голос:** {str(profile['voice']).capitalize()}'
 
         formatted.append((title, description, int(profile['skin_color'][1:-2], 16)))

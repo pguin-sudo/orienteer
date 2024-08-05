@@ -1,8 +1,9 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Column, String, Integer, Boolean, ARRAY, DateTime
+from sqlalchemy import String, Integer, Boolean, ARRAY, DateTime
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import mapped_column
 from sqlalchemy.sql import func
 
 from .common import Base
@@ -11,16 +12,16 @@ from .common import Base
 class Sponsor(Base):
     __tablename__ = 'sponsors'
 
-    user_id = Column(UUID(as_uuid=True), nullable=False, primary_key=True, default=uuid.uuid4)
-    extra_slots = Column(Integer, nullable=False, default=0)
-    ooc_color = Column(String(6), nullable=True, default=None)
-    allowed_markings = Column(ARRAY(String), nullable=False, default=[])
-    ghost_theme = Column(String, nullable=True, default=None)
-    have_sponsor_chat = Column(Boolean, nullable=False, default=False)
-    have_priority_join = Column(Boolean, nullable=False, default=False)
+    user_id = mapped_column(UUID(as_uuid=True), nullable=False, primary_key=True, default=uuid.uuid4)
+    extra_slots = mapped_column(Integer, nullable=False, default=0)
+    ooc_color = mapped_column(String(6), nullable=True, default=None)
+    allowed_markings = mapped_column(ARRAY(String), nullable=False, default=[])
+    ghost_theme = mapped_column(String, nullable=True, default=None)
+    have_sponsor_chat = mapped_column(Boolean, nullable=False, default=False)
+    have_priority_join = mapped_column(Boolean, nullable=False, default=False)
 
-    is_active = Column(Boolean, nullable=False, default=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    is_active = mapped_column(Boolean, nullable=False, default=False)
+    created_at = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     def __init__(self, user_id: uuid.UUID, ooc_color: str = None, allowed_markings: tuple[str] = None,
                  ghost_theme: str = None, have_sponsor_chat: bool = None, have_priority_join: bool = None,

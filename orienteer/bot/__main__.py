@@ -24,8 +24,12 @@ class OrienteerBot(commands.InteractionBot):
     if not DEBUG_MODE:
         async def on_slash_command_error(self, interaction, *args, **kwargs):
             await interaction.edit_original_message(embed=embeds.error_message(Errors.unexpected_error.value,
-                                                    content='Пожалуйста, обратитесь к <@536086033050107914>, '
-                                                            'мы постараемся исправить её как можно скорее.'))
+                                                                               content='Пожалуйста, обратитесь к '
+                                                                                       '<@536086033050107914>, мы'
+                                                                                       ' постараемся исправить её '
+                                                                                       'как можно скорее.',
+                                                                               footer='И попробуйте выполнить команду '
+                                                                                      'еще раз.'))
             logger.error(f"{interaction=}\n{args=}\n{kwargs=}")
 
     @property

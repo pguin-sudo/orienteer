@@ -15,7 +15,7 @@ async def link_discord(user_id: UUID, discord_user_id: int, discord_username: st
         await discord_auth.link_discord(db_session, user_id, discord_user_id, discord_username)
 
 
-async def get_discord_user_id_by_user_id(user_id: UUID) -> str | None:
+async def get_discord_user_id_by_user_id(user_id: UUID) -> int | None:
     async with async_session() as db_session:
         return await discord_auth.get_discord_user_id_by_user_id(db_session, user_id)
 

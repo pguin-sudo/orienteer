@@ -21,8 +21,9 @@ async def get_formatted_grouped_trackers(user_id: UUID) -> list[str | Any]:
     return groups
 
 
-async def get_most_popular_role(user_id: UUID) -> str:
-    return get_job_group_and_name((await playtime.get_most_popular_tracker(user_id))['tracker'])[1]
+async def get_most_popular_role_name(user_id: UUID) -> str:
+    popular_role = await playtime.get_most_popular_tracker(user_id)
+    return get_job_group_and_name(popular_role['tracker'])[1] if popular_role is not None else 'Отсутствует'
 
 
 async def get_overall(user_id: UUID) -> timedelta:

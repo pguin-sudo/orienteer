@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, DateTime, String, ARRAY
+from sqlalchemy import Integer, DateTime, String, ARRAY
+from sqlalchemy.orm import mapped_column
 
 from .common import Base
 
@@ -6,13 +7,13 @@ from .common import Base
 class Season(Base):
     __tablename__ = 'seasons'
 
-    season_id = Column(Integer, primary_key=True, autoincrement=True)
-    start_date = Column(DateTime(timezone=True), nullable=False)
-    title = Column(String(256), nullable=False)
-    description = Column(String, nullable=False)
-    color = Column(String(6), nullable=False)
-    image_url = Column(String, nullable=False)
-    awards = Column(ARRAY(Integer), nullable=False)
+    season_id = mapped_column(Integer, primary_key=True, autoincrement=True)
+    start_date = mapped_column(DateTime(timezone=True), nullable=False)
+    title = mapped_column(String(256), nullable=False)
+    description = mapped_column(String, nullable=False)
+    color = mapped_column(String(6), nullable=False)
+    image_url = mapped_column(String, nullable=False)
+    awards = mapped_column(ARRAY(Integer), nullable=False)
 
     def __init__(self, start_date, title, description, color, image_url, awards):
         self.start_date = start_date

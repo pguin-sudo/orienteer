@@ -1,4 +1,5 @@
 from datetime import timedelta
+from typing import Type
 from uuid import UUID
 
 from loguru import logger
@@ -223,12 +224,15 @@ class SevenNewSlots(AbstractProduct):
         await sponsors.add_extra_clots(user_id, -7)
 
 
-def get_product(id_: int) -> AbstractProduct | None:
+def get_product(id_: int) -> (Type[ColoredNick] | Type[GigachatAccess] | Type[PriorityQueue] | Type[Orientalink] |
+                              Type[BanAnnulment] | Type[SevenNewSlots] | None):
     for product in get_all_products():
         if product.id == id_:
             return product
     return None
 
 
-def get_all_products() -> tuple[AbstractProduct]:
-    return (ColoredNick, GigachatAccess, PriorityQueue, Orientalink, BanAnnulment, SevenNewSlots)
+def get_all_products() -> tuple[
+    Type[ColoredNick], Type[GigachatAccess], Type[PriorityQueue], Type[Orientalink], Type[BanAnnulment], Type[
+        SevenNewSlots]]:
+    return ColoredNick, GigachatAccess, PriorityQueue, Orientalink, BanAnnulment, SevenNewSlots

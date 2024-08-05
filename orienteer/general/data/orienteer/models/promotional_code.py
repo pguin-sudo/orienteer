@@ -1,4 +1,5 @@
-from sqlalchemy import Column, JSON, Integer, DateTime, String, Boolean
+from sqlalchemy import JSON, Integer, DateTime, String, Boolean
+from sqlalchemy.orm import mapped_column
 
 from .common import Base
 
@@ -6,12 +7,12 @@ from .common import Base
 class PromotionalCode(Base):
     __tablename__ = 'promotional_codes'
 
-    code = Column(String, nullable=False, primary_key=True)
-    usages = Column(Integer, nullable=False, default=10000)
-    jobs = Column(JSON, nullable=False, default={})
-    dependencies = Column(JSON, nullable=False, default={})
-    expiration_date = Column(DateTime(timezone=True), nullable=True)
-    is_creator = Column(Boolean, nullable=False, default=False)
+    code = mapped_column(String, nullable=False, primary_key=True)
+    usages = mapped_column(Integer, nullable=False, default=10000)
+    jobs = mapped_column(JSON, nullable=False, default={})
+    dependencies = mapped_column(JSON, nullable=False, default={})
+    expiration_date = mapped_column(DateTime(timezone=True), nullable=True)
+    is_creator = mapped_column(Boolean, nullable=False, default=False)
 
     def __init__(self, code, usages=None, jobs=None, dependencies=None, expiration_date=None, is_creator=None):
         self.code = code

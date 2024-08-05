@@ -1,4 +1,3 @@
-import heapq
 from datetime import timedelta
 from typing import Tuple, Any
 from uuid import UUID
@@ -14,7 +13,7 @@ async def get_cached_playtime(season_id: int, user_id: UUID):
         return await seasons_cached_playtime.get_cached_playtime(db_session, season_id, user_id)
 
 
-async def _process_user(user_id: UUID, season_id: int, db_session) -> playtime:
+async def _process_user(user_id: UUID, season_id: int, db_session) -> timedelta:
     overall_playtime = await playtime.get_tracker(user_id, 'Overall')
     if overall_playtime is None:
         return timedelta()

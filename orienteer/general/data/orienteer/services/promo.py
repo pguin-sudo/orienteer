@@ -22,7 +22,7 @@ async def try_promo(discord_user_id: int, user_id: UUID, code: str) -> tuple[boo
 
     async with async_session() as db_session:
         data = await promo.get_promo_data(db_session, code)
-        if not data:
+        if not data or not data.usages:
             return False, Errors.promo_not_found.value
 
         if data.usages <= 0:

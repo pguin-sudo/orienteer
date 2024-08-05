@@ -12,5 +12,5 @@ async def get_formatted_first_seen_time(user_id: UUID) -> str:
     return get_formatted_datetime(await seen_time.get_first_seen_time(user_id))
 
 
-async def get_first_seen_time(user_id: UUID) -> datetime:
+async def get_first_seen_time(user_id: UUID) -> datetime | None:
     return await seen_time.get_first_seen_time(user_id)

@@ -1,14 +1,12 @@
-from contextlib import AbstractAsyncContextManager
-
 import asyncpg
 from asyncpg.pool import Pool
 
-from orienteer.general.config import (POSTGRES_SS14_HOST, POSTGRES_SS14_PORT, POSTGRES_SS14_DBNAME,
-                                            POSTGRES_SS14_USER, POSTGRES_SS14_PASSWORD)
+from orienteer.general.config import (POSTGRES_SS14_HOST, POSTGRES_SS14_PORT, POSTGRES_SS14_DBNAME, POSTGRES_SS14_USER,
+                                      POSTGRES_SS14_PASSWORD)
 
 
-class DBConnectionContextManager(AbstractAsyncContextManager):
-    _pool: Pool = None
+class DBConnectionContextManager:
+    _pool: Pool | None = None
 
     async def __aenter__(self) -> asyncpg.Connection:
         if DBConnectionContextManager._pool is None:
@@ -21,5 +19,6 @@ class DBConnectionContextManager(AbstractAsyncContextManager):
         return self.connection
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await DBConnectionContextManager._pool.release(self.connection)
+        if DBConnectionContextManager._pool is not None:
+            await DBConnectionContextManager._pool.release(self.connection)
         self.connection = None
