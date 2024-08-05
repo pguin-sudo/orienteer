@@ -43,6 +43,20 @@ async def add_orientiks_from_friends(db_session: AsyncSession, user_id: UUID, am
     await db_session.commit()
 
 
+async def add_orientiks_from_sponsorship(db_session: AsyncSession, user_id: UUID, amount: int) -> None:
+    result = await db_session.execute(select(Orientiks).where(user_id == Orientiks.user_id))
+    record = result.scalars().first()
+
+    if record:
+        new_sponsorship_amount = record.sponsorship + amount
+        await db_session.execute(
+            update(Orientiks).where(user_id == Orientiks.user_id).values(sponsorship=new_sponsorship_amount))
+    else:
+        await db_session.execute(insert(Orientiks).values(user_id=user_id, sponsorship=amount))
+
+    await db_session.commit()
+
+
 async def add_spent(db_session: AsyncSession, user_id: UUID, amount: int) -> None:
     current_spent = await db_session.scalar(select(Orientiks.spent).where(user_id == Orientiks.user_id))
     new_spent = current_spent + amount

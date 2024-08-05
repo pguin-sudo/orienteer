@@ -190,7 +190,7 @@ class Profile(AbstractCall):
         if all_roles is not None:
             embed.add_field(name='Наигранное время:', value=f'Общее: {all_roles[10]}', inline=False)
         if most_popular_role is not None:
-            embed.add_field(name='Любимя роль:', value=f'{most_popular_role}', inline=False)
+            embed.add_field(name='Любимая роль:', value=f'{most_popular_role}', inline=False)
         if sponsor_level is not None:
             embed.add_field(name='Статус спонсора:', value=sponsor_level, inline=False)
         if a_rank is not None:

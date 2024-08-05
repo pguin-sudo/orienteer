@@ -1,10 +1,9 @@
 from datetime import timedelta
-from typing import Type
 from uuid import UUID
 
 from loguru import logger
 
-from orienteer.general.data.orienteer.services import sponsors
+from orienteer.general.data.orienteer.services import sponsors, orientiks
 from orienteer.general.data.ss14.services import bans
 from orienteer.general.utils.calculations import calculate_fine
 from .abstract_product import AbstractProduct
@@ -224,15 +223,52 @@ class SevenNewSlots(AbstractProduct):
         await sponsors.add_extra_clots(user_id, -7)
 
 
-def get_product(id_: int) -> (Type[ColoredNick] | Type[GigachatAccess] | Type[PriorityQueue] | Type[Orientalink] |
-                              Type[BanAnnulment] | Type[SevenNewSlots] | None):
+def get_product(id_: int) -> AbstractProduct | None:
     for product in get_all_products():
         if product.id == id_:
             return product
     return None
 
 
-def get_all_products() -> tuple[
-    Type[ColoredNick], Type[GigachatAccess], Type[PriorityQueue], Type[Orientalink], Type[BanAnnulment], Type[
-        SevenNewSlots]]:
-    return ColoredNick, GigachatAccess, PriorityQueue, Orientalink, BanAnnulment, SevenNewSlots
+class SevenOrientiks(AbstractProduct):
+    id = 6
+    name = '21 ориентик на 24 часа'
+    price_tag = '<:orienta:1250903370894671963>\'s'
+    description = (
+        'Да, ты всё правильно понял это 21 ориентик на 24 часа за 7 ориентиков. В чем подвох? Подвоха нет. '
+        'Это просто 21 ориентик на 24 часа за 7 ориентиков.')
+    image_url = 'https://media.discordapp.net/attachments/1162830763390140548/1250350926716473465/Queue.png'
+    '?ex=666a9f8b&is=66694e0b&hm=1bff6892241431d60d80ec58f24fe78b7bc8407dd5ec3d0740271f940c45ef1f&='
+    '&format=webp&quality=lossless&width=725&height=671'
+    emoji = '🎰'
+    is_subscription = True
+    cooldown = timedelta(days=1)
+
+    @staticmethod
+    async def calculate_price(user_id) -> int:
+        return 7
+
+    @staticmethod
+    async def can_buy(user_id: UUID) -> bool:
+        return True
+
+    @staticmethod
+    async def buy(user_id: UUID):
+        logger.info(f'Покупка {SevenOrientiks.name}')
+        await orientiks.add_orientiks_from_sponsorship(user_id, 21)
+
+    @staticmethod
+    async def retrieve(user_id: UUID):
+        logger.info(f'Возврат {SevenOrientiks.name}')
+        await orientiks.add_orientiks_from_sponsorship(user_id, -21)
+
+
+def get_product(id_: int) -> AbstractProduct | None:
+    for product in get_all_products():
+        if product.id == id_:
+            return product
+    return None
+
+
+def get_all_products() -> tuple[AbstractProduct]:
+    return ColoredNick, GigachatAccess, PriorityQueue, Orientalink, BanAnnulment, SevenNewSlots, SevenOrientiks  # noqa

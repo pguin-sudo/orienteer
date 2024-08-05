@@ -44,6 +44,11 @@ async def do_transfer(sender_user_id: UUID, recipient_user_id: UUID, amount: int
         await orientiks.add_orientiks_from_friends(db_session, recipient_user_id, amount)
 
 
+async def add_orientiks_from_sponsorship(user_id: UUID, amount: int) -> None:
+    async with async_session() as db_session:
+        await orientiks.add_orientiks_from_sponsorship(db_session, user_id, amount)
+
+
 async def spent(user_id: UUID, amount: int) -> None:
     async with async_session() as db_session:
         await orientiks.add_spent(db_session, user_id, amount)
@@ -52,3 +57,4 @@ async def spent(user_id: UUID, amount: int) -> None:
 async def add_time_balancing(user_id: UUID, minutes: int) -> None:
     async with async_session() as db_session:
         await orientiks.add_time_balancing(db_session, user_id, minutes)
+
