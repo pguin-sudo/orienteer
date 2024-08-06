@@ -20,7 +20,7 @@ class Sponsor(Base):
     have_sponsor_chat = mapped_column(Boolean, nullable=False, default=False)
     have_priority_join = mapped_column(Boolean, nullable=False, default=False)
 
-    is_active = mapped_column(Boolean, nullable=False, default=False)
+    is_active = mapped_column(Boolean, nullable=False, default=True)
     created_at = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     def __init__(self, user_id: uuid.UUID, ooc_color: str = None, allowed_markings: tuple[str] = None,
