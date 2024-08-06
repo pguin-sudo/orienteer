@@ -1,6 +1,5 @@
 from uuid import UUID
 
-from loguru import logger
 from sqlalchemy import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -30,4 +29,10 @@ async def get_last_purchase_of_product(db_session: AsyncSession, user_id: UUID, 
 
 async def get_all_purchases(db_session: AsyncSession) -> tuple[Purchase, ...]:
     result = await db_session.execute(select(Purchase).order_by(desc(Purchase.date)))
+    return tuple(result.scalars().all())
+
+
+async def get_all_purchases_of_user(db_session: AsyncSession, user_id: UUID) -> tuple[Purchase, ...]:
+    result = await db_session.execute(
+        select(Purchase).filter(user_id == Purchase.user_id).order_by(desc(Purchase.date)))
     return tuple(result.scalars().all())

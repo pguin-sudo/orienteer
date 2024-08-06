@@ -1,5 +1,6 @@
 class Extensions:
     __list__ = [
+        {'package': 'orienteer.bot.cogs', 'name': 'common'},
         {'package': 'orienteer.bot.cogs', 'name': 'info'},
         {'package': 'orienteer.bot.cogs', 'name': 'promo'},
         {'package': 'orienteer.bot.cogs', 'name': 'orientiks'},

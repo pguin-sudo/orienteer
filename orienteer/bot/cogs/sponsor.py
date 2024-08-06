@@ -6,6 +6,10 @@ from orienteer.bot.calls import sponsor
 
 
 class Sponsors(commands.Cog):
+    """
+    Спонсорские  🎗️
+    """
+
     def __init__(self, bot):
         self.bot: Bot = bot
 
@@ -13,7 +17,7 @@ class Sponsors(commands.Cog):
     @commands.cooldown(1, 5.0, BucketType.user)
     async def sponsor_info(self, interaction: CommandInteraction):
         """
-        Выводит информацию о спонсорской подписке.
+        Выводит информацию о спонсорских подписках.
 
         Parameters
         ----------

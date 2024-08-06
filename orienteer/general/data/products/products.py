@@ -240,7 +240,7 @@ class SevenOrientiks(AbstractProduct):
     image_url = 'https://media.discordapp.net/attachments/1162830763390140548/1250350926716473465/Queue.png'
     '?ex=666a9f8b&is=66694e0b&hm=1bff6892241431d60d80ec58f24fe78b7bc8407dd5ec3d0740271f940c45ef1f&='
     '&format=webp&quality=lossless&width=725&height=671'
-    emoji = '🎰'
+    emoji = '💳'
     is_subscription = True
     cooldown = timedelta(days=1)
 

@@ -1,6 +1,6 @@
 from sqlalchemy import Integer, DateTime, UUID
-from sqlalchemy.sql import func
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.sql import func
 
 from .common import Base
 
@@ -19,8 +19,6 @@ class Purchase(Base):
         self.user_id = user_id
         self.price = price
 
-
     def __repr__(self):
         return f"<Purchase(id={self.id}, product_id={self.product_id}, user_id={self.user_id}, " \
                f"price={self.price}, date={self.date})>"
-

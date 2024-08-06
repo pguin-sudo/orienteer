@@ -41,3 +41,16 @@ async def get_current_subscriptions() -> tuple[tuple[Purchase, AbstractProduct],
                 continue
             result.append((purchase, product))
         return tuple(result)
+
+
+async def get_all_user_purchases(user_id: UUID) -> tuple[tuple[Purchase, AbstractProduct], ...]:
+    async with async_session() as db_session:
+        purchases_ = await purchases.get_all_purchases_of_user(db_session, user_id)
+        result = [] # noqa
+        for purchase in purchases_:
+            product = products.get_product(purchase.product_id)
+            if (product is None or product.cooldown is None or not product.is_subscription
+                    or purchase.date + product.cooldown < datetime.now(timezone.utc)):
+                continue
+            result.append((purchase, product))
+        return tuple(result)

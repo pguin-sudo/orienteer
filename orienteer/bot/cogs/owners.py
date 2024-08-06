@@ -6,6 +6,10 @@ from orienteer.bot.calls import owners
 
 
 class Owners(commands.Cog):
+    """
+    Приватные  🔒
+    """
+
     def __init__(self, bot):
         self.bot: Bot = bot
 

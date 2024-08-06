@@ -6,6 +6,10 @@ from orienteer.bot.calls import promo
 
 
 class Promo(commands.Cog):
+    """
+    Промокоды  🏆
+    """
+
     def __init__(self, bot):
         self.bot: Bot = bot
 

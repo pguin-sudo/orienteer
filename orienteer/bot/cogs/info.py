@@ -6,6 +6,10 @@ from orienteer.bot.calls import info
 
 
 class Info(commands.Cog):
+    """
+    Информация  ℹ️
+    """
+
     def __init__(self, bot):
         self.bot: Bot = bot
 
@@ -42,7 +46,7 @@ class Info(commands.Cog):
     @commands.cooldown(1, 5.0, BucketType.user)
     async def bans(self, interaction: CommandInteraction, ckey: str | None = None):
         """
-        Показывает все, полученные на сервере, баны игрока, а также общий штраф за них.
+        Выводит все полученные на сервере баны и общий штраф за них.
 
         Parameters
         ----------
@@ -57,7 +61,7 @@ class Info(commands.Cog):
     @commands.cooldown(1, 5.0, BucketType.user)
     async def profile(self, interaction: CommandInteraction, ckey: str | None = None):
         """
-        Показывает профиль игрока: большое количество информации связанной с игровым аккаунтом.
+        Выводит  информацию, связанную с игровым аккаунтом.
 
         Parameters
         ----------
@@ -72,7 +76,7 @@ class Info(commands.Cog):
     @commands.cooldown(1, 5.0, BucketType.user)
     async def chars(self, interaction: CommandInteraction, ckey: str | None = None):
         """
-        Показывает общую информацию о персонажах игрока.
+        Выводит общую информацию о персонажах игрока.
 
         Parameters
         ----------

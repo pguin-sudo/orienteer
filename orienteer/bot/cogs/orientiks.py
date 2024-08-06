@@ -6,6 +6,10 @@ from orienteer.bot.calls import orientiks
 
 
 class Orientiks(commands.Cog):
+    """
+    Экономика  💶
+    """
+
     def __init__(self, bot):
         self.bot: Bot = bot
 
@@ -29,7 +33,7 @@ class Orientiks(commands.Cog):
     @commands.cooldown(1, 5.0, BucketType.user)
     async def transfer(self, interaction: CommandInteraction, ckey: str, amount: int):
         """
-        Выводит баланс ориентиков.
+        Перечисляет ориентики указанному пользователю.
 
         Parameters
         ----------
@@ -53,6 +57,20 @@ class Orientiks(commands.Cog):
         """
 
         async with orientiks.Shop(interaction) as call:
+            await call()
+
+    @commands.slash_command()
+    @commands.cooldown(1, 5.0, BucketType.user)
+    async def purchases(self, interaction: CommandInteraction):
+        """
+        Выводит список всех купленных товаров.
+
+        Parameters
+        ----------
+        interaction: Disnake interaction
+        """
+
+        async with orientiks.Purchases(interaction) as call:
             await call()
 
 

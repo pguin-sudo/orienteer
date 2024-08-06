@@ -1,10 +1,11 @@
+from datetime import timezone
+
 from disnake import Interaction
 from disnake.ui import View, Button
 
 from orienteer.bot.calls.abstract import AbstractCall
 from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors, Results, Success
-from orienteer.checker.schedules import subscriptions
 from orienteer.general.data.orienteer.services import discord_auth, orientiks, purchases
 from orienteer.general.data.products import products
 from orienteer.general.data.products.abstract_product import AbstractProduct
@@ -134,10 +135,9 @@ class Shop(AbstractCall):
                 await purchases.create_purchase(responding_user_id, product_.id, price_)
                 await orientiks.spent(responding_user_id, price_)
 
-                await self.interaction.edit_original_message(
-                    embed=embeds.success_message(
-                        title=f'{Results.you_have_bought_product.value} **"{product_.name}"**:',
-                        content=product_info_), view=button_view)
+                await self.interaction.edit_original_message(embed=embeds.success_message(
+                    title=f'{Results.you_have_bought_product.value} **"{product_.name}"**:', content=product_info_),
+                    view=button_view)
 
             return buy
 
@@ -161,3 +161,34 @@ class Shop(AbstractCall):
         if i == 1:
             await self.interaction.edit_original_message(embed=embeds.error_message(content=Errors.empty_shop.value),
                                                          view=button_view)
+
+
+class Purchases(AbstractCall):
+    async def __call__(self):
+        user_id = await discord_auth.get_user_id_by_discord_user_id(self.interaction.user.id)
+        if user_id is None:
+            await self.interaction.edit_original_message(
+                embed=embeds.error_message(content=Errors.no_user_id_with_discord.value))
+            return
+
+        ckey = await player.get_ckey(user_id)
+
+        embed = embeds.result_message(f'Покупки {ckey}:')
+
+        user_purchases = await purchases.get_all_user_purchases(user_id)
+        for i, (purchase, product) in enumerate(user_purchases):
+            sub_info = ''
+            if product.is_subscription:
+                if product.cooldown:
+                    expire_date = product.cooldown + purchase.date
+                    sub_info = f'Действует до {get_formatted_datetime(expire_date)}' if expire_date > datetime.now(
+                        timezone.utc) else f'Подписка истекла {get_formatted_datetime(expire_date)}'
+                else:
+                    sub_info = 'Бессрочная подписка'
+
+            embed.add_field(f'{i + 1}. {product.emoji} {product.name}',
+                            f'Дата покупки: {get_formatted_datetime(purchase.date)}\n'
+                            f'Цена: {purchase.price}{product.price_tag}\n'
+                            f'{sub_info}', inline=False)
+
+            await self.interaction.edit_original_message(embed=embed)
