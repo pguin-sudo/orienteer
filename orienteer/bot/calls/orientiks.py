@@ -173,9 +173,14 @@ class Purchases(AbstractCall):
 
         ckey = await player.get_ckey(user_id)
 
+        user_purchases = await purchases.get_all_user_purchases(user_id)
+        if user_purchases is None or user_purchases == ():
+            await self.interaction.edit_original_message(
+                embed=embeds.result_message(f'Покупки {ckey}:', content='Отсутствуют'))
+            return
+
         embed = embeds.result_message(f'Покупки {ckey}:')
 
-        user_purchases = await purchases.get_all_user_purchases(user_id)
         for i, (purchase, product) in enumerate(user_purchases):
             sub_info = ''
             if product.is_subscription:
@@ -191,4 +196,4 @@ class Purchases(AbstractCall):
                             f'Цена: {purchase.price}{product.price_tag}\n'
                             f'{sub_info}', inline=False)
 
-            await self.interaction.edit_original_message(embed=embed)
+        await self.interaction.edit_original_message(embed=embed)
