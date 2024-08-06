@@ -17,7 +17,7 @@ class Errors(Enum):
     # Shop
     empty_shop = 'Похоже, что ваш магазин пуст, приходите завтра :)'
     not_shop_owner = 'Покупки можно совершать только в своем магазине.'
-    not_have_permissions = 'Вы не можете совершить эту покупку по неизвестной причине.'
+    not_have_permissions_shop = 'Вы не можете совершить эту покупку по неизвестной причине.'
     product_is_in_cooldown_for = 'Вы не можете совершить эту покупку, ещё'
 
     # Promo
@@ -32,6 +32,7 @@ class Errors(Enum):
     # Sponsors
     ooc_color_is_none = 'У вас нет подписки на цвет спонсора'
     incorrect_color = 'Некорректное значение цвета'
+    not_have_permissions = 'У вас нет доступа к этой команде'
 
     # Global
     unexpected_error = 'Непредвиденная ошибка'

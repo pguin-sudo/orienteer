@@ -27,6 +27,16 @@ def _have_privileges(sponsor: Sponsor) -> bool:
         return True
 
 
+async def is_sponsor_active(user_id: UUID) -> bool:
+    async with async_session() as db_session:
+        sponsor = await sponsors.get_sponsor(db_session, user_id)
+
+    if sponsor is None or not _have_privileges(sponsor) or not sponsor.is_active:
+        return False
+
+    return True
+
+
 async def get_sponsor_status_and_color(user_id: UUID) -> tuple[str | None, int | None]:
     async with async_session() as db_session:
         sponsor = await sponsors.get_sponsor(db_session, user_id)

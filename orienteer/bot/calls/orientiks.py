@@ -113,7 +113,7 @@ class Shop(AbstractCall):
 
                 if not (await product_.can_buy(responding_user_id)):
                     await self.interaction.edit_original_message(
-                        embed=embeds.error_message(content=Errors.not_have_permissions.value), view=button_view)
+                        embed=embeds.error_message(content=Errors.not_have_permissions_shop.value), view=button_view)
                     return
 
                 purchase_cooldown = await purchases.get_purchase_cooldown(responding_user_id, product_)

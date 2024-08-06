@@ -1,5 +1,8 @@
 from datetime import datetime, timezone
 
+from g4f import Provider
+from g4f.client import Client
+
 from orienteer.bot.calls.abstract import AbstractCall
 from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors
@@ -59,7 +62,9 @@ class SetColor(AbstractCall):
                 embed=embeds.error_message(content=Errors.no_user_id_with_discord.value))
             return
 
-        if (await sponsors.get_sponsor(user_id)).ooc_color is None:
+        sponsor = await sponsors.get_sponsor(user_id)
+
+        if sponsor is None or sponsor.ooc_color is None:
             await self.interaction.edit_original_message(
                 embed=embeds.error_message(content=Errors.ooc_color_is_none.value))
             return
@@ -82,3 +87,23 @@ class SetColor(AbstractCall):
 
         await self.interaction.edit_original_message(
             embed=embeds.result_message(content=f'Цвет #{color} был установлен, как цвет ника'))
+
+
+class Ask(AbstractCall):
+    async def __call__(self, question: str) -> None:
+        user_id = await discord_auth.get_user_id_by_discord_user_id(self.interaction.user.id)
+        if user_id is None:
+            await self.interaction.edit_original_message(
+                embed=embeds.error_message(content=Errors.no_user_id_with_discord.value))
+            return
+
+        if not await sponsors.is_sponsor_active(user_id):
+            await self.interaction.edit_original_message(
+                embed=embeds.error_message(content=Errors.not_have_permissions.value))
+            return
+
+        client = Client()
+        response = client.chat.completions.create(provider=Provider.HuggingChat, model="command-r+",
+                                                  messages=[{'content': question}], )
+        await self.interaction.edit_original_message(
+            embed=embeds.result_message(title=question + '?', content=response.choices[0].message.content))
