@@ -5,9 +5,8 @@ from orienteer.general.data.orienteer.models.sponsors import Sponsor
 
 
 async def get_sponsor(db_session: AsyncSession, user_id) -> Sponsor | None:
-    sponsor = (await db_session.execute(select(Sponsor).filter_by(user_id=user_id))).fetchone()
-    sponsor = sponsor[0] if sponsor is not None else None
-    return sponsor
+    sponsor = await db_session.execute(select(Sponsor).filter_by(user_id=user_id))
+    return sponsor.scalars().one_or_none()
 
 
 async def try_create_empty_sponsor(db_session: AsyncSession, user_id) -> Sponsor:

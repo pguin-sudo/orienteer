@@ -21,7 +21,9 @@ class SponsorInfo(AbstractCall):
         sponsor = await sponsors.get_sponsor(user_id)
         color = None
 
-        if not sponsor.is_active:
+        if sponsor is None:
+            content = 'Данные о спонсорстве отсутствуют.'
+        elif not sponsor.is_active:
             content = 'Привилегии временно деактивированы.'
         else:
             content = ''
