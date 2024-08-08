@@ -22,21 +22,14 @@ async def link_discord(db_session: AsyncSession, user_id: UUID, discord_user_id:
 async def get_discord_user_id_by_user_id(db_session: AsyncSession, user_id: UUID) -> int | None:
     query = select(DiscordAuth.discord_user_id).filter(user_id == DiscordAuth.user_id)
     result = await db_session.execute(query)
-    discord_user_id = result.scalar_one_or_none()
-    if discord_user_id is not None:
-        return int(discord_user_id)
-    else:
-        return None
+    return result.scalar_one_or_none()
 
 
 async def get_user_id_by_discord_user_id(db_session: AsyncSession, discord_user_id: int) -> UUID | None:
     query = select(DiscordAuth.user_id).filter(discord_user_id == DiscordAuth.discord_user_id)
     result = await db_session.execute(query)
     user_id = result.scalar_one_or_none()
-    if user_id is not None:
-        return user_id
-    else:
-        return None
+    return user_id
 
 
 async def get_all_authorized(db_session: AsyncSession) -> tuple[DiscordAuth, ...]:

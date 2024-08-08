@@ -3,9 +3,10 @@ import disnake
 from orienteer.general.config import DEBUG_MODE
 
 DEBUG_FOOTER_CONTENT = 'Бот запущен в тестовом режиме, при обнаружении любого бага писать @mocviu'
-DEBUG_FOOTER_IMAGE = ('https://cdn.discordapp.com/attachments/1247233955590180896/1249057919601868952/'
-                      '128px-GNOME_Terminal_icon_2019.svg.png?ex=6665eb56&is=666499d6&'
-                      'hm=fc9958dcae1190b0b2de840512df4c7d52eaf25b78aba3bc1d3b8ea0483ec9dd&')
+DEBUG_FOOTER_IMAGE = ('https://media.discordapp.net/attachments/847146486969008129/1271010621747630131/debug-icon'
+                      '-design-free-vector.jpg?ex=66b5c862&is=66b476e2&hm'
+                      '=362919a91e6430722a8eb044bd2ba72dd8276d810518ce301b8b28801dfad8d9&=&format=webp&width=701'
+                      '&height=701')
 
 
 def _base_embed(title='', content='', color=0x38383d, footer=''):
