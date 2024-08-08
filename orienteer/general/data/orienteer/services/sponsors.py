@@ -45,11 +45,11 @@ async def get_sponsor_status_and_color(user_id: UUID) -> tuple[str | None, int |
         return None, None
 
     if not _have_privileges(sponsor):
-        status = 'Нет активных привилегий'
+        status = 'Нет активных привилегий 🩼'
     elif not sponsor.is_active:
-        status = 'Временно отключен'
+        status = 'Временно отключен 🛞'
     else:
-        status = 'Активен'
+        status = 'Активен 🎗️'
 
     color = int(sponsor.ooc_color, 16) if sponsor.ooc_color is not None else None
 

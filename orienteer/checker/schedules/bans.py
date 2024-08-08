@@ -54,7 +54,7 @@ async def check_bans():
         embed_desc += f'**Администратор:** {admin_name}\n\n'
         embed_desc += f'**Время получения:** {get_formatted_datetime(ban_time)}\n'
         embed_desc += f'**Время снятия:** {expiration_time_str}\n'
-        embed_desc += f'**Штраф:** {fine} <:orienta:1250903370894671963>\'s\n\n'
+        embed_desc += f'**Штраф:** {fine} <:orienta:1250903370894671963>\n\n'
         embed_desc += f'**Причина:** {reason}\n'
 
         await send_discord_message(WEBHOOKS_BANS, USERNAME, embed_title, embed_desc, color)

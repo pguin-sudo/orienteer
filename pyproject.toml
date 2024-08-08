@@ -27,6 +27,8 @@ numpy = "^2.0.1"
 schedule = "^1.2.2"
 apscheduler = "^3.10.4"
 pyright = "^1.1.374"
+aiocache = "^0.12.2"
+asyncstdlib = "^3.12.4"
 
 [build-system]
 requires = ["poetry-core"]

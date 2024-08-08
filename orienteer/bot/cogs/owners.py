@@ -1,8 +1,5 @@
-from disnake import CommandInteraction
 from disnake.ext import commands
-from disnake.ext.commands import Bot, BucketType
-
-from orienteer.bot.calls import owners
+from disnake.ext.commands import Bot
 
 
 class Owners(commands.Cog):

@@ -1,10 +1,10 @@
+from orienteer.bot.calls.abstract import AbstractCall
 from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors, Results
 from orienteer.general.data.orienteer.services import discord_auth, promo, sponsors, orientiks
 from orienteer.general.data.requests import hub
 from orienteer.general.data.ss14.services import player, playtime, bans, seen_time, admin_rank, whitelist, chars
 from orienteer.general.formatting.time import *
-from orienteer.bot.calls.abstract import AbstractCall
 
 
 class Status(AbstractCall):
@@ -111,7 +111,8 @@ class Bans(AbstractCall):
 
         all_bans, total_time, total_fine = await bans.get_formatted_bans_and_total_stats(user_id)
         if all_bans is None:
-            await self.interaction.edit_original_message(embed=embeds.result_message(content=Results.no_bans_info.value))
+            await self.interaction.edit_original_message(
+                embed=embeds.result_message(content=Results.no_bans_info.value))
             return
 
         if len(all_bans) > 15:
@@ -124,7 +125,7 @@ class Bans(AbstractCall):
             embed.add_field(ban[0], ban[1], inline=False)
 
         if total_fine > 0:
-            embed.description = f'Итого со штрафов: -{total_fine} <:orienta:1250903370894671963>\'s\nСуммарное время банов: {get_formatted_timedelta(total_time)}'
+            embed.description = f'Итого со штрафов: -{total_fine} <:orienta:1250903370894671963>\nСуммарное время банов: {get_formatted_timedelta(total_time)}'
         else:
             embed.description = 'Отсутствуют <:MF_Yelpozitiv:1198982508256165918>'
         await self.interaction.edit_original_message(embed=embed)
@@ -141,6 +142,11 @@ class Profile(AbstractCall):
                 await self.interaction.edit_original_message(
                     embed=embeds.error_message(content=Errors.no_user_id_with_ckey.value))
                 return
+            discord_user_id = await discord_auth.get_discord_user_id_by_user_id(user_id)
+            if discord_user_id is None:
+                ping_statement = 'Аккаунт не верифицирован 😶‍🌫️'
+            else:
+                ping_statement = f'Аккаунт верифицирован, как <@{discord_user_id}> ✅'
         else:
             user_id = await discord_auth.get_user_id_by_discord_user_id(self.interaction.user.id)
             if user_id is None:
@@ -148,6 +154,7 @@ class Profile(AbstractCall):
                     embed=embeds.error_message(content=Errors.no_user_id_with_discord.value))
                 return
             ckey = await player.get_ckey(user_id)
+            ping_statement = f'Аккаунт верифицирован, как <@{self.interaction.user.id}> ✅'
 
         creator = await promo.get_creator_code(user_id)
         first_seen = await seen_time.get_formatted_first_seen_time(user_id)
@@ -162,28 +169,30 @@ class Profile(AbstractCall):
         balance_info = await orientiks.get_balance(user_id)
         ban_status = await bans.get_last_ban_status(user_id)
 
-        embed = embeds.result_message(title=f'Профиль {ckey}:', content=f'Первое появление: {first_seen}\n'
-                                                                        f'Последнее появление: {last_seen}')
+        embed = embeds.result_message(title=f'Профиль {ckey}:',
+                                      content=f'Первое появление: {first_seen}\n'
+                                              f'Последнее появление: {last_seen}')
 
         if color is None:
             if ban_status == 0:
                 embed.color = 0x5c85d6
-                ban_status = "Без блокировки"
+                ban_status = 'Без блокировки ✅'
             elif ban_status == 1:
                 embed.colour = 0xe84f4f
-                ban_status = "Временно заблокирован"
+                ban_status = 'Временно заблокирован 😶‍🌫️'
             elif ban_status == 2:
                 embed.colour = 0x222222
-                ban_status = "Бессрочно заблокирован"
+                ban_status = 'Бессрочно заблокирован 🪦'
         else:
             if ban_status == 0:
-                ban_status = "Без блокировки"
+                ban_status = 'Без блокировки ✅'
             elif ban_status == 1:
-                ban_status = "Временно заблокирован"
+                ban_status = 'Временно заблокирован 😶‍🌫️'
             elif ban_status == 2:
-                ban_status = "Бессрочно заблокирован"
+                ban_status = 'Бессрочно заблокирован 🪦'
             embed.colour = color
 
+        embed.add_field(name='Дискорд:', value=f'{ping_statement}', inline=False)
         embed.add_field(name='Статус:', value=f'{ban_status}', inline=False)
         if creator is not None:
             embed.add_field(name='Код пригласителя:', value=f'{creator}', inline=False)
@@ -197,11 +206,11 @@ class Profile(AbstractCall):
             embed.add_field(name='Ранг администратора:',
                             value=f'{a_rank[0]}, стаж: {get_formatted_timedelta(a_rank[1])}', inline=False)
         if is_in_whitelist:
-            embed.add_field(name='Whitelist:', value='Есть!', inline=False)
+            embed.add_field(name='Whitelist:', value='Есть! 😊', inline=False)
         else:
-            embed.add_field(name='Whitelist:', value='Нет <:EDGEHOG:1106583346835898399>', inline=False)
+            embed.add_field(name='Whitelist:', value='Нет   <:EDGEHOG:1106583346835898399>', inline=False)
         if balance_info is not None:
-            embed.add_field(name='Баланс:', value=f'{balance_info} <:orienta:1250903370894671963>\'s', inline=False)
+            embed.add_field(name='Баланс:', value=f'{balance_info} <:orienta:1250903370894671963>', inline=False)
 
         await self.interaction.edit_original_message(embed=embed)
 
@@ -227,7 +236,8 @@ class Chars(AbstractCall):
 
         all_chars = await chars.get_formatted_chars(user_id)
         if all_chars is None:
-            await self.interaction.edit_original_message(embed=embeds.result_message(content=Results.no_bans_info.value))
+            await self.interaction.edit_original_message(
+                embed=embeds.result_message(content=Results.no_bans_info.value))
             return
 
         embed_array = []

@@ -33,7 +33,7 @@ class Balance(AbstractCall):
             ckey = await player.get_ckey(user_id)
 
         await self.interaction.edit_original_message(embed=embeds.result_message(title=f'Баланс {ckey}:',
-                                                                                 content=f'{await orientiks.get_balance(user_id)} <:orienta:1250903370894671963>\'s'))
+                                                                                 content=f'{await orientiks.get_balance(user_id)} <:orienta:1250903370894671963>'))
 
 
 class Transfer(AbstractCall):

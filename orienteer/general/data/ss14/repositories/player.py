@@ -1,6 +1,9 @@
 from typing import AsyncGenerator
 from uuid import UUID
 
+from aiocache import cached
+from aiocache.serializers import PickleSerializer
+
 from ..dbconnection import DBConnectionContextManager
 
 
@@ -35,4 +38,19 @@ async def all_user_ids_generator() -> AsyncGenerator[UUID, None]:
                 break
             for row in rows:
                 yield row['user_id']
+            offset += batch_size
+
+
+async def all_ckey_generator() -> AsyncGenerator[str, None]:
+    offset = 0
+    batch_size = 20
+
+    async with DBConnectionContextManager() as connection:
+        while True:
+            rows = await connection.fetch(
+                f'SELECT last_seen_user_name FROM player ORDER BY last_seen_time LIMIT {batch_size} OFFSET {offset}')
+            if not rows:
+                break
+            for row in rows:
+                yield row['last_seen_user_name']
             offset += batch_size

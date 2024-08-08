@@ -36,7 +36,7 @@ async def get_formatted_bans_and_total_stats(user_id: UUID) -> tuple[list[tuple[
         description = f'**Администратор:** {admin_name}\n'
         description += f'**Время получения:** {bantime_str}\n'
         description += f'**Время снятия:** {expiration_time_str}\n'
-        description += f'**Штраф:** {fine} <:orienta:1250903370894671963>\'s\n'
+        description += f'**Штраф:** {fine} <:orienta:1250903370894671963>\n'
         description += f'**Причина:** {reason}\n'
 
         formatted.append((title, description))

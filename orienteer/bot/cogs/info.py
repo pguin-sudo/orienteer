@@ -3,6 +3,7 @@ from disnake.ext import commands
 from disnake.ext.commands import Bot, BucketType
 
 from orienteer.bot.calls import info
+from orienteer.bot.utils.params import autocomplete_ckey
 
 
 class Info(commands.Cog):
@@ -29,7 +30,8 @@ class Info(commands.Cog):
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def roles(self, interaction: CommandInteraction, ckey: str | None = None):
+    async def roles(self, interaction: CommandInteraction,
+                    ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None)):
         """
         Выводит время, наигранное на разных ролях.
 
@@ -44,7 +46,8 @@ class Info(commands.Cog):
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def bans(self, interaction: CommandInteraction, ckey: str | None = None):
+    async def bans(self, interaction: CommandInteraction,
+                   ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None)):
         """
         Выводит все полученные на сервере баны и общий штраф за них.
 
@@ -59,7 +62,8 @@ class Info(commands.Cog):
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def profile(self, interaction: CommandInteraction, ckey: str | None = None):
+    async def profile(self, interaction: CommandInteraction,
+                      ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None)):
         """
         Выводит  информацию, связанную с игровым аккаунтом.
 
@@ -74,7 +78,8 @@ class Info(commands.Cog):
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def chars(self, interaction: CommandInteraction, ckey: str | None = None):
+    async def chars(self, interaction: CommandInteraction,
+                    ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None)):
         """
         Выводит общую информацию о персонажах игрока.
 
