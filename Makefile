@@ -22,6 +22,10 @@ bot:
 checker:
 	poetry run py -m orienteer.checker
 
+.PHONY: tests
+tests:
+	poetry run py -m tests
+
 
 # compose
 .PHONY: redis
