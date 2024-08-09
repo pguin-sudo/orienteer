@@ -6,7 +6,6 @@ from orienteer.bot.calls.abstract import AbstractCall
 from orienteer.bot.utils import embeds
 from orienteer.general.data.orienteer.services import orientiks
 from orienteer.general.formatting import plots
-from orienteer.general.formatting.time import get_formatted_datetime
 
 
 class GOI(AbstractCall):
@@ -15,7 +14,7 @@ class GOI(AbstractCall):
         last_cached_info = await orientiks.get_last_cached_info()
 
         embed = embeds.success_message(f'Сводка о состоянии рынка ориентиков',
-                                       f'**Спонсоркие:** {last_cached_info.total_sponsorship} <:orienta:1250903370894671963>\n'
+                                       f'**Спонсорские:** {last_cached_info.total_sponsorship} <:orienta:1250903370894671963>\n'
                                        f'**Потраченные:** {last_cached_info.total_spent} <:orienta:1250903370894671963>\n'
                                        f'**Штрафные:** {-last_cached_info.total_fine} <:orienta:1250903370894671963>\n'
                                        f'**За наигранное время:** {last_cached_info.total_from_time - last_cached_info.total_time_balancing} <:orienta:1250903370894671963>\n\n'
