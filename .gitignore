@@ -16,4 +16,5 @@ venv
 orienteer/general/config/local.py
 
 # Data
-celerybeat-schedule
+cache/*
+!cache/.gitkeep

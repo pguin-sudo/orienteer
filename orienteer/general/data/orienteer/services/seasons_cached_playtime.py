@@ -5,7 +5,7 @@ from uuid import UUID
 from orienteer.general.data.orienteer.database import async_session
 from orienteer.general.data.orienteer.models.seasons_cached_playtime import CachedPlaytime
 from orienteer.general.data.orienteer.repositories import seasons_cached_playtime
-from orienteer.general.data.ss14.repositories import playtime, player
+from orienteer.general.data.ss14.services import playtime, player
 
 
 async def get_cached_playtime(season_id: int, user_id: UUID):
@@ -14,18 +14,18 @@ async def get_cached_playtime(season_id: int, user_id: UUID):
 
 
 async def _process_user(user_id: UUID, season_id: int, db_session) -> timedelta:
-    overall_playtime = await playtime.get_tracker(user_id, 'Overall')
+    overall_playtime = await playtime.get_overall(user_id)
     if overall_playtime is None:
         return timedelta()
 
     cached_playtime = await seasons_cached_playtime.get_cached_playtime(db_session, season_id, user_id)
     if cached_playtime is None:
         await seasons_cached_playtime.add_cached_playtime(db_session,
-                                                          CachedPlaytime(user_id, overall_playtime['time_spent'],
+                                                          CachedPlaytime(user_id, overall_playtime,
                                                                          season_id))
         return timedelta()
 
-    return overall_playtime['time_spent'] - cached_playtime.playtime
+    return overall_playtime - cached_playtime.playtime
 
 
 async def get_leaderboard(season_id: int, depth: int = 7) -> Tuple[Tuple[UUID, Any], ...]:
@@ -37,4 +37,4 @@ async def get_leaderboard(season_id: int, depth: int = 7) -> Tuple[Tuple[UUID, A
 
     leaderboard.sort(key=lambda x: x[1], reverse=True)
 
-    return tuple(leaderboard[:7])
+    return tuple(leaderboard[:depth])

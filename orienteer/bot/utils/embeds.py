@@ -25,9 +25,9 @@ def error_message(title='Ошибка', content='', color=0xdb3c30, footer=''):
     return _base_embed(title='<:beer:1180521543390986324> ' + title, content=content, color=color, footer=footer)
 
 
-def success_message(title='Успех', content='', color=0x3cdb30):
+def success_message(title='Успех', content='', color=0x3cdb30, footer=''):
     color = 0x3cdb30 if color is None else color
-    return _base_embed(title='✅ ' + title, content=content, color=color)
+    return _base_embed(title='✅ ' + title, content=content, color=color, footer=footer)
 
 
 def result_message(title='Результат:', content='', color=0x5c85d6):

@@ -11,13 +11,15 @@ from alembic import context
 from orienteer.general.data.orienteer.models.common import *
 from orienteer.general.data.orienteer.models.discord_auth import *
 from orienteer.general.data.orienteer.models.orientiks import *
+from orienteer.general.data.orienteer.models.orientiks_cached_info import *
 from orienteer.general.data.orienteer.models.promotional_code import *
 from orienteer.general.data.orienteer.models.promotional_code_usages import *
-from orienteer.general.data.orienteer.models.sent_bans import *
 from orienteer.general.data.orienteer.models.purchases import *
-from orienteer.general.data.orienteer.models.sponsors import *
 from orienteer.general.data.orienteer.models.seasons import *
 from orienteer.general.data.orienteer.models.seasons_cached_playtime import *
+from orienteer.general.data.orienteer.models.sent_bans import *
+from orienteer.general.data.orienteer.models.sponsors import *
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

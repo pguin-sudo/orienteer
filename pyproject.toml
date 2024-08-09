@@ -29,6 +29,7 @@ apscheduler = "^3.10.4"
 pyright = "^1.1.374"
 aiocache = "^0.12.2"
 asyncstdlib = "^3.12.4"
+pandas = "^2.2.2"
 
 [build-system]
 requires = ["poetry-core"]

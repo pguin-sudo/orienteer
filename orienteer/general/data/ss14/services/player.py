@@ -1,3 +1,4 @@
+from typing import AsyncGenerator
 from uuid import UUID
 
 from aiocache import cached
@@ -12,6 +13,10 @@ async def get_user_id(nickname: str) -> UUID | None:
 
 async def get_ckey(user_id: UUID) -> str | None:
     return await player.get_ckey(user_id)
+
+
+def all_user_ids_generator() -> AsyncGenerator[UUID, None]:
+    return player.all_user_ids_generator()
 
 
 @cached(ttl=60, serializer=PickleSerializer())
