@@ -1,17 +1,16 @@
 import base64
 import io
+import urllib
 from uuid import UUID
 
 import qrcode
-import urllib
 from fastapi import HTTPException
 
 from orienteer.api.utils.discord import exchange_code, get_user_info
+from orienteer.general.config import AUTH_API_KEY, AUTH_REDIRECT_URI, BOT_ID, ROLES_PASSENGER
 from orienteer.general.data.orienteer.services import discord_auth
 from orienteer.general.data.ss14.services import player
 from orienteer.general.utils.discord import set_role
-
-from orienteer.general.config import AUTH_API_KEY, AUTH_REDIRECT_URI, BOT_ID, ROLES_PASSENGER
 
 
 async def generate_link(user_id: UUID):
@@ -48,34 +47,37 @@ async def check_linked(user_id: UUID):
 
 async def discord_auth_redirect(code: str, state: str) -> dict:
     if not code:
-        raise HTTPException(
-            status_code=400, detail='Не удается получить код авторизации.')
+        raise HTTPException(status_code=400, detail='Не удается получить код авторизации.')
 
     parsed_state = urllib.parse.parse_qs(state)
     user_id = parsed_state.get('user_id', [None])[0]
 
     if not user_id:
-        raise HTTPException(
-            status_code=400, detail='Не удалось получить идентификатор пользователя.')
+        raise HTTPException(status_code=400, detail='Не удалось получить идентификатор пользователя.')
 
     data = await exchange_code(code)
 
     if not data or 'access_token' not in data:
-        raise HTTPException(
-            status_code=400, detail='Не удалось получить токен доступа.')
+        raise HTTPException(status_code=400, detail='Не удалось получить токен доступа.')
 
     token = data['access_token']
     user_info = await get_user_info(token)
     user_name = await player.get_ckey(user_id)
 
     if user_name is None:
-        raise HTTPException(
-            status_code=400, detail='Неверный идентификатор пользователя.')
+        raise HTTPException(status_code=400, detail='Аккаунт SS14, который вы пытаетесь верифицировать не существует.')
 
     if await discord_auth.is_discord_linked(user_id):
-        raise HTTPException(status_code=400, detail='Аккаунт уже подтвержден.')
+        raise HTTPException(status_code=400, detail='Аккаунт SS14 уже подтвержден.')
 
     discord_user_id = int(user_info['id'])
+
+    linked_user_id = await discord_auth.get_user_id_by_discord_user_id(discord_user_id)
+    if linked_user_id is not None:
+        raise HTTPException(status_code=400,
+                            detail=f'Дискорд аккаунт уже связан с пользователем '
+                                   f'{await player.get_ckey(linked_user_id)}.')
+
     await discord_auth.link_discord(user_id, discord_user_id, user_info['username'])
     await set_role(discord_user_id, ROLES_PASSENGER)
 
