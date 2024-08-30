@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..models.purchases import Purchase
 
 
-async def create_purchase(db_session: AsyncSession, product_id: int, user_id: UUID, price: int) -> Purchase:
+async def create_purchase(db_session: AsyncSession, product_id: int, user_id: UUID, price: int | None) -> Purchase:
     purchase = Purchase(product_id=product_id, user_id=user_id, price=price)
     db_session.add(purchase)
     await db_session.commit()

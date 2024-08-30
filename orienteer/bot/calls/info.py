@@ -1,6 +1,7 @@
 from orienteer.bot.calls.abstract import AbstractCall
 from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors, Results
+from orienteer.general.config import CURRENCY_SIGN
 from orienteer.general.data.orienteer.services import discord_auth, promo, sponsors, orientiks
 from orienteer.general.data.requests import hub
 from orienteer.general.data.ss14.services import player, playtime, bans, seen_time, admin_rank, whitelist, chars
@@ -125,7 +126,7 @@ class Bans(AbstractCall):
             embed.add_field(ban[0], ban[1], inline=False)
 
         if total_fine > 0:
-            embed.description = f'Итого со штрафов: -{total_fine} <:orienta:1250903370894671963>\nСуммарное время банов: {get_formatted_timedelta(total_time)}'
+            embed.description = f'Итого со штрафов: -{total_fine} {CURRENCY_SIGN}\nСуммарное время банов: {get_formatted_timedelta(total_time)}'
         else:
             embed.description = 'Отсутствуют <:MF_Yelpozitiv:1198982508256165918>'
         await self.interaction.edit_original_message(embed=embed)
@@ -169,9 +170,8 @@ class Profile(AbstractCall):
         balance_info = await orientiks.get_balance(user_id)
         ban_status = await bans.get_last_ban_status(user_id)
 
-        embed = embeds.result_message(title=f'Профиль {ckey}:',
-                                      content=f'Первое появление: {first_seen}\n'
-                                              f'Последнее появление: {last_seen}')
+        embed = embeds.result_message(title=f'Профиль {ckey}:', content=f'Первое появление: {first_seen}\n'
+                                                                        f'Последнее появление: {last_seen}')
 
         if color is None:
             if ban_status == 0:
@@ -210,7 +210,7 @@ class Profile(AbstractCall):
         else:
             embed.add_field(name='Whitelist:', value='Нет   <:EDGEHOG:1106583346835898399>', inline=False)
         if balance_info is not None:
-            embed.add_field(name='Баланс:', value=f'{balance_info} <:orienta:1250903370894671963>', inline=False)
+            embed.add_field(name='Баланс:', value=f'{balance_info} {CURRENCY_SIGN}', inline=False)
 
         await self.interaction.edit_original_message(embed=embed)
 

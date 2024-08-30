@@ -2,13 +2,13 @@ from datetime import timezone, datetime, timedelta
 from uuid import UUID
 
 from orienteer.general.data.orienteer.repositories import purchases
-from orienteer.general.data.products.abstract_product import AbstractProduct
+from orienteer.general.data.products.products.abstract import AbstractProduct
 from ..database import async_session
 from ..models.purchases import Purchase
-from ...products import products
+from ...products.services import get_product
 
 
-async def create_purchase(user_id: UUID, product_id, product_price):
+async def create_purchase(user_id: UUID, product_id: int, product_price: int | None):
     async with async_session() as db_session:
         purchase = await purchases.create_purchase(db_session, product_id, user_id, product_price)
         return purchase
@@ -35,7 +35,7 @@ async def get_current_subscriptions() -> tuple[tuple[Purchase, AbstractProduct],
         purchases_ = await purchases.get_all_purchases(db_session)
         result = []
         for purchase in purchases_:
-            product = products.get_product(purchase.product_id)
+            product = get_product(purchase.product_id)
             if (product is None or product.cooldown is None or not product.is_subscription
                     or purchase.date + product.cooldown < datetime.now(timezone.utc)):
                 continue
@@ -48,7 +48,7 @@ async def get_all_user_purchases(user_id: UUID) -> tuple[tuple[Purchase, Abstrac
         purchases_ = await purchases.get_all_purchases_of_user(db_session, user_id)
         result = []
         for purchase in purchases_:
-            product = products.get_product(purchase.product_id)
+            product = get_product(purchase.product_id)
             if product is None:
                 continue
             result.append((purchase, product))

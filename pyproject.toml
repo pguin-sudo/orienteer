@@ -30,6 +30,8 @@ pyright = "^1.1.374"
 aiocache = "^0.12.2"
 asyncstdlib = "^3.12.4"
 pandas = "^2.2.2"
+mplcyberpunk = "^0.7.1"
+setuptools = "^72.1.0"
 
 [build-system]
 requires = ["poetry-core"]

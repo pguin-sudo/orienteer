@@ -3,18 +3,19 @@ from uuid import UUID
 
 from loguru import logger
 
+from orienteer.general.config import CURRENCY_SIGN
 from orienteer.general.data.orienteer.services import sponsors, orientiks
 from orienteer.general.data.ss14.services import bans
 from orienteer.general.utils.calculations import calculate_fine
-from .abstract_product import AbstractProduct
+from .abstract import AbstractProduct
 
 
 class ColoredNick(AbstractProduct):
     id = 0
     name = 'Цветной ник в OOC чате на месяц'
-    price_tag = '<:orienta:1250903370894671963>'
-    description = 'Внеси краски в свою жизнь и выделись на фоне остальных игроков. '
-    'За 30 <:orienta:1250903370894671963> укрась свой ник в ООС чате изменив его цвет на свой выбор.'
+    price_tag = CURRENCY_SIGN
+    description = f'Внеси краски в свою жизнь и выделись на фоне остальных игроков. '
+    'За 30 {CURRENCY_SIGN} укрась свой ник в ООС чате изменив его цвет на свой выбор.'
     image_url = 'https://media.discordapp.net/attachments/1162830763390140548/1250350926124941312/OOC.png'
     '?ex=666a9f8b&is=66694e0b&hm=97af81ca5481befdfe55eb31caa31871912158bc6896cf1572f666e3d5c78fcd&='
     '&format=webp&quality=lossless&width=725&height=671'
@@ -23,7 +24,7 @@ class ColoredNick(AbstractProduct):
     cooldown = timedelta(days=31)
 
     @staticmethod
-    async def calculate_price(user_id) -> int:
+    async def calculate_price(user_id: UUID) -> int | None:
         return 29
 
     @staticmethod
@@ -45,7 +46,7 @@ class ColoredNick(AbstractProduct):
 class GigachatAccess(AbstractProduct):
     id = 1
     name = 'Доступ в гигачат на месяц'
-    price_tag = '<:orienta:1250903370894671963>'
+    price_tag = CURRENCY_SIGN
     description = 'Прикоснись к немного более глубоким уровням взаимодействия администрации корпорации Ориента '
     'с участниками и стань членов чата спонсоров. Там ты сможешь общаться (в том числе, обсуждая рецепты блюд) '
     'с директорами и другими членами проекта напрямую и в более неформальной обстановке.'
@@ -58,7 +59,7 @@ class GigachatAccess(AbstractProduct):
     cooldown = timedelta(days=31)
 
     @staticmethod
-    async def calculate_price(user_id) -> int:
+    async def calculate_price(user_id: UUID) -> int | None:
         return 19
 
     @staticmethod
@@ -80,7 +81,7 @@ class GigachatAccess(AbstractProduct):
 class PriorityQueue(AbstractProduct):
     id = 2
     name = 'Приоритет в очереди на сервер на месяц'
-    price_tag = '<:orienta:1250903370894671963>'
+    price_tag = CURRENCY_SIGN
     description = 'Если тебе (внезапно) неприятно долго ожидать в очереди чтобы зайти на сервер ты можешь купить '
     'этот товар и заходить на него быстрее других игроков.'
     image_url = 'https://media.discordapp.net/attachments/1162830763390140548/1250350926716473465/Queue.png'
@@ -91,7 +92,7 @@ class PriorityQueue(AbstractProduct):
     cooldown = timedelta(days=31)
 
     @staticmethod
-    async def calculate_price(user_id) -> int:
+    async def calculate_price(user_id: UUID) -> int | None:
         return 19
 
     @staticmethod
@@ -113,7 +114,7 @@ class PriorityQueue(AbstractProduct):
 class Orientalink(AbstractProduct):
     id = 3
     name = 'Orientalink на месяц'
-    price_tag = '<:orienta:1250903370894671963>'
+    price_tag = CURRENCY_SIGN
     description = 'Да, да, тот самый Orientalink с кучей различных плюшек.'
     image_url = 'https://media.discordapp.net/attachments/1162830763390140548/1250350926716473465/Queue.png'
     '?ex=666a9f8b&is=66694e0b&hm=1bff6892241431d60d80ec58f24fe78b7bc8407dd5ec3d0740271f940c45ef1f&='
@@ -123,7 +124,7 @@ class Orientalink(AbstractProduct):
     cooldown = timedelta(days=31)
 
     @staticmethod
-    async def calculate_price(user_id) -> int:
+    async def calculate_price(user_id: UUID) -> int | None:
         return 19
 
     @staticmethod
@@ -145,7 +146,7 @@ class Orientalink(AbstractProduct):
 class BanAnnulment(AbstractProduct):
     id = 4
     name = 'Аннулирование бана'
-    price_tag = '<:orienta:1250903370894671963> за ваш последний бан'
+    price_tag = f'{CURRENCY_SIGN} за ваш последний бан'
     description = 'По глупой случайности нарушил правила и очень раскаиваешься но администрация не согласилась '
     'удовлетворить твое обжалование? С этим товаром ты сможешь закончить свое наказание настолько раньше '
     'насколько вздумается.\n'
@@ -158,7 +159,7 @@ class BanAnnulment(AbstractProduct):
     cooldown = timedelta(days=14)
 
     @staticmethod
-    async def calculate_price(user_id) -> int:
+    async def calculate_price(user_id: UUID) -> int | None:
         last_ban = await bans.get_last_ban(user_id)
 
         if last_ban is None:
@@ -168,7 +169,7 @@ class BanAnnulment(AbstractProduct):
         ban_time = last_ban['ban_time']
 
         if expiration_time is None:
-            return 999
+            return None
 
         return int((calculate_fine(expiration_time - ban_time)) * 2.5)
 
@@ -194,8 +195,8 @@ class BanAnnulment(AbstractProduct):
 class SevenNewSlots(AbstractProduct):
     id = 5
     name = '7 слотов на месяц'
-    price_tag = '<:orienta:1250903370894671963>'
-    description = '7 дополнительных слотов для персонажей.'
+    price_tag = CURRENCY_SIGN
+    description = '7 дополнительных слотов для персонажей в меню персонализации.'
     image_url = 'https://media.discordapp.net/attachments/1162830763390140548/1250350926716473465/Queue.png'
     '?ex=666a9f8b&is=66694e0b&hm=1bff6892241431d60d80ec58f24fe78b7bc8407dd5ec3d0740271f940c45ef1f&='
     '&format=webp&quality=lossless&width=725&height=671'
@@ -204,8 +205,8 @@ class SevenNewSlots(AbstractProduct):
     cooldown = timedelta(days=31)
 
     @staticmethod
-    async def calculate_price(user_id) -> int:
-        return 15
+    async def calculate_price(user_id: UUID) -> int | None:
+        return None
 
     @staticmethod
     async def can_buy(user_id: UUID) -> bool:
@@ -223,20 +224,12 @@ class SevenNewSlots(AbstractProduct):
         await sponsors.add_extra_clots(user_id, -7)
 
 
-def get_product(id_: int) -> AbstractProduct | None:
-    for product in get_all_products():
-        if product.id == id_:
-            return product
-    return None
-
-
 class SevenOrientiks(AbstractProduct):
     id = 6
     name = '21 ориентик на 24 часа'
-    price_tag = '<:orienta:1250903370894671963>'
-    description = (
-        'Да, ты всё правильно понял это 21 ориентик на 24 часа за 7 ориентиков. В чем подвох? Подвоха нет. '
-        'Это просто 21 ориентик на 24 часа за 7 ориентиков.')
+    price_tag = CURRENCY_SIGN
+    description = ('Да, ты всё правильно понял это 21 ориентик на 24 часа за 7 ориентиков. В чем подвох? Подвоха нет. '
+                   'Это просто 21 ориентик на 24 часа за 7 ориентиков.')
     image_url = 'https://media.discordapp.net/attachments/1162830763390140548/1250350926716473465/Queue.png'
     '?ex=666a9f8b&is=66694e0b&hm=1bff6892241431d60d80ec58f24fe78b7bc8407dd5ec3d0740271f940c45ef1f&='
     '&format=webp&quality=lossless&width=725&height=671'
@@ -245,8 +238,8 @@ class SevenOrientiks(AbstractProduct):
     cooldown = timedelta(days=1)
 
     @staticmethod
-    async def calculate_price(user_id) -> int:
-        return 7
+    async def calculate_price(user_id: UUID) -> int | None:
+        return None
 
     @staticmethod
     async def can_buy(user_id: UUID) -> bool:
@@ -261,14 +254,3 @@ class SevenOrientiks(AbstractProduct):
     async def retrieve(user_id: UUID):
         logger.info(f'Возврат {SevenOrientiks.name}')
         await orientiks.add_orientiks_from_sponsorship(user_id, -21)
-
-
-def get_product(id_: int) -> AbstractProduct | None:
-    for product in get_all_products():
-        if product.id == id_:
-            return product
-    return None
-
-
-def get_all_products() -> tuple[AbstractProduct]:
-    return ColoredNick, GigachatAccess, PriorityQueue, Orientalink, BanAnnulment, SevenNewSlots, SevenOrientiks  # noqa

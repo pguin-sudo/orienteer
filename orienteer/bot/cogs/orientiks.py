@@ -77,6 +77,21 @@ class Orientiks(commands.Cog):
         async with orientiks.Purchases(interaction) as call:
             await call()
 
+    @commands.slash_command()
+    @commands.cooldown(1, 5.0, BucketType.user)
+    async def buy(self, interaction: CommandInteraction, amount: int):
+        """
+        Позволяет покупать ориентики.
+
+        Parameters
+        ----------
+        interaction: Disnake interaction
+        amount: количество покупаемых ориентиков
+        """
+
+        async with orientiks.Buy(interaction) as call:
+            await call(amount)
+
 
 def setup(bot):
     bot.add_cog(Orientiks(bot))

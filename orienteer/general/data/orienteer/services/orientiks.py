@@ -1,5 +1,8 @@
+import math
+from datetime import datetime, timezone
 from uuid import UUID
 
+from orienteer.general.config import ORIENTIKS_MARGIN, ORIENTIKS_PRICE_COEFFICIENT
 from ..database import async_session
 from ..models.orientiks import Orientiks
 from ..models.orientiks_cached_info import OrientiksCachedInfo
@@ -103,6 +106,22 @@ async def get_all_cached_info() -> tuple[OrientiksCachedInfo, ...]:
         return await orientiks_cached_info.get_all_cached_info(db_session)
 
 
-async def get_last_cached_info() -> OrientiksCachedInfo:
+async def get_cached_info(timestamp: datetime | None = None) -> OrientiksCachedInfo:
+    timestamp = timestamp or datetime.now()
     async with async_session() as db_session:
-        return await orientiks_cached_info.get_last_cached_info(db_session)
+        return await orientiks_cached_info.get_cached_info(db_session, timestamp)
+
+
+async def get_price(buy: bool, timestamp: datetime | None = None) -> float:
+    timestamp = timestamp or datetime.now()
+    async with async_session() as db_session:
+        cached_info = await orientiks_cached_info.get_cached_info(db_session, timestamp)
+
+        numerator = math.log(cached_info.total_fine + cached_info.total_spent + 1)
+        denominator = math.log(
+            cached_info.total_from_time - cached_info.total_time_balancing + cached_info.total_sponsorship + 1)
+
+        clean_price = (numerator / denominator) * ORIENTIKS_PRICE_COEFFICIENT
+
+        price = clean_price * (1 + ORIENTIKS_MARGIN) if buy else clean_price * (1 - ORIENTIKS_MARGIN)
+        return round(price, 2)

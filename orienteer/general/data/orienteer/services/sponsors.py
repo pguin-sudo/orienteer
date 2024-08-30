@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from orienteer.general.config import ROLES_SPONSOR
+from orienteer.general.config import ROLES_GIGACHAT
 from orienteer.general.data.orienteer.models.sponsors import Sponsor
 from orienteer.general.utils import discord
 from ..database import async_session
@@ -99,7 +99,7 @@ async def set_sponsor_chat(user_id: UUID, status: bool):
         discord_user_id = await discord_auth.get_discord_user_id_by_user_id(db_session, user_id)
         if discord_user_id is None:
             raise Exception
-        await discord.set_role(discord_user_id, ROLES_SPONSOR, not status)
+        await discord.set_role(discord_user_id, ROLES_GIGACHAT, not status)
         return await sponsors.update_sponsor(db_session, user_id, have_sponsor_chat=status)
 
 

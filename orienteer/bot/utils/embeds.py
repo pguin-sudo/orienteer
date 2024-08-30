@@ -30,9 +30,9 @@ def success_message(title='Успех', content='', color=0x3cdb30, footer=''):
     return _base_embed(title='✅ ' + title, content=content, color=color, footer=footer)
 
 
-def result_message(title='Результат:', content='', color=0x5c85d6):
+def result_message(title='Результат:', content='', color=0x5c85d6, footer=''):
     color = 0x5c85d6 if color is None else color
-    return _base_embed(title=title, content=content, color=color)
+    return _base_embed(title=title, content=content, color=color, footer=footer)
 
 
 def char_embed(title='Неизвестный персонаж', content='', color=0xfff):

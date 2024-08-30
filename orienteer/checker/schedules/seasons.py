@@ -6,7 +6,7 @@ from loguru import logger
 
 from orienteer.general.config import WEBHOOKS_SEASONS, SEASON_MESSAGE_ID
 from orienteer.general.data.orienteer.services import seasons, seasons_cached_playtime, discord_auth
-from orienteer.general.data.products import products
+from orienteer.general.data.products.services import get_product
 from orienteer.general.data.ss14.services import player
 from orienteer.general.formatting.time import get_formatted_timedelta
 from orienteer.general.utils.discord import send_discord_message
@@ -27,7 +27,7 @@ async def check_season_and_update():
 
     description += f'### Награды:\n'
     for i, prize in enumerate(season.awards):
-        description += f'{i + 1}. **{products.get_product(i).name}**\n'
+        description += f'{i + 1}. **{get_product(i).name}**\n'
 
     if not await send_discord_message(WEBHOOKS_SEASONS, USERNAME, title=season.title, description=description,
                                       color=int(season.color, 16), timestamp=datetime.now(timezone.utc),

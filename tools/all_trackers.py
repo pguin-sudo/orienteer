@@ -15,3 +15,7 @@ def main():
     tracker_records = asyncio.run(unique_trackers())
     for tracker_record in tracker_records:
         logger.info(get_job_group_and_name(tracker_record['tracker'])[1])
+
+
+if __name__ == '__main__':
+    main()
