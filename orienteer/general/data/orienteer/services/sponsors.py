@@ -73,7 +73,7 @@ async def get_sponsor_state(user_id: UUID) -> dict:
                             "ghostTheme": sponsor.ghost_theme if sponsor.ghost_theme is not None else SponsorDefaults.ghost_theme,
                             "havePriorityJoin": sponsor.have_priority_join if sponsor.have_priority_join is not None else SponsorDefaults.have_priority_join, }
 
-        return {user_id: sponsor_data}
+        return {str(user_id): sponsor_data}
 
 
 async def get_sponsor(user_id: UUID) -> Sponsor | None:
