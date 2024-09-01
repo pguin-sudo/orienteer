@@ -4,15 +4,15 @@ from uuid import UUID
 import pytz
 
 from orienteer.bot.utils.content_locale import Errors, Results
-from orienteer.general.data.orienteer.database import async_session
-from orienteer.general.data.orienteer.repositories import promo
 from orienteer.general.data.ss14.repositories import playtime
 from orienteer.general.formatting.playtime import get_job_group_and_name
 from orienteer.general.formatting.time import get_formatted_timedelta
+from ..database import database_helper
+from ..repositories import promo
 
 
 async def get_creator_code(user_id) -> str | None:
-    async with async_session() as db_session:
+    async with database_helper.session_factory() as db_session:
         return await promo.get_creator_code(db_session, user_id)
 
 
@@ -20,7 +20,7 @@ async def try_promo(discord_user_id: int, user_id: UUID, code: str) -> tuple[boo
     # TODO: Lower only to official promos
     code = code.lower()
 
-    async with async_session() as db_session:
+    async with database_helper.session_factory() as db_session:
         data = await promo.get_promo_data(db_session, code)
         if not data or not data.usages:
             return False, Errors.promo_not_found.value

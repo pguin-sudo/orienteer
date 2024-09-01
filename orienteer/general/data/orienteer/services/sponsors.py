@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from uuid import UUID
 
 from orienteer.general.config import ROLES_GIGACHAT
-from orienteer.general.data.orienteer.models.sponsors import Sponsor
 from orienteer.general.utils import discord
-from ..database import async_session
+from ..database import database_helper
+from ..models.sponsors import Sponsor
 from ..repositories import sponsors, discord_auth
 
 
@@ -20,15 +20,15 @@ class SponsorDefaults:
 
 
 def _have_privileges(sponsor: Sponsor) -> bool:
-    if (sponsor.extra_slots == 0 and not sponsor.ooc_color and not sponsor.allowed_markings and not sponsor.ghost_theme
-            and not sponsor.have_sponsor_chat and not sponsor.have_priority_join):
+    if (
+            sponsor.extra_slots == 0 and not sponsor.ooc_color and not sponsor.allowed_markings and not sponsor.ghost_theme and not sponsor.have_sponsor_chat and not sponsor.have_priority_join):
         return False
     else:
         return True
 
 
 async def is_sponsor_active(user_id: UUID) -> bool:
-    async with async_session() as db_session:
+    async with database_helper.session_factory() as db_session:
         sponsor = await sponsors.get_sponsor(db_session, user_id)
 
     if sponsor is None or not _have_privileges(sponsor) or not sponsor.is_active:
@@ -38,7 +38,7 @@ async def is_sponsor_active(user_id: UUID) -> bool:
 
 
 async def get_sponsor_status_and_color(user_id: UUID) -> tuple[str | None, int | None]:
-    async with async_session() as db_session:
+    async with database_helper.session_factory() as db_session:
         sponsor = await sponsors.get_sponsor(db_session, user_id)
 
     if sponsor is None:
@@ -57,7 +57,7 @@ async def get_sponsor_status_and_color(user_id: UUID) -> tuple[str | None, int |
 
 
 async def get_sponsor_state(user_id: UUID) -> dict:
-    async with async_session() as db_session:
+    async with database_helper.session_factory() as db_session:
         sponsor: Sponsor | None = await sponsors.get_sponsor(db_session, user_id)
 
         if sponsor is None:
@@ -77,24 +77,24 @@ async def get_sponsor_state(user_id: UUID) -> dict:
 
 
 async def get_sponsor(user_id: UUID) -> Sponsor | None:
-    async with async_session() as db_session:
+    async with database_helper.session_factory() as db_session:
         return await sponsors.get_sponsor(db_session, user_id)
 
 
 async def add_extra_clots(user_id: UUID, amount: int) -> Sponsor | None:
-    async with async_session() as db_session:
+    async with database_helper.session_factory() as db_session:
         sponsor = await sponsors.try_create_empty_sponsor(db_session, user_id)
         return await sponsors.update_sponsor(db_session, user_id, extra_slots=sponsor.extra_slots + amount)
 
 
 async def set_colored_nick(user_id: UUID, color: str | None):
-    async with async_session() as db_session:
+    async with database_helper.session_factory() as db_session:
         await sponsors.try_create_empty_sponsor(db_session, user_id)
         return await sponsors.update_sponsor(db_session, user_id, ooc_color=color)
 
 
 async def set_sponsor_chat(user_id: UUID, status: bool):
-    async with async_session() as db_session:
+    async with database_helper.session_factory() as db_session:
         await sponsors.try_create_empty_sponsor(db_session, user_id)
         discord_user_id = await discord_auth.get_discord_user_id_by_user_id(db_session, user_id)
         if discord_user_id is None:
@@ -104,18 +104,18 @@ async def set_sponsor_chat(user_id: UUID, status: bool):
 
 
 async def set_priority_join(user_id: UUID, status: bool):
-    async with async_session() as db_session:
+    async with database_helper.session_factory() as db_session:
         await sponsors.try_create_empty_sponsor(db_session, user_id)
         return await sponsors.update_sponsor(db_session, user_id, have_priority_join=status)
 
 
 async def add_marking(user_id: UUID, marking: str):
-    async with async_session() as db_session:
+    async with database_helper.session_factory() as db_session:
         await sponsors.try_create_empty_sponsor(db_session, user_id)
         return await sponsors.add_marking(db_session, user_id, marking)
 
 
 async def remove_marking(user_id: UUID, marking: str):
-    async with async_session() as db_session:
+    async with database_helper.session_factory() as db_session:
         await sponsors.try_create_empty_sponsor(db_session, user_id)
         return await sponsors.remove_marking(db_session, user_id, marking)

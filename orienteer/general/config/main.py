@@ -6,6 +6,7 @@ load_dotenv('.env')
 
 # Debug settings
 DEBUG_MODE = False
+DEBUG_DB_ECHO = False
 
 # Bot settings
 BOT_TOKEN = os.getenv('BOT_TOKEN')
