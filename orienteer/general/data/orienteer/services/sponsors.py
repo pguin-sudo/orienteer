@@ -56,24 +56,24 @@ async def get_sponsor_status_and_color(user_id: UUID) -> tuple[str | None, int |
     return status, color
 
 
-async def get_sponsor_state(user_id: UUID) -> dict:
+async def get_sponsor_state(user_id: UUID) -> dict | None:
     async with database_helper.session_factory() as db_session:
         sponsor: Sponsor | None = await sponsors.get_sponsor(db_session, user_id)
 
         if sponsor is None:
-            sponsor_data = {"tier": 1, "extraSlots": SponsorDefaults.extra_slots, "oocColor": SponsorDefaults.ooc_color,
-                            "allowedMarkings": SponsorDefaults.allowed_markings,
-                            "ghostTheme": SponsorDefaults.ghost_theme,
-                            "havePriorityJoin": SponsorDefaults.have_priority_join, }
+            return None
         else:
-            sponsor_data = {"tier": 1,
-                            "extraSlots": sponsor.extra_slots if sponsor.extra_slots != 0 else SponsorDefaults.extra_slots,
-                            "oocColor": sponsor.ooc_color if sponsor.ooc_color is not None else SponsorDefaults.ooc_color,
-                            "allowedMarkings": sponsor.allowed_markings if sponsor.allowed_markings != [] else SponsorDefaults.allowed_markings,
-                            "ghostTheme": sponsor.ghost_theme if sponsor.ghost_theme is not None else SponsorDefaults.ghost_theme,
-                            "havePriorityJoin": sponsor.have_priority_join if sponsor.have_priority_join is not None else SponsorDefaults.have_priority_join, }
+            sponsor_data = {'tier': 1,
+                            'extraSlots': sponsor.extra_slots if sponsor.extra_slots != 0 else SponsorDefaults.extra_slots,
+                            'oocColor': f'#{sponsor.ooc_color if sponsor.ooc_color is not None else SponsorDefaults.ooc_color}',
+                            'allowedMarkings': sponsor.allowed_markings if sponsor.allowed_markings != [] else SponsorDefaults.allowed_markings,
+                            'ghostTheme': '',
+                            'priorityJoin': sponsor.have_priority_join if sponsor.have_priority_join is not None else SponsorDefaults.have_priority_join,
+                            'openAllRoles': False,
+                            'loadouts': []
+                            }
 
-        return {str(user_id): sponsor_data}
+        return sponsor_data
 
 
 async def get_sponsor(user_id: UUID) -> Sponsor | None:
