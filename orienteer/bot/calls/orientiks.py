@@ -9,7 +9,7 @@ from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors, Results, Success
 from orienteer.general.config import CURRENCY_SIGN, USERS_OWNERS
 from orienteer.general.data.orienteer.services import discord_auth, orientiks, purchases
-from orienteer.general.data.products import products
+from orienteer.general.data.products.services import get_all_products
 from orienteer.general.data.products.products.abstract import AbstractProduct
 from orienteer.general.data.ss14.services import player
 from orienteer.general.formatting.time import *
@@ -100,7 +100,7 @@ class Shop(AbstractCall):
         embed = embeds.result_message(title='Товары, доступные к покупке:')
         button_view = View()
 
-        products_array = products.get_all_products()
+        products_array = get_all_products()
 
         def create_callback(product_: AbstractProduct):
             async def buy(interaction: Interaction):
