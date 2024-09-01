@@ -1,7 +1,13 @@
 <!-- templates/success.html -->
 {% extends "base_template.html" %}
 {% block content %}
-    <h2 class="accent">Успех!</h2>
-    <h5>Ваш аккаунт SS14 "<span class="accent">{{ user_name }}</span>" был успешно связан с аккаунтом Discord "<span
-            class="accent">{{ discord_name }}</span>".</h5>
+    <h2 class="accent">Наши поздравления!</h2>
+    <p>Ваш аккаунт SS14 "<span class="accent">{{ user_name }}</span>" был успешно связан с Discord-аккаунтом "<span
+            class="accent">{{ discord_name }}</span>".
+    </p>
+    <p class="text-muted">
+        Теперь вы можете полноценно пользоваться нашим Discord-ботом
+        <a href="https://discord.com/channels/@me/1199716683766562876">@orienteer</a>. Просто напишите /help в
+        <a href="https://discord.com/invite/J4ntC79E39">#┃🤖┋консоль</a>.
+    </p>
 {% endblock %}
