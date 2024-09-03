@@ -206,7 +206,7 @@ class SevenNewSlots(AbstractProduct):
 
     @staticmethod
     async def calculate_price(user_id: UUID) -> int | None:
-        return None
+        return 19
 
     @staticmethod
     async def can_buy(user_id: UUID) -> bool:
@@ -239,7 +239,7 @@ class SevenOrientiks(AbstractProduct):
 
     @staticmethod
     async def calculate_price(user_id: UUID) -> int | None:
-        return None
+        return 7
 
     @staticmethod
     async def can_buy(user_id: UUID) -> bool:
