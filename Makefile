@@ -1,8 +1,10 @@
 # git
 .PHONY: update
 update:
-	git fetch
-	git pull
+	git fetch --all
+	git stash
+	git reset --hard origin/master
+	git stash pop
 
 
 # modules
@@ -25,9 +27,3 @@ checker:
 .PHONY: tests
 tests:
 	poetry run py -m tests
-
-
-# compose
-.PHONY: redis
-redis:
-	poetry run docker-compose up redis
