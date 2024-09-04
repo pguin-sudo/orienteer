@@ -5,6 +5,7 @@ from orienteer.general.config import CURRENCY_SIGN
 from orienteer.general.data.orienteer.services import discord_auth, promo, sponsors, orientiks
 from orienteer.general.data.requests import hub
 from orienteer.general.data.ss14.services import player, playtime, bans, seen_time, admin_rank, whitelist, chars
+from orienteer.general.formatting.player import ping
 from orienteer.general.formatting.time import *
 
 
@@ -147,7 +148,7 @@ class Profile(AbstractCall):
             if discord_user_id is None:
                 ping_statement = 'Аккаунт не верифицирован 😶‍🌫️'
             else:
-                ping_statement = f'Аккаунт верифицирован, как <@{discord_user_id}> ✅'
+                ping_statement = f'Аккаунт верифицирован, как {ping(discord_user_id)} ✅'
         else:
             user_id = await discord_auth.get_user_id_by_discord_user_id(self.interaction.user.id)
             if user_id is None:
@@ -155,7 +156,7 @@ class Profile(AbstractCall):
                     embed=embeds.error_message(content=Errors.no_user_id_with_discord.value))
                 return
             ckey = await player.get_ckey(user_id)
-            ping_statement = f'Аккаунт верифицирован, как <@{self.interaction.user.id}> ✅'
+            ping_statement = f'Аккаунт верифицирован, как {ping(self.interaction.user.id)} ✅'
 
         creator = await promo.get_creator_code(user_id)
         first_seen = await seen_time.get_formatted_first_seen_time(user_id)

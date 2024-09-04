@@ -10,6 +10,7 @@ from orienteer.general.data.orienteer.services import orientiks, discord_auth, p
 from orienteer.general.data.products.services import boosty_levels
 from orienteer.general.data.ss14.services import player
 from orienteer.general.formatting import plots
+from orienteer.general.formatting.player import ping
 
 
 class GOI(AbstractCall):
@@ -46,7 +47,7 @@ class Reward(AbstractCall):
         discord_user_id = await discord_auth.get_discord_user_id_by_user_id(user_id)
 
         embed = embeds.success_message(
-            content=f'{amount} ориентик(ов) были выданы {ckey}{f'(<@{discord_user_id}>)' if discord_user_id is not None else f', дискорд аккаунт не привязан'}')
+            content=f'{amount} ориентик(ов) были выданы {ckey}{ping(discord_user_id)}')
 
         await self.interaction.edit_original_message(embed=embed)
 
@@ -69,6 +70,6 @@ class NewSponsor(AbstractCall):
         discord_user_id = await discord_auth.get_discord_user_id_by_user_id(user_id)
 
         embed = embeds.success_message(
-            content=f'Уровень подписки {subscription_level} был выдан {ckey}{f'(<@{discord_user_id}>)' if discord_user_id is not None else f', дискорд аккаунт не привязан'}')
+            content=f'Уровень подписки {subscription_level} был выдан {ckey}{ping(discord_user_id)}')
 
         await self.interaction.edit_original_message(embed=embed)

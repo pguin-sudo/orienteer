@@ -8,6 +8,7 @@ from orienteer.general.config import WEBHOOKS_SEASONS, SEASON_MESSAGE_ID
 from orienteer.general.data.orienteer.services import seasons, seasons_cached_playtime, discord_auth
 from orienteer.general.data.products.services import get_product
 from orienteer.general.data.ss14.services import player
+from orienteer.general.formatting.player import ping
 from orienteer.general.formatting.time import get_formatted_timedelta
 from orienteer.general.utils.discord import send_discord_message
 
@@ -22,8 +23,8 @@ async def check_season_and_update():
     description += f'### Самые активные игроки:\n'
     for i, leader in enumerate(leaderboard):
         discord_user_id = await discord_auth.get_discord_user_id_by_user_id(leader[0])
-        discord_ping = ' (<@' + str(discord_user_id) + '>)' if discord_user_id else ''
-        description += f'{i + 1}. **{await player.get_ckey(leader[0])}{discord_ping}:** {get_formatted_timedelta(leader[1])}\n'
+        description += (f'{i + 1}. **{await player.get_ckey(leader[0])}{ping(discord_user_id)}:** '
+                        f'{get_formatted_timedelta(leader[1])}\n')
 
     description += f'### Награды:\n'
     for i, prize in enumerate(season.awards):

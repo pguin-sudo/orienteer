@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import Tuple, Any
+from typing import Any
 from uuid import UUID
 
 from orienteer.general.data.ss14.services import playtime, player
@@ -27,7 +27,7 @@ async def _process_user(user_id: UUID, season_id: int, db_session) -> timedelta:
     return overall_playtime - cached_playtime.playtime
 
 
-async def get_leaderboard(season_id: int, depth: int = 7) -> Tuple[Tuple[UUID, Any], ...]:
+async def get_leaderboard(season_id: int, depth: int = 7) -> tuple[tuple[UUID, Any], ...]:
     leaderboard = []
 
     async with database_helper.session_factory() as db_session:

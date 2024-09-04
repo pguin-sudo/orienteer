@@ -8,7 +8,7 @@ from orienteer.bot.utils.params import autocomplete_ckey
 
 class Orientiks(commands.Cog):
     """
-    Экономика  💶
+        Экономика  💶
     """
 
     def __init__(self, bot):
@@ -91,6 +91,20 @@ class Orientiks(commands.Cog):
 
         async with orientiks.Buy(interaction) as call:
             await call(amount)
+
+    @commands.slash_command()
+    @commands.cooldown(1, 5.0, BucketType.user)
+    async def bogachi(self, interaction: CommandInteraction):
+        """
+        Выводит список самых богатых людей.
+
+        Parameters
+        ----------
+        interaction: Disnake interaction
+        """
+
+        async with orientiks.Bogachi(interaction) as call:
+            await call()
 
 
 def setup(bot):

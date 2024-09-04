@@ -1,6 +1,11 @@
 import math
 from datetime import datetime
+from typing import Any
 from uuid import UUID
+
+from aiocache import cached
+from aiocache.serializers import PickleSerializer
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from orienteer.general.config import ORIENTIKS_MARGIN, ORIENTIKS_PRICE_COEFFICIENT
 from ..database import database_helper
@@ -24,13 +29,21 @@ async def _init_balance(user_id: UUID) -> None:
         await orientiks.add_time_balancing(db_session, user_id, int(overall.total_seconds() // 3600 * PRICE_FOR_INIT))
 
 
-async def get_balance(user_id: UUID) -> int:
+async def get_balance(user_id: UUID, db_session: AsyncSession | None = None) -> int:
+    # !!! After SS14 db refactoring
     overall = await playtime.get_overall(user_id)
 
     if overall is None:
         return 0
 
-    async with database_helper.session_factory() as db_session:
+    # I think it is a very bad decision to do that, well fuck this
+    if db_session is None:
+        async with database_helper.session_factory() as db_session:
+            raw_info = await orientiks.get_balance_raw_info(db_session, user_id=user_id)
+            if raw_info is None:
+                await _init_balance(user_id)
+                raw_info = await orientiks.get_balance_raw_info(db_session, user_id=user_id)
+    else:
         raw_info = await orientiks.get_balance_raw_info(db_session, user_id=user_id)
         if raw_info is None:
             await _init_balance(user_id)
@@ -63,29 +76,22 @@ async def add_time_balancing(user_id: UUID, minutes: int) -> None:
 
 
 async def add_calculated_cached_info() -> OrientiksCachedInfo:
-    # Initialize the info object with default values
     info = OrientiksCachedInfo(total_sponsorship=0, total_friends=0, total_pardons=0, total_time_balancing=0,
                                total_spent=0, total_fine=0, total_from_time=0)
 
     async with database_helper.session_factory() as db_session:
-        # Iterate over all user IDs
         async for user_id in player.all_user_ids_generator():
-            # Fetch the overall playtime for the user
             overall = await playtime.get_overall(user_id)
-            if overall is None:
+            if overall is None or await bans.get_last_ban_status(user_id) == 2:
                 continue
 
-            # Fetch raw balance info
             raw_info = await orientiks.get_balance_raw_info(db_session, user_id=user_id)
             if raw_info is None:
-                # Initialize balance if info is not available
                 await _init_balance(user_id)
                 raw_info = await orientiks.get_balance_raw_info(db_session, user_id=user_id)
 
-            # Fetch any fines the user might have
             fine = await bans.get_fine(user_id=user_id)
 
-            # Accumulate totals
             info.total_sponsorship += raw_info.sponsorship
             info.total_friends += raw_info.friends
             info.total_pardons += raw_info.pardons
@@ -94,7 +100,6 @@ async def add_calculated_cached_info() -> OrientiksCachedInfo:
             info.total_fine += fine
             info.total_from_time += int(overall.total_seconds() // 3600 * PRICE)
 
-    # Update the cached information in the database
     async with database_helper.session_factory() as db_session:
         await orientiks_cached_info.add_cached_info(db_session, info)
 
@@ -125,3 +130,19 @@ async def get_price(buy: bool, timestamp: datetime | None = None) -> float:
 
         price = clean_price * (1 + ORIENTIKS_MARGIN) if buy else clean_price * (1 - ORIENTIKS_MARGIN)
         return round(price, 2)
+
+
+@cached(ttl=3600, serializer=PickleSerializer())
+async def get_leaderboard(depth: int = 27) -> tuple[tuple[UUID, Any], ...]:
+    leaderboard = []
+
+    async with database_helper.session_factory() as db_session:
+        async for user_id in player.all_user_ids_generator():
+            if await bans.get_last_ban_status(user_id) == 2:
+                continue
+
+            leaderboard.append((user_id, await get_balance(user_id, db_session)))
+
+    leaderboard.sort(key=lambda x: x[1], reverse=True)
+
+    return tuple(leaderboard[:depth])

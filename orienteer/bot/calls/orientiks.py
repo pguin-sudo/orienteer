@@ -9,9 +9,10 @@ from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors, Results, Success
 from orienteer.general.config import CURRENCY_SIGN, USERS_OWNERS
 from orienteer.general.data.orienteer.services import discord_auth, orientiks, purchases
-from orienteer.general.data.products.services import get_all_products
 from orienteer.general.data.products.products.abstract import AbstractProduct
+from orienteer.general.data.products.services import get_all_products
 from orienteer.general.data.ss14.services import player
+from orienteer.general.formatting.player import ping
 from orienteer.general.formatting.time import *
 
 
@@ -254,3 +255,19 @@ class Buy(AbstractCall):
         button_view.add_item(button)
 
         await self.interaction.edit_original_message(embed=embed, view=button_view)
+
+
+class Bogachi(AbstractCall):
+    async def __call__(self):
+        leaderboard = await orientiks.get_leaderboard()
+        description = ''
+
+        for i, leader in enumerate(leaderboard):
+            description += (f'{i + 1}. '
+                            f'**{await player.get_ckey(leader[0])}'
+                            f'{ping(await discord_auth.get_discord_user_id_by_user_id(leader[0]))}:** '
+                            f'{leader[1]}{CURRENCY_SIGN}\n')
+
+        embed = embeds.result_message('Богачи:', content=description)
+
+        await self.interaction.edit_original_message(embed=embed)
