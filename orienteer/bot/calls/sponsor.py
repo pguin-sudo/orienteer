@@ -30,19 +30,23 @@ class SponsorInfo(AbstractCall):
             content = 'Привилегии временно деактивированы.'
         else:
             content = ''
-            if sponsor.extra_slots != 0:
-                content += f'- **Дополнительные слоты 🎰:** {sponsor.extra_slots}\n'
             if sponsor.ooc_color:
                 content += f'- **Цвет в OOC 🧊:** #{sponsor.ooc_color}\n'
                 color = int(sponsor.ooc_color, 16)
+            if sponsor.priority_join:
+                content += f'- **Приоритетный вход 🚪**\n'
+            if sponsor.extra_slots != 0:
+                content += f'- **Дополнительные слоты 🎰:** {sponsor.extra_slots}\n'
             if sponsor.allowed_markings:
                 content += f'- **Модификации персонажа 😶‍🌫️:** {sponsor.allowed_markings}\n'
+            if sponsor.loadouts:
+                content += f'- **Дополнительные предметы 🔮:** {sponsor.loadouts}\n'
+            if sponsor.open_all_roles:
+                content += f'- **Разблокировка всех профессий 🧑🏻‍🏫**\n'
             if sponsor.ghost_theme:
-                content += f'- **Тема призрака 👻:** {sponsor.ghost_theme}\n'
-            if sponsor.have_sponsor_chat:
+                content += f'- **Тема призрака 👻:** {sponsor.ghost_theme}\n\n'
+            if sponsor.sponsor_chat:
                 content += f'- **Доступ в спонсор чат 💥**\n'
-            if sponsor.have_priority_join:
-                content += f'- **Приоритетный вход 🚪**\n\n'
             if sponsor.created_at:
                 content += (f'*Первая подписка:* {get_formatted_datetime(sponsor.created_at)}, '
                             f'{get_formatted_timedelta(datetime.now(timezone.utc) - sponsor.created_at)} назад\n')

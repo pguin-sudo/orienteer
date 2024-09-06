@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from uuid import UUID
 
 from orienteer.general.config import ROLES_GIGACHAT
@@ -8,20 +7,9 @@ from ..models.sponsors import Sponsor
 from ..repositories import sponsors, discord_auth
 
 
-@dataclass
-class SponsorDefaults:
-    tier: int = 0
-    extra_slots: int = 0
-    ooc_color: str = '87cefa'
-    allowed_markings: tuple[str] = ('',)
-    ghost_theme: str = ''
-    have_sponsor_chat: bool = False
-    have_priority_join: bool = False
-
-
 def _have_privileges(sponsor: Sponsor) -> bool:
     if (
-            sponsor.extra_slots == 0 and not sponsor.ooc_color and not sponsor.allowed_markings and not sponsor.ghost_theme and not sponsor.have_sponsor_chat and not sponsor.have_priority_join):
+            sponsor.extra_slots == 0 and not sponsor.ooc_color and not sponsor.allowed_markings and not sponsor.ghost_theme and not sponsor.sponsor_chat and not sponsor.priority_join):
         return False
     else:
         return True
@@ -62,16 +50,21 @@ async def get_sponsor_state(user_id: UUID) -> dict | None:
 
         if sponsor is None:
             return None
-        else:
-            sponsor_data = {'tier': 1,
-                            'extraSlots': sponsor.extra_slots if sponsor.extra_slots != 0 else SponsorDefaults.extra_slots,
-                            'oocColor': f'#{sponsor.ooc_color if sponsor.ooc_color is not None else SponsorDefaults.ooc_color}',
-                            'allowedMarkings': sponsor.allowed_markings if sponsor.allowed_markings != [] else SponsorDefaults.allowed_markings,
-                            'ghostTheme': '',
-                            'priorityJoin': sponsor.have_priority_join if sponsor.have_priority_join is not None else SponsorDefaults.have_priority_join,
-                            'openAllRoles': False,
-                            'loadouts': []
-                            }
+
+        sponsor_data = {
+            'tier': 1,
+            'priorityJoin': sponsor.priority_join,
+            'extraSlots': sponsor.extra_slots,
+            'allowedMarkings': sponsor.allowed_markings,
+            'loadouts': sponsor.loadouts,
+            'openAllRoles': sponsor.open_all_roles,
+            'ghostTheme': sponsor.ghost_theme}
+
+        if sponsor.ooc_color is not None:
+            sponsor_data['oocColor'] = f'#{sponsor.ooc_color}'
+
+        if sponsor.ghost_theme is not None:
+            sponsor_data['ghost_theme'] = f'{sponsor.ghost_theme}'
 
         return sponsor_data
 
@@ -100,13 +93,13 @@ async def set_sponsor_chat(user_id: UUID, status: bool):
         if discord_user_id is None:
             raise Exception
         await discord.set_role(discord_user_id, ROLES_GIGACHAT, not status)
-        return await sponsors.update_sponsor(db_session, user_id, have_sponsor_chat=status)
+        return await sponsors.update_sponsor(db_session, user_id, sponsor_chat=status)
 
 
 async def set_priority_join(user_id: UUID, status: bool):
     async with database_helper.session_factory() as db_session:
         await sponsors.try_create_empty_sponsor(db_session, user_id)
-        return await sponsors.update_sponsor(db_session, user_id, have_priority_join=status)
+        return await sponsors.update_sponsor(db_session, user_id, priority_join=status)
 
 
 async def add_marking(user_id: UUID, marking: str):
@@ -119,3 +112,15 @@ async def remove_marking(user_id: UUID, marking: str):
     async with database_helper.session_factory() as db_session:
         await sponsors.try_create_empty_sponsor(db_session, user_id)
         return await sponsors.remove_marking(db_session, user_id, marking)
+
+
+async def add_laodout(user_id: UUID, marking: str):
+    async with database_helper.session_factory() as db_session:
+        await sponsors.try_create_empty_sponsor(db_session, user_id)
+        return await sponsors.add_loadout(db_session, user_id, marking)
+
+
+async def remove_laodout(user_id: UUID, marking: str):
+    async with database_helper.session_factory() as db_session:
+        await sponsors.try_create_empty_sponsor(db_session, user_id)
+        return await sponsors.remove_loadout(db_session, user_id, marking)

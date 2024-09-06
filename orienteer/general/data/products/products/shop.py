@@ -65,7 +65,7 @@ class GigachatAccess(AbstractProduct):
     @staticmethod
     async def can_buy(user_id: UUID) -> bool:
         sponsor = await sponsors.get_sponsor(user_id)
-        return sponsor is None or sponsor.have_sponsor_chat is None or not sponsor.have_sponsor_chat
+        return sponsor is None or sponsor.sponsor_chat is None or not sponsor.sponsor_chat
 
     @staticmethod
     async def buy(user_id: UUID):
@@ -98,7 +98,7 @@ class PriorityQueue(AbstractProduct):
     @staticmethod
     async def can_buy(user_id: UUID) -> bool:
         sponsor = await sponsors.get_sponsor(user_id)
-        return sponsor is None or sponsor.have_priority_join is None or not sponsor.have_priority_join
+        return sponsor is None or sponsor.priority_join is None or not sponsor.priority_join
 
     @staticmethod
     async def buy(user_id: UUID):
@@ -135,12 +135,12 @@ class Orientalink(AbstractProduct):
     @staticmethod
     async def buy(user_id: UUID):
         logger.info(f'Покупка {Orientalink.name}')
-        await sponsors.add_marking(user_id, 'Orientalink')
+        await sponsors.add_loadout(user_id, 'Orientalink')
 
     @staticmethod
     async def retrieve(user_id: UUID):
         logger.info(f'Возврат {Orientalink.name}')
-        await sponsors.remove_marking(user_id, 'Orientalink')
+        await sponsors.remove_loadout(user_id, 'Orientalink')
 
 
 class BanAnnulment(AbstractProduct):

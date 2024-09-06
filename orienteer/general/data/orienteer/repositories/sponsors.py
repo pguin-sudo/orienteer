@@ -49,3 +49,24 @@ async def remove_marking(db_session: AsyncSession, user_id, marking):
             await db_session.commit()
         return sponsor
     return None
+
+
+async def add_loadout(db_session: AsyncSession, user_id, marking):
+    sponsor = (await db_session.execute(select(Sponsor).filter_by(user_id=user_id))).fetchone()
+    if sponsor is not None:
+        sponsor = sponsor[0]
+        sponsor.loadouts.append(marking)
+        await db_session.commit()
+        return sponsor
+    return None
+
+
+async def remove_loadout(db_session: AsyncSession, user_id, marking):
+    sponsor = (await db_session.execute(select(Sponsor).filter_by(user_id=user_id))).fetchone()
+    if sponsor is not None:
+        if marking in sponsor.allowed_markings:
+            sponsor.loadouts.remove(marking)
+            await db_session.commit()
+        return sponsor
+    return None
+

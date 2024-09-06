@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from ..models.seasons import Season
 from ..repositories import seasons
 from ..database import database_helper
