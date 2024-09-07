@@ -114,13 +114,13 @@ async def remove_marking(user_id: UUID, marking: str):
         return await sponsors.remove_marking(db_session, user_id, marking)
 
 
-async def add_laodout(user_id: UUID, marking: str):
+async def add_laodout(user_id: UUID, laodout: str):
     async with database_helper.session_factory() as db_session:
         await sponsors.try_create_empty_sponsor(db_session, user_id)
-        return await sponsors.add_loadout(db_session, user_id, marking)
+        return await sponsors.add_loadout(db_session, user_id, laodout)
 
 
-async def remove_laodout(user_id: UUID, marking: str):
+async def remove_laodout(user_id: UUID, laodout: str):
     async with database_helper.session_factory() as db_session:
         await sponsors.try_create_empty_sponsor(db_session, user_id)
-        return await sponsors.remove_loadout(db_session, user_id, marking)
+        return await sponsors.remove_loadout(db_session, user_id, laodout)

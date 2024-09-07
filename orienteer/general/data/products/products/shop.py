@@ -135,12 +135,12 @@ class Orientalink(AbstractProduct):
     @staticmethod
     async def buy(user_id: UUID):
         logger.info(f'Покупка {Orientalink.name}')
-        await sponsors.add_loadout(user_id, 'Orientalink')
+        await sponsors.add_laodout(user_id, 'OrientaLink80')
 
     @staticmethod
     async def retrieve(user_id: UUID):
         logger.info(f'Возврат {Orientalink.name}')
-        await sponsors.remove_loadout(user_id, 'Orientalink')
+        await sponsors.add_laodout(user_id, 'OrientaLink80')
 
 
 class BanAnnulment(AbstractProduct):
