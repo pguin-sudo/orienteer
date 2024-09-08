@@ -35,7 +35,7 @@ class Reward(AbstractCall):
     async def __call__(self, ckey: str, amount: int):
         ckey = ckey.replace(' ', '')
 
-        user_id = await player.get_user_id(ckey)
+        user_id, ckey = await player.get_user_id_nocased(ckey)
 
         if user_id is None:
             await self.interaction.edit_original_message(
@@ -56,7 +56,7 @@ class NewSponsor(AbstractCall):
     async def __call__(self, ckey: str, subscription_level: str):
         ckey = ckey.replace(' ', '')
 
-        user_id = await player.get_user_id(ckey)
+        user_id, ckey = await player.get_user_id_nocased(ckey)
 
         if user_id is None:
             await self.interaction.edit_original_message(

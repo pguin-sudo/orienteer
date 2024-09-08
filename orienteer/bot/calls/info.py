@@ -57,7 +57,7 @@ class Roles(AbstractCall):
         if ckey is not None:
             ckey = ckey.replace(' ', '')
 
-            user_id = await player.get_user_id(ckey)
+            user_id, ckey = await player.get_user_id_nocased(ckey)
 
             if user_id is None:
                 await self.interaction.edit_original_message(
@@ -97,7 +97,7 @@ class Bans(AbstractCall):
         if ckey is not None:
             ckey = ckey.replace(' ', '')
 
-            user_id = await player.get_user_id(ckey)
+            user_id, ckey = await player.get_user_id_nocased(ckey)
 
             if user_id is None:
                 await self.interaction.edit_original_message(
@@ -138,7 +138,7 @@ class Profile(AbstractCall):
         if ckey is not None:
             ckey = ckey.replace(' ', '')
 
-            user_id = await player.get_user_id(ckey)
+            user_id, ckey = await player.get_user_id_nocased(ckey)
 
             if user_id is None:
                 await self.interaction.edit_original_message(
@@ -221,7 +221,7 @@ class Chars(AbstractCall):
         if ckey is not None:
             ckey = ckey.replace(' ', '')
 
-            user_id = await player.get_user_id(ckey)
+            user_id, ckey = await player.get_user_id_nocased(ckey)
 
             if user_id is None:
                 await self.interaction.edit_original_message(

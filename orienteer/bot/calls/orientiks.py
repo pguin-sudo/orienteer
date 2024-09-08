@@ -21,7 +21,7 @@ class Balance(AbstractCall):
         if ckey is not None:
             ckey = ckey.replace(' ', '')
 
-            user_id = await player.get_user_id(ckey)
+            user_id, ckey = await player.get_user_id_nocased(ckey)
 
             if user_id is None:
                 await self.interaction.edit_original_message(
@@ -43,7 +43,7 @@ class Transfer(AbstractCall):
     async def __call__(self, recipient_ckey: str, amount: int) -> None:
         recipient_ckey = recipient_ckey.replace(' ', '')
 
-        recipient_user_id = await player.get_user_id(recipient_ckey)
+        recipient_user_id = await player.get_user_id_nocased(recipient_ckey)
 
         amount = int(amount)
         if amount <= 0:

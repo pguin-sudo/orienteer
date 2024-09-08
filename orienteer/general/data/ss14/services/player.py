@@ -7,8 +7,15 @@ from aiocache.serializers import PickleSerializer
 from ..repositories import player
 
 
-async def get_user_id(nickname: str) -> UUID | None:
-    return await player.get_user_id(nickname)
+async def get_user_id(ckey: str) -> UUID | None:
+    return await player.get_user_id(ckey)
+
+
+async def get_user_id_nocased(ckey: str) -> tuple[UUID | None, str]:
+    """
+    Возвращает user_id и ckey игрока с ckey, а если без учета регистра есть только 1 игрок - его user_id
+    """
+    return await player.get_user_id_nocased(ckey)
 
 
 async def get_ckey(user_id: UUID) -> str | None:
