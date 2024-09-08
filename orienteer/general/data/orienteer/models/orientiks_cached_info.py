@@ -4,7 +4,7 @@ from orienteer.general.data.orienteer.models.common import Base
 
 
 class OrientiksCachedInfo(Base):
-    __tablename__ = 'orientiks_cached_infos'
+    __tablename__ = "orientiks_cached_infos"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
@@ -18,8 +18,17 @@ class OrientiksCachedInfo(Base):
 
     date = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
-    def __init__(self, total_sponsorship=0, total_friends=0, total_pardons=0, total_time_balancing=0, total_spent=0,
-                 total_fine=0, total_from_time=0, date=None):
+    def __init__(
+        self,
+        total_sponsorship=0,
+        total_friends=0,
+        total_pardons=0,
+        total_time_balancing=0,
+        total_spent=0,
+        total_fine=0,
+        total_from_time=0,
+        date=None,
+    ):
         self.total_sponsorship = total_sponsorship
         self.total_friends = total_friends
         self.total_pardons = total_pardons
@@ -30,7 +39,9 @@ class OrientiksCachedInfo(Base):
         self.date = date or func.now()
 
     def __repr__(self):
-        return f"<OrientiksCachedInfo(id={self.id}, total_sponsorship={self.total_sponsorship}, " \
-               f"total_friends={self.total_friends}, total_pardons={self.total_pardons}, " \
-               f"total_time_balancing={self.total_time_balancing}, total_spent={self.total_spent}, " \
-               f"total_fine={self.total_fine}, total_from_time={self.total_from_time}, date={self.date})>"
+        return (
+            f"<OrientiksCachedInfo(id={self.id}, total_sponsorship={self.total_sponsorship}, "
+            f"total_friends={self.total_friends}, total_pardons={self.total_pardons}, "
+            f"total_time_balancing={self.total_time_balancing}, total_spent={self.total_spent}, "
+            f"total_fine={self.total_fine}, total_from_time={self.total_from_time}, date={self.date})>"
+        )

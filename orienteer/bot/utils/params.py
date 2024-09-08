@@ -8,7 +8,9 @@ async def autocomplete_ckey(_: disnake.ApplicationCommandInteraction, user_input
     return await player.contains_in_ckeys(user_input)
 
 
-async def autocomplete_boosty_level(_: disnake.ApplicationCommandInteraction, user_input: str):
+async def autocomplete_boosty_level(
+    _: disnake.ApplicationCommandInteraction, user_input: str
+):
     ckeys = []
     for level in boosty_levels:
         if user_input.lower() in level.lower():

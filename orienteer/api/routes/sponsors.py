@@ -8,7 +8,7 @@ from orienteer.general.data.orienteer.services import sponsors
 router = APIRouter()
 
 
-@router.get('/api/sponsors/{user_id}')
+@router.get("/api/sponsors/{user_id}")
 async def sponsor_info_handler_route(user_id: UUID):
     if not user_id or user_id == "00000000-0000-0000-0000-000000000000":
         raise HTTPException(status_code=404, detail="User not found")

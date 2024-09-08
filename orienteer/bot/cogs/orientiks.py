@@ -8,7 +8,7 @@ from orienteer.bot.utils.params import autocomplete_ckey
 
 class Orientiks(commands.Cog):
     """
-        Экономика  💶
+    Экономика  💶
     """
 
     def __init__(self, bot):
@@ -16,8 +16,11 @@ class Orientiks(commands.Cog):
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def balance(self, interaction: CommandInteraction,
-                      ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None)):
+    async def balance(
+        self,
+        interaction: CommandInteraction,
+        ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None),
+    ):
         """
         Выводит баланс ориентиков.
 
@@ -33,9 +36,12 @@ class Orientiks(commands.Cog):
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def transfer(self, interaction: CommandInteraction,
-                       amount: int,
-                       ckey: str = commands.Param(autocomplete=autocomplete_ckey)):
+    async def transfer(
+        self,
+        interaction: CommandInteraction,
+        amount: int,
+        ckey: str = commands.Param(autocomplete=autocomplete_ckey),
+    ):
         """
         Перечисляет ориентики указанному пользователю.
 

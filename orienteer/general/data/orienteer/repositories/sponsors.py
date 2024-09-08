@@ -10,7 +10,9 @@ async def get_sponsor(db_session: AsyncSession, user_id) -> Sponsor | None:
 
 
 async def try_create_empty_sponsor(db_session: AsyncSession, user_id) -> Sponsor:
-    sponsor = (await db_session.execute(select(Sponsor).filter_by(user_id=user_id))).fetchone()
+    sponsor = (
+        await db_session.execute(select(Sponsor).filter_by(user_id=user_id))
+    ).fetchone()
     if sponsor is None:
         sponsor = Sponsor(user_id)
         db_session.add(sponsor)
@@ -21,7 +23,9 @@ async def try_create_empty_sponsor(db_session: AsyncSession, user_id) -> Sponsor
 
 
 async def update_sponsor(db_session: AsyncSession, user_id, **kwargs) -> Sponsor | None:
-    sponsor = (await db_session.execute(select(Sponsor).filter_by(user_id=user_id))).fetchone()
+    sponsor = (
+        await db_session.execute(select(Sponsor).filter_by(user_id=user_id))
+    ).fetchone()
     if sponsor is not None:
         sponsor = sponsor[0]
         for key, value in kwargs.items():
@@ -32,7 +36,9 @@ async def update_sponsor(db_session: AsyncSession, user_id, **kwargs) -> Sponsor
 
 
 async def add_marking(db_session: AsyncSession, user_id, marking):
-    sponsor = (await db_session.execute(select(Sponsor).filter_by(user_id=user_id))).fetchone()
+    sponsor = (
+        await db_session.execute(select(Sponsor).filter_by(user_id=user_id))
+    ).fetchone()
     if sponsor is not None:
         sponsor = sponsor[0]
         sponsor.allowed_markings.append(marking)
@@ -42,7 +48,9 @@ async def add_marking(db_session: AsyncSession, user_id, marking):
 
 
 async def remove_marking(db_session: AsyncSession, user_id, marking):
-    sponsor = (await db_session.execute(select(Sponsor).filter_by(user_id=user_id))).fetchone()
+    sponsor = (
+        await db_session.execute(select(Sponsor).filter_by(user_id=user_id))
+    ).fetchone()
     if sponsor is not None:
         if marking in sponsor.allowed_markings:
             sponsor.allowed_markings.remove(marking)
@@ -52,7 +60,9 @@ async def remove_marking(db_session: AsyncSession, user_id, marking):
 
 
 async def add_loadout(db_session: AsyncSession, user_id, marking):
-    sponsor = (await db_session.execute(select(Sponsor).filter_by(user_id=user_id))).fetchone()
+    sponsor = (
+        await db_session.execute(select(Sponsor).filter_by(user_id=user_id))
+    ).fetchone()
     if sponsor is not None:
         sponsor = sponsor[0]
         sponsor.loadouts.append(marking)
@@ -62,11 +72,12 @@ async def add_loadout(db_session: AsyncSession, user_id, marking):
 
 
 async def remove_loadout(db_session: AsyncSession, user_id, marking):
-    sponsor = (await db_session.execute(select(Sponsor).filter_by(user_id=user_id))).fetchone()
+    sponsor = (
+        await db_session.execute(select(Sponsor).filter_by(user_id=user_id))
+    ).fetchone()
     if sponsor is not None:
         if marking in sponsor.allowed_markings:
             sponsor.loadouts.remove(marking)
             await db_session.commit()
         return sponsor
     return None
-

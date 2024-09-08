@@ -1,1 +1,1 @@
-from orienteer.general.config.local import *
+from orienteer.general.config.local import *  # noqa

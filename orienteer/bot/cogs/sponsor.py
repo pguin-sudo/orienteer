@@ -29,8 +29,11 @@ class Sponsors(commands.Cog):
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def set_color(self, interaction: CommandInteraction,
-                        color: str = commands.Param(min_length=6, max_length=6)):
+    async def set_color(
+        self,
+        interaction: CommandInteraction,
+        color: str = commands.Param(min_length=6, max_length=6),
+    ):
         """
         Меняет цвет спонсора.
 

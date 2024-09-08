@@ -8,9 +8,15 @@ from loguru_discord import DiscordSink
 from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors
 from orienteer.bot.utils.extensions import Extensions
-from orienteer.general.config import BOT_NAME, BOT_TOKEN, USERS_OWNERS, WEBHOOKS_LOGS, DEBUG_MODE
+from orienteer.general.config import (
+    BOT_NAME,
+    BOT_TOKEN,
+    USERS_OWNERS,
+    WEBHOOKS_LOGS,
+    DEBUG_MODE,
+)
 
-logger.add(DiscordSink(WEBHOOKS_LOGS['bot']))
+logger.add(DiscordSink(WEBHOOKS_LOGS["bot"]))
 
 
 class OrienteerBot(commands.InteractionBot):
@@ -22,14 +28,18 @@ class OrienteerBot(commands.InteractionBot):
         logger.info(f"Logged in as {self.user} (ID: {self.user.id})")
 
     if not DEBUG_MODE:
+
         async def on_slash_command_error(self, interaction, *args, **kwargs):
             await interaction.edit_original_message(
-                embed=embeds.error_message(Errors.unexpected_error.value, content='Пожалуйста, обратитесь к '
-                                                                                  '<@536086033050107914>, мы'
-                                                                                  ' постараемся исправить её '
-                                                                                  'как можно скорее.',
-                                           footer='И попробуйте выполнить команду '
-                                                  'еще раз.'))
+                embed=embeds.error_message(
+                    Errors.unexpected_error.value,
+                    content="Пожалуйста, обратитесь к "
+                    "<@536086033050107914>, мы"
+                    " постараемся исправить её "
+                    "как можно скорее.",
+                    footer="И попробуйте выполнить команду " "еще раз.",
+                )
+            )
             logger.error(f"{interaction=}\n{args=}\n{kwargs=}")
 
     @property
@@ -38,9 +48,12 @@ class OrienteerBot(commands.InteractionBot):
 
 
 def main():
-    logger.success('<<<<<<<<<<<<<<<< Bot module is starting >>>>>>>>>>>>>>>>')
+    logger.success("<<<<<<<<<<<<<<<< Bot module is starting >>>>>>>>>>>>>>>>")
 
-    bot = OrienteerBot(activity=Activity(name=BOT_NAME, type=ActivityType.playing), owner_ids=USERS_OWNERS)
+    bot = OrienteerBot(
+        activity=Activity(name=BOT_NAME, type=ActivityType.playing),
+        owner_ids=USERS_OWNERS,
+    )
 
     for e in Extensions.all():
         try:

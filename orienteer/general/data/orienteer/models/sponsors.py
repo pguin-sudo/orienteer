@@ -9,9 +9,11 @@ from .common import Base
 
 
 class Sponsor(Base):
-    __tablename__ = 'sponsors'
+    __tablename__ = "sponsors"
 
-    user_id = mapped_column(UUID(as_uuid=True), nullable=False, primary_key=True, default=uuid.uuid4)
+    user_id = mapped_column(
+        UUID(as_uuid=True), nullable=False, primary_key=True, default=uuid.uuid4
+    )
     ooc_color = mapped_column(String(6), nullable=True, default=None)
     priority_join = mapped_column(Boolean, nullable=False, default=False)
     extra_slots = mapped_column(Integer, nullable=False, default=0)

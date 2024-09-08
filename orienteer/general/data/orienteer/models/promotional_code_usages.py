@@ -9,11 +9,13 @@ from .common import Base
 
 
 class PromotionalCodeUsages(Base):
-    __tablename__ = 'promotional_code_usages'
+    __tablename__ = "promotional_code_usages"
 
     cache_id = mapped_column(Integer, primary_key=True, autoincrement=True)
     user_id = mapped_column(UUID(as_uuid=True), nullable=False)
-    promotional_code = mapped_column(String, ForeignKey('promotional_codes.code'), nullable=False)
+    promotional_code = mapped_column(
+        String, ForeignKey("promotional_codes.code"), nullable=False
+    )
     discord_user_id = mapped_column(BigInteger)
 
     created_at = mapped_column(DateTime(timezone=True), server_default=func.now())

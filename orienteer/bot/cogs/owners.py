@@ -32,8 +32,12 @@ class Owners(commands.Cog):
     @commands.slash_command()
     @commands.is_owner()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def reward(self, interaction: CommandInteraction, amount: int,
-                     ckey: str = commands.Param(autocomplete=autocomplete_ckey)):
+    async def reward(
+        self,
+        interaction: CommandInteraction,
+        amount: int,
+        ckey: str = commands.Param(autocomplete=autocomplete_ckey),
+    ):
         """
         Выдает указанное кол-во ориентиков определенному игроку.
 
@@ -50,9 +54,12 @@ class Owners(commands.Cog):
     @commands.slash_command()
     @commands.is_owner()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def new_sponsor(self, interaction: CommandInteraction,
-                          ckey: str = commands.Param(autocomplete=autocomplete_ckey),
-                          boosty_level: str = commands.Param(autocomplete=autocomplete_boosty_level)):
+    async def new_sponsor(
+        self,
+        interaction: CommandInteraction,
+        ckey: str = commands.Param(autocomplete=autocomplete_ckey),
+        boosty_level: str = commands.Param(autocomplete=autocomplete_boosty_level),
+    ):
         """
         Выдает указанный уровень подписки определенному игроку.
 

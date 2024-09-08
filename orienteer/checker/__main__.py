@@ -11,11 +11,11 @@ from orienteer.checker.schedules.seasons import setup_seasons_schedule
 from orienteer.checker.schedules.subscriptions import setup_subscriptions_schedule
 from orienteer.general.config import WEBHOOKS_LOGS
 
-logger.add(DiscordSink(WEBHOOKS_LOGS['checker']))
+logger.add(DiscordSink(WEBHOOKS_LOGS["checker"]))
 
 
 async def main():
-    logger.success('<<<<<<<<<<<<<<<< Checker module is starting >>>>>>>>>>>>>>>>')
+    logger.success("<<<<<<<<<<<<<<<< Checker module is starting >>>>>>>>>>>>>>>>")
 
     scheduler = AsyncIOScheduler()
 
@@ -31,5 +31,5 @@ async def main():
         await asyncio.sleep(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(main())

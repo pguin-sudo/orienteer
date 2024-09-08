@@ -9,7 +9,7 @@ async def get_all_user_ids() -> AsyncGenerator[UUID, None]:
 
     async with DBConnectionContextManager() as connection:
         while True:
-            query = f'SELECT user_id FROM player LIMIT {1} OFFSET {offset}'
+            query = f"SELECT user_id FROM player LIMIT {1} OFFSET {offset}"
             results = await connection.fetchval(query)
             if not results:
                 break

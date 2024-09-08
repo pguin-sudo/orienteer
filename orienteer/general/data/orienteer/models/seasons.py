@@ -5,7 +5,7 @@ from .common import Base
 
 
 class Season(Base):
-    __tablename__ = 'seasons'
+    __tablename__ = "seasons"
 
     season_id = mapped_column(Integer, primary_key=True, autoincrement=True)
     start_date = mapped_column(DateTime(timezone=True), nullable=False)
