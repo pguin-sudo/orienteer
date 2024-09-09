@@ -16,7 +16,7 @@ DATABASE_URL = (
 
 
 class DatabaseHelper:
-    def __init__(self, db_url, echo):
+    def __init__(self, db_url: str, echo):
         self.engine: AsyncEngine = create_async_engine(
             url=db_url,
             echo=echo,

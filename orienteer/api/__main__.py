@@ -10,7 +10,8 @@ from orienteer.api.routes import authentication, sponsors
 from orienteer.api.utils.authentication import generate_link
 from orienteer.general.config import WEBHOOKS_LOGS
 
-logger.add(DiscordSink(WEBHOOKS_LOGS["api"]))
+if WEBHOOKS_LOGS["api"] is not None:
+    logger.add(DiscordSink(WEBHOOKS_LOGS["api"]))
 
 app = FastAPI(template_dir=os.path.abspath("templates"))
 

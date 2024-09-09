@@ -11,7 +11,8 @@ from orienteer.checker.schedules.seasons import setup_seasons_schedule
 from orienteer.checker.schedules.subscriptions import setup_subscriptions_schedule
 from orienteer.general.config import WEBHOOKS_LOGS
 
-logger.add(DiscordSink(WEBHOOKS_LOGS["checker"]))
+if WEBHOOKS_LOGS["checker"] is not None:
+    logger.add(DiscordSink(WEBHOOKS_LOGS["checker"]))
 
 
 async def main():

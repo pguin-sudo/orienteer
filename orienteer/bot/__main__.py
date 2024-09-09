@@ -16,7 +16,8 @@ from orienteer.general.config import (
     DEBUG_MODE,
 )
 
-logger.add(DiscordSink(WEBHOOKS_LOGS["bot"]))
+if WEBHOOKS_LOGS["bot"] is not None:
+    logger.add(DiscordSink(WEBHOOKS_LOGS["bot"]))
 
 
 class OrienteerBot(commands.InteractionBot):

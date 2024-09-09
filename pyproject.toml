@@ -31,9 +31,12 @@ asyncstdlib = "^3.12.4"
 pandas = "^2.2.2"
 mplcyberpunk = "^0.7.1"
 setuptools = "^72.1.0"
-autoflake = "^2.3.1"
-black = "^24.8.0"
+
+[tool.poetry.group.dev.dependencies]
 mypy = "^1.11.2"
+black = "^24.8.0"
+autoflake = "^2.3.1"
+autotyping = "^24.3.0"
 
 [build-system]
 requires = ["poetry-core"]

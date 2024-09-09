@@ -11,7 +11,7 @@ class Owners(commands.Cog):
     Приватные  🔒
     """
 
-    def __init__(self, bot):
+    def __init__(self, bot: Bot):
         self.bot: Bot = bot
 
     @commands.slash_command()

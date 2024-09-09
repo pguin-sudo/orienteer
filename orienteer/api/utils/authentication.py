@@ -59,7 +59,7 @@ async def discord_auth_redirect(code: str, state: str) -> dict:
         )
 
     parsed_state = urllib.parse.parse_qs(state)
-    user_id = parsed_state.get("user_id", [None])[0]
+    user_id = UUID(parsed_state.get("user_id", [None])[0])
 
     if not user_id:
         raise HTTPException(
