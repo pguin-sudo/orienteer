@@ -1,8 +1,8 @@
-import asyncio
 from datetime import datetime
 
 import aiohttp
 from aiohttp.client_exceptions import ClientConnectorError
+from aiohttp.client_exceptions import ServerDisconnectedError
 from disnake import Webhook, Embed
 
 from orienteer.general.config.main import BOT_TOKEN
@@ -16,14 +16,28 @@ async def set_role(discord_user_id: int, role_id: int, remove: bool = False):
     async with aiohttp.ClientSession() as session:
         if remove:
             async with session.delete(url, headers=headers) as response:
-                if response.status == 429:
-                    await asyncio.sleep(5)
-                    await set_role(discord_user_id, role_id, remove)
+                if response.status // 100 == 4:
+                    raise ServerDisconnectedError
+
         else:
             async with session.put(url, headers=headers) as response:
-                if response.status == 429:
-                    await asyncio.sleep(5)
-                    await set_role(discord_user_id, role_id, remove)
+                if response.status // 100 == 4:
+                    raise ServerDisconnectedError
+
+
+async def get_guild_profile(
+    discord_user_id: int, server_id: int = 1075005001035943967
+) -> tuple[int]:
+    url = f"https://discord.com/api/v10/guilds/{server_id}/members/{discord_user_id}"
+
+    headers = {"Authorization": f"Bot {BOT_TOKEN}", "Content-Type": "application/json"}
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, headers=headers) as response:
+            if response.status // 100 == 4:
+                return await response.json()
+            else:
+                return await response.json()
 
 
 async def send_discord_message(

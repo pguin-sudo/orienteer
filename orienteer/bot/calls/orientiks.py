@@ -8,7 +8,11 @@ from orienteer.bot.calls.abstract import AbstractCall
 from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors, Results, Success
 from orienteer.general.config import CURRENCY_SIGN, USERS_OWNERS
-from orienteer.general.data.orienteer.services import discord_auth, orientiks, purchases
+from orienteer.general.data.orienteer.services import (
+    discord_auth,
+    transactions,
+    purchases,
+)
 from orienteer.general.data.products.products.abstract import AbstractProduct
 from orienteer.general.data.products.services import get_all_products
 from orienteer.general.data.ss14.services import player
@@ -46,7 +50,7 @@ class Balance(AbstractCall):
         await self.interaction.edit_original_message(
             embed=embeds.result_message(
                 title=f"Баланс {ckey}:",
-                content=f"{await orientiks.get_balance(user_id)} {CURRENCY_SIGN}",
+                content=f"{await transactions.get_balance(user_id)} {CURRENCY_SIGN}",
             )
         )
 
@@ -55,7 +59,9 @@ class Transfer(AbstractCall):
     async def __call__(self, recipient_ckey: str, amount: int) -> None:
         recipient_ckey = recipient_ckey.replace(" ", "")
 
-        recipient_user_id = await player.get_user_id_nocased(recipient_ckey)
+        recipient_user_id, recipient_ckey = await player.get_user_id_nocased(
+            recipient_ckey
+        )
 
         amount = int(amount)
         if amount <= 0:
@@ -88,13 +94,13 @@ class Transfer(AbstractCall):
             return
         sender_ckey = await player.get_ckey(sender_user_id)
 
-        if await orientiks.get_balance(sender_user_id) < amount:
+        if await transactions.get_balance(sender_user_id) < amount:
             await self.interaction.edit_original_message(
                 embed=embeds.error_message(content=Errors.not_enough_money.value)
             )
             return
 
-        if await orientiks.get_balance(recipient_user_id) < 0:
+        if await transactions.get_balance(recipient_user_id) < 0:
             await self.interaction.edit_original_message(
                 embed=embeds.error_message(
                     content=Errors.you_can_not_transfer_to_account_with_negative_balance.value
@@ -110,13 +116,13 @@ class Transfer(AbstractCall):
             )
             return
 
-        await orientiks.do_transfer(sender_user_id, recipient_user_id, amount)
+        await transactions.do_transfer(sender_user_id, recipient_user_id, amount)
 
         await self.interaction.edit_original_message(
             embed=embeds.success_message(
                 Success.transfer.value,
-                f"Баланс получателя ({recipient_ckey}): {await orientiks.get_balance(recipient_user_id)}\n"
-                f"Баланс отправителя ({sender_ckey}): {await orientiks.get_balance(sender_user_id)}",
+                f"Баланс получателя ({recipient_ckey}): {await transactions.get_balance(recipient_user_id)}\n"
+                f"Баланс отправителя ({sender_ckey}): {await transactions.get_balance(sender_user_id)}",
             )
         )
 
@@ -174,7 +180,7 @@ class Shop(AbstractCall):
                     return
 
                 price_ = await product_.calculate_price(user_id)
-                if await orientiks.get_balance(responding_user_id) < price_:
+                if await transactions.get_balance(responding_user_id) < price_:
                     await self.interaction.edit_original_message(
                         embed=embeds.error_message(
                             content=Errors.not_enough_money.value
@@ -189,7 +195,7 @@ class Shop(AbstractCall):
 
                 await product_.buy(responding_user_id)
                 await purchases.create_purchase(responding_user_id, product_.id, price_)
-                await orientiks.spent(responding_user_id, price_)
+                await transactions.spend(responding_user_id, price_)
 
                 await self.interaction.edit_original_message(
                     embed=embeds.success_message(
@@ -295,7 +301,7 @@ class Buy(AbstractCall):
             )
             return
 
-        buy_price = await orientiks.get_price(buy=True)
+        buy_price = await transactions.get_price(buy=True)
 
         embed = embeds.result_message(
             "Заявка на покупку ориентиков...",
@@ -334,8 +340,8 @@ class Buy(AbstractCall):
                 view=button_view,
             )
 
-            # PRICE CHECK
-            await orientiks.add_orientiks_from_sponsorship(user_id, amount)
+            # PRICE CHECK and CHANGE TYPE
+            await transactions.add_orientiks_from_boosty(user_id, amount)
             logger.info("Orientiks bought")
 
         dev_button = Button(label="Купить", emoji="💳")
@@ -355,7 +361,7 @@ class Buy(AbstractCall):
 
 class Bogachi(AbstractCall):
     async def __call__(self):
-        leaderboard = await orientiks.get_leaderboard()
+        leaderboard = await transactions.get_leaderboard()
         description = ""
 
         for i, leader in enumerate(leaderboard):

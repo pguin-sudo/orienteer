@@ -6,7 +6,7 @@ from orienteer.general.data.orienteer.services import (
     discord_auth,
     promo,
     sponsors,
-    orientiks,
+    transactions,
 )
 from orienteer.general.data.requests import hub
 from orienteer.general.data.ss14.services import (
@@ -279,7 +279,7 @@ class Profile(AbstractCall):
         a_rank = await admin_rank.get_admin_rank_name_and_time(user_id)
 
         is_in_whitelist = await whitelist.check_whitelist(user_id)
-        balance_info = await orientiks.get_balance(user_id)
+        balance_info = await transactions.get_balance(user_id)
         ban_status = await bans.get_last_ban_status(user_id)
 
         embed = embeds.result_message(

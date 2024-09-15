@@ -4,6 +4,7 @@ from sqlalchemy.orm import mapped_column
 from .common import Base
 
 
+# DEPRECATED
 class Orientiks(Base):
     __tablename__ = "orientiks"
 

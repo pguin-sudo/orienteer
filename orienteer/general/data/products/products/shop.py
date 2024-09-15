@@ -4,7 +4,7 @@ from uuid import UUID
 from loguru import logger
 
 from orienteer.general.config import CURRENCY_SIGN
-from orienteer.general.data.orienteer.services import sponsors, orientiks
+from orienteer.general.data.orienteer.services import sponsors, transactions
 from orienteer.general.data.ss14.services import bans
 from orienteer.general.utils.calculations import calculate_fine
 from .abstract import AbstractProduct
@@ -256,9 +256,9 @@ class SevenOrientiks(AbstractProduct):
     @staticmethod
     async def buy(user_id: UUID):
         logger.info(f"Покупка {SevenOrientiks.name}")
-        await orientiks.add_orientiks_from_sponsorship(user_id, 21)
+        await transactions.add_orientiks_for_other(user_id, 21, "Кредит")
 
     @staticmethod
     async def retrieve(user_id: UUID):
         logger.info(f"Возврат {SevenOrientiks.name}")
-        await orientiks.add_orientiks_from_sponsorship(user_id, -21)
+        await transactions.add_orientiks_for_other(user_id, -21, "Возврат по кредиту")

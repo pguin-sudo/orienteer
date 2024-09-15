@@ -5,7 +5,6 @@ from loguru import logger
 from loguru_discord import DiscordSink
 
 from orienteer.checker.schedules.bans import setup_bans_schedule
-from orienteer.checker.schedules.orientiks import setup_orientiks_schedule
 from orienteer.checker.schedules.roles import setup_roles_schedule
 from orienteer.checker.schedules.seasons import setup_seasons_schedule
 from orienteer.checker.schedules.subscriptions import setup_subscriptions_schedule
@@ -21,7 +20,6 @@ async def main():
     scheduler = AsyncIOScheduler()
 
     await setup_bans_schedule(scheduler)
-    await setup_orientiks_schedule(scheduler)
     await setup_roles_schedule(scheduler)
     await setup_seasons_schedule(scheduler)
     await setup_subscriptions_schedule(scheduler)

@@ -4,7 +4,7 @@ from uuid import UUID
 from loguru import logger
 
 from orienteer.general.config import CURRENCY_SIGN, ROLES_BOOSTER
-from orienteer.general.data.orienteer.services import orientiks
+from orienteer.general.data.orienteer.services import transactions
 from orienteer.general.data.orienteer.services.discord_auth import (
     get_discord_user_id_by_user_id,
 )
@@ -36,12 +36,12 @@ class Orientiks10(AbstractProduct):
     @staticmethod
     async def buy(user_id: UUID):
         logger.info(f"Покупка {Orientiks10.name}")
-        await orientiks.add_orientiks_from_sponsorship(user_id, 10)
+        await transactions.add_orientiks_from_boosty(user_id, 10)
 
     @staticmethod
     async def retrieve(user_id: UUID):
         logger.info(f"Возврат {Orientiks10.name}")
-        await orientiks.add_orientiks_from_sponsorship(user_id, -10)
+        await transactions.add_orientiks_from_boosty(user_id, -10)
 
 
 class Whitelist(AbstractProduct):

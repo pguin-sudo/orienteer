@@ -5,7 +5,7 @@ from apscheduler.triggers.cron import CronTrigger
 from loguru import logger
 
 from orienteer.general.config import WEBHOOKS_BANS, CURRENCY_SIGN
-from orienteer.general.data.orienteer.services import orientiks, sent_bans
+from orienteer.general.data.orienteer.services import transactions, sent_bans
 from orienteer.general.data.ss14.services import bans, player
 from orienteer.general.formatting.playtime import get_job_group_and_name
 from orienteer.general.formatting.time import get_formatted_datetime
@@ -17,7 +17,7 @@ REASON = "Превышение нижнего порога штрафов"
 
 
 async def _ban_if_fine_limit(user_id: UUID, reason: str):
-    if await orientiks.get_balance(user_id) < -500 and reason != REASON:
+    if await transactions.get_balance(user_id) < -500 and reason != REASON:
         await bans.add_ban(user_id, REASON)
 
 

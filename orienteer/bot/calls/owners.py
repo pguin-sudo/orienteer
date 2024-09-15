@@ -6,7 +6,11 @@ from orienteer.bot.calls.abstract import AbstractCall
 from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors
 from orienteer.general.config import CURRENCY_SIGN
-from orienteer.general.data.orienteer.services import orientiks, discord_auth, purchases
+from orienteer.general.data.orienteer.services import (
+    transactions,
+    discord_auth,
+    purchases,
+)
 from orienteer.general.data.products.services import boosty_levels
 from orienteer.general.data.ss14.services import player
 from orienteer.general.formatting import plots
@@ -16,9 +20,11 @@ from orienteer.general.formatting.player import ping
 class GOI(AbstractCall):
     async def __call__(self):
         img_path = plots.plot_orientiks_cached_info(
-            await orientiks.get_all_cached_info()
+            await transactions.get_all_cached_info()
         )
-        last_cached_info = await orientiks.get_cached_info(datetime.now(timezone.utc))
+        last_cached_info = await transactions.get_cached_info(
+            datetime.now(timezone.utc)
+        )
 
         embed = embeds.success_message(
             f"Сводка о состоянии рынка ориентиков",
@@ -51,7 +57,7 @@ class Reward(AbstractCall):
             )
             return
 
-        await orientiks.add_orientiks_from_sponsorship(user_id, amount)
+        await transactions.add_orientiks_from_sponsorship(user_id, amount)
 
         discord_user_id = await discord_auth.get_discord_user_id_by_user_id(user_id)
 

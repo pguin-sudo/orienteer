@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer, DateTime, func
 from orienteer.general.data.orienteer.models.common import Base
 
 
+# DEPRECATED
 class OrientiksCachedInfo(Base):
     __tablename__ = "orientiks_cached_infos"
 
