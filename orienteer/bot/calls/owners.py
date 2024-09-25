@@ -19,10 +19,15 @@ from orienteer.general.formatting.player import ping
 
 class GOI(AbstractCall):
     async def __call__(self):
-        img_path = plots.plot_orientiks_cached_info(
-            await transactions.get_all_cached_info()
+        embed = embeds.error_message(
+            "Команда временно отключена",
+            "Команда как бы есть, но её нет. В любом случае она обещала скоро вновь появиться...",
         )
-        last_cached_info = await transactions.get_cached_info(
+
+        img_path = plots.plot_orientiks_cached_info(
+            await transactions.get_cached_info_range()
+        )
+        last_cached_info = await transactions.get_cached_info_one(
             datetime.now(timezone.utc)
         )
 
