@@ -3,7 +3,7 @@ import disnake
 from orienteer.general.config import DEBUG_MODE
 
 DEBUG_FOOTER_CONTENT = (
-    "Бот запущен в тестовом режиме, при обнаружении любого бага писать @mocviu"
+    "А вы знали, что можете получить до 100 ориентиков за описание бага в ЛС @mocviu?"
 )
 DEBUG_FOOTER_IMAGE = (
     "https://media.discordapp.net/attachments/847146486969008129/1271010621747630131/debug-icon"
