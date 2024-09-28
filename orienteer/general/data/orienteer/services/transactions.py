@@ -8,6 +8,7 @@ from aiocache.serializers import PickleSerializer
 
 from orienteer.general.config import ORIENTIKS_MARGIN, ORIENTIKS_PRICE_COEFFICIENT
 from orienteer.general.utils import discord
+from orienteer.general.utils.dtos import UserDTO
 from . import discord_auth
 from ..database import database_helper
 from ..models.orientiks_cached_info import OrientiksCachedInfo
@@ -49,8 +50,12 @@ async def add_time_balancing(user_id: UUID, minutes: int) -> None:
 
 async def add_orientiks_from_boosty(user_id: UUID, amount: int) -> None:
     async with database_helper.session_factory() as db_session:
-        await transactions.add_transaction(db_session, user_id, amount, TransactionType.Boosty,
-                                           f'Transfer from "{player.get_ckey(user_id)}"', )
+        await transactions.add_transaction(db_session, user_id, amount, TransactionType.Boosty)
+
+
+async def add_orientiks_from_tip(user_id: UUID, amount: int, name: str) -> None:
+    async with database_helper.session_factory() as db_session:
+        await transactions.add_transaction(db_session, user_id, amount, TransactionType.Tip, name)
 
 
 async def add_orientiks_from_other(user_id: UUID, amount: int, name: str) -> None:
@@ -77,6 +82,7 @@ async def get_cached_info_one(timestamp: datetime | None = None) -> OrientiksCac
         return await transactions.get_cached_info_one(db_session, timestamp)
 
 
+# @deprecated
 async def get_price(buy: bool, timestamp: datetime | None = None) -> float:
     timestamp = timestamp or datetime.now()
     async with database_helper.session_factory() as db_session:
@@ -94,7 +100,7 @@ async def get_price(buy: bool, timestamp: datetime | None = None) -> float:
 
 # @deprecated
 @cached(ttl=3600, serializer=PickleSerializer())
-async def get_leaderboard(depth: int = 27) -> tuple[tuple[UUID, Any], ...]:
+async def get_leaderboard(depth: int = 27) -> tuple[tuple[UserDTO, Any], ...]:
     leaderboard = []
 
     async with database_helper.session_factory() as db_session:
@@ -102,7 +108,7 @@ async def get_leaderboard(depth: int = 27) -> tuple[tuple[UUID, Any], ...]:
             if await bans.get_last_ban_status(user_id) == 2:
                 continue
 
-            leaderboard.append((user_id, await get_balance(user_id)))
+            leaderboard.append((await UserDTO.from_user_id(user_id), await get_balance(user_id)))
 
     leaderboard.sort(key=lambda x: x[1], reverse=True)
 

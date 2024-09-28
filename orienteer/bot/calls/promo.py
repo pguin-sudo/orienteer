@@ -2,21 +2,19 @@ from orienteer.bot.calls.abstract import AbstractCall
 from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors, Results
 from orienteer.general.data.orienteer.services import discord_auth, promo
+from orienteer.general.utils.dtos import UserDTO
 
 
 class Promo(AbstractCall):
-    async def __call__(self, code: str):
-        user_id = await discord_auth.get_user_id_by_discord_user_id(
-            self.interaction.user.id
-        )
-        if user_id is None:
+    async def __call__(self, user_dto: UserDTO, code: str):
+        if user_dto.user_id is None:
             await self.interaction.edit_original_message(
                 embed=embeds.error_message(Errors.no_user_id_with_discord.value)
             )
             return
 
         success, content = await promo.try_promo(
-            self.interaction.user.id, user_id, code
+            self.interaction.user.id, user_dto.user_id, code
         )
 
         await self.interaction.edit_original_message(

@@ -31,7 +31,7 @@ class OrienteerBot(commands.InteractionBot):
     if not DEBUG_MODE:
 
         async def on_slash_command_error(self, interaction, *args, **kwargs):
-            await interaction.edit_original_message(
+            await interaction.send(
                 embed=embeds.error_message(
                     Errors.unexpected_error.value,
                     content="Пожалуйста, обратитесь к "

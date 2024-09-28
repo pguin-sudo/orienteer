@@ -7,11 +7,11 @@ from loguru import logger
 class AbstractCall(ABC):
     def __init__(self, interaction: CommandInteraction, ephemeral=False) -> None:
         self.interaction = interaction
-        self.ephemeral = ephemeral
+        self._ephemeral = ephemeral
 
     async def __aenter__(self):
         if not self.interaction.response.is_done():
-            await self.interaction.response.defer(ephemeral=self.ephemeral)
+            await self.interaction.response.defer(ephemeral=self._ephemeral)
         return self
 
     async def __call__(self, *args, **kwargs):

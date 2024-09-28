@@ -8,13 +8,12 @@ from orienteer.bot.utils.content_locale import Errors
 from orienteer.general.config import CURRENCY_SIGN
 from orienteer.general.data.orienteer.services import (
     transactions,
-    discord_auth,
     purchases,
 )
 from orienteer.general.data.products.services import boosty_levels
-from orienteer.general.data.ss14.services import player
 from orienteer.general.formatting import plots
 from orienteer.general.formatting.player import ping
+from orienteer.general.utils.dtos import UserDTO
 
 
 class GOI(AbstractCall):
@@ -51,48 +50,24 @@ class GOI(AbstractCall):
 
 
 class Reward(AbstractCall):
-    async def __call__(self, ckey: str, amount: int):
-        ckey = ckey.replace(" ", "")
-
-        user_id, ckey = await player.get_user_id_nocased(ckey)
-
-        if user_id is None:
-            await self.interaction.edit_original_message(
-                embed=embeds.error_message(content=Errors.no_user_id_with_ckey.value)
-            )
-            return
-
-        await transactions.add_orientiks_from_sponsorship(user_id, amount)
-
-        discord_user_id = await discord_auth.get_discord_user_id_by_user_id(user_id)
+    async def __call__(self, user_dto: UserDTO, amount: int):
+        await transactions.add_orientiks_from_tip(user_dto.user_id, amount, "Reward")
 
         embed = embeds.success_message(
-            content=f"{amount} ориентик(ов) были выданы {ckey}{ping(discord_user_id)}"
+            content=f"{amount} ориентик(ов) были выданы {user_dto.ckey}{ping(user_dto.discord_user_id)}"
         )
 
         await self.interaction.edit_original_message(embed=embed)
 
 
 class NewSponsor(AbstractCall):
-    async def __call__(self, ckey: str, subscription_level: str):
-        ckey = ckey.replace(" ", "")
-
-        user_id, ckey = await player.get_user_id_nocased(ckey)
-
-        if user_id is None:
-            await self.interaction.edit_original_message(
-                embed=embeds.error_message(content=Errors.no_user_id_with_ckey.value)
-            )
-            return
-
+    async def __call__(self, user_dto: UserDTO, subscription_level: str):
         for sponsor_product in boosty_levels[subscription_level]:
-            await purchases.create_purchase(user_id, sponsor_product.id, None)
-            await sponsor_product.buy(user_id)
-
-        discord_user_id = await discord_auth.get_discord_user_id_by_user_id(user_id)
+            await purchases.create_purchase(user_dto.user_id, sponsor_product.id, None)
+            await sponsor_product.buy(user_dto.user_id)
 
         embed = embeds.success_message(
-            content=f"Уровень подписки {subscription_level} был выдан {ckey}{ping(discord_user_id)}"
+            content=f"Уровень подписки {subscription_level} был выдан {user_dto.ckey}{ping(user_dto.discord_user_id)}"
         )
 
         await self.interaction.edit_original_message(embed=embed)

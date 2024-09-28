@@ -2,7 +2,11 @@ from enum import Enum
 
 
 class Errors(Enum):
-    no_user_id_with_ckey = "Указанный пользователь не найден."
+    # General
+    ckey_and_discord = "Невозможно если указан и ckey, и discord"
+    no_ckey_or_discord = "Укажите ckey или discord."
+
+    unknown_user = "Указанный пользователь не найден."
     no_user_id_with_discord = "Ваш аккаунт не привязан к игре."
     no_playtime_info = "Не удается найти данные о наигранном времени."
     recipient_not_found = "Получатель не найден."

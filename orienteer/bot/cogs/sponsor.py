@@ -3,6 +3,9 @@ from disnake.ext import commands
 from disnake.ext.commands import Bot, BucketType
 
 from orienteer.bot.calls import sponsor
+from orienteer.bot.utils import embeds
+from orienteer.bot.utils.content_locale import Errors
+from orienteer.general.utils.dtos import UserDTO
 
 
 class Sponsors(commands.Cog):
@@ -29,11 +32,8 @@ class Sponsors(commands.Cog):
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def set_color(
-        self,
-        interaction: CommandInteraction,
-        color: str = commands.Param(min_length=6, max_length=6),
-    ):
+    async def set_color(self, interaction: CommandInteraction,
+            color: str = commands.Param(min_length=6, max_length=6), ):
         """
         Меняет цвет спонсора.
 
@@ -43,8 +43,12 @@ class Sponsors(commands.Cog):
         color: цвет
         """
 
+        user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
+        if user_dto is None:
+            await interaction.send(embed=embeds.error_message(Errors.no_user_id_with_discord.value))
+
         async with sponsor.SetColor(interaction) as call:
-            await call(color)
+            await call(user_dto, color)
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
@@ -58,8 +62,12 @@ class Sponsors(commands.Cog):
         question: вопрос
         """
 
+        user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
+        if user_dto is None:
+            await interaction.send(embed=embeds.error_message(Errors.no_user_id_with_discord.value))
+
         async with sponsor.Ask(interaction) as call:
-            await call(question)
+            await call(user_dto, question)
 
 
 def setup(bot):
