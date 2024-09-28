@@ -174,3 +174,5 @@ class NewItems(AbstractProduct):
     async def retrieve(user_id: UUID):
         logger.info(f"Возврат {BoostyRole.name}")
         logger.error("Бля, мне лень делать имплементацию выдачи времени")
+
+all_: tuple[AbstractProduct] = (Orientiks10, Whitelist, BoostyRole, AllRoles, NewItems)  # noqa

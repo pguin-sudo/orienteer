@@ -1,4 +1,4 @@
-from orienteer.general.data.products.products import shop, boosty
+from orienteer.general.data.products.products import shop, boosty, presents
 from orienteer.general.data.products.products.abstract import AbstractProduct
 
 
@@ -10,15 +10,7 @@ def get_product(id_: int) -> AbstractProduct | None:
 
 
 def get_all_products() -> tuple[AbstractProduct]:
-    return (
-        shop.ColoredNick,
-        shop.GigachatAccess,  # noqa
-        shop.PriorityQueue,
-        shop.Orientalink,
-        shop.BanAnnulment,
-        shop.SevenNewSlots,
-        shop.SevenOrientiks,
-    )
+    return (*shop.all_, *boosty.all_, *presents.all_)  # noqa
 
 
 boosty_levels: dict[str, tuple[AbstractProduct]] = {  # noqa

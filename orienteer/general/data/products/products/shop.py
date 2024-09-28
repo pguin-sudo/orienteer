@@ -262,3 +262,7 @@ class SevenOrientiks(AbstractProduct):
     async def retrieve(user_id: UUID):
         logger.info(f"Возврат {SevenOrientiks.name}")
         await transactions.add_orientiks_for_other(user_id, -21, "Возврат по кредиту")
+
+
+all_: tuple[AbstractProduct] = (ColoredNick, GigachatAccess, PriorityQueue, Orientalink, # noqa
+                                BanAnnulment, SevenNewSlots, SevenOrientiks,)

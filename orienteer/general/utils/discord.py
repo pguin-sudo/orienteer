@@ -17,12 +17,14 @@ async def set_role(discord_user_id: int, role_id: int, remove: bool = False):
         if remove:
             async with session.delete(url, headers=headers) as response:
                 if response.status // 100 == 4:
-                    raise ServerDisconnectedError
+                    pass
+                    # raise ServerDisconnectedError
 
         else:
             async with session.put(url, headers=headers) as response:
                 if response.status // 100 == 4:
-                    raise ServerDisconnectedError
+                    pass
+                    # raise ServerDisconnectedError
 
 
 async def get_guild_profile(

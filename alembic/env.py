@@ -9,8 +9,6 @@ from alembic import context
 
 from orienteer.general.data.orienteer.models.common import *
 from orienteer.general.data.orienteer.models.discord_auth import *
-from orienteer.general.data.orienteer.models.orientiks import *
-from orienteer.general.data.orienteer.models.orientiks_cached_info import *
 from orienteer.general.data.orienteer.models.promotional_code import *
 from orienteer.general.data.orienteer.models.promotional_code_usages import *
 from orienteer.general.data.orienteer.models.purchases import *

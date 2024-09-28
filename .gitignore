@@ -20,4 +20,5 @@ cache/*
 !cache/.gitkeep
 
 # Dev
+tools/.temp.py
 tools/_temp.py

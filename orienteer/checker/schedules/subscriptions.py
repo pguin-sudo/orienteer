@@ -30,6 +30,4 @@ async def setup_retrieves_schedule(scheduler: AsyncIOScheduler):
 
 
 async def setup_subscriptions_schedule(scheduler: AsyncIOScheduler):
-    scheduler.add_job(
-        setup_retrieves_schedule, CronTrigger(minute="*/2"), args=[scheduler]
-    )
+    scheduler.add_job(setup_retrieves_schedule, CronTrigger(minute="*/2"), args=(scheduler,))

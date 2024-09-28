@@ -53,7 +53,7 @@ async def add_orientiks_from_boosty(user_id: UUID, amount: int) -> None:
                                            f'Transfer from "{player.get_ckey(user_id)}"', )
 
 
-async def add_orientiks_for_other(user_id: UUID, amount: int, name: str) -> None:
+async def add_orientiks_from_other(user_id: UUID, amount: int, name: str) -> None:
     async with database_helper.session_factory() as db_session:
         await transactions.add_transaction(db_session, user_id, amount, TransactionType.Other, name)
 
