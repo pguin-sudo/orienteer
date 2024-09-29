@@ -29,7 +29,7 @@ async def set_role(discord_user_id: int, role_id: int, remove: bool = False):
 
 async def get_guild_profile(
     discord_user_id: int, server_id: int = 1075005001035943967
-) -> tuple[int]:
+) -> dict | None:
     url = f"https://discord.com/api/v10/guilds/{server_id}/members/{discord_user_id}"
 
     headers = {"Authorization": f"Bot {BOT_TOKEN}", "Content-Type": "application/json"}
@@ -39,7 +39,7 @@ async def get_guild_profile(
             if response.status // 100 == 4:
                 return await response.json()
             else:
-                return await response.json()
+                return None
 
 
 async def send_discord_message(

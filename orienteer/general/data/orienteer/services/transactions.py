@@ -9,7 +9,6 @@ from aiocache.serializers import PickleSerializer
 from orienteer.general.config import ORIENTIKS_MARGIN, ORIENTIKS_PRICE_COEFFICIENT
 from orienteer.general.utils import discord
 from orienteer.general.utils.dtos import UserDTO
-from . import discord_auth
 from ..database import database_helper
 from ..models.orientiks_cached_info import OrientiksCachedInfo
 from ..models.transactions import TransactionType
@@ -37,14 +36,19 @@ async def do_transfer(sender_user_id: UUID, recipient_user_id: UUID, amount: int
                                            f'Transfer from "{await player.get_ckey(recipient_user_id)}"', )
 
 
-async def add_time_balancing(user_id: UUID, minutes: int) -> None:
+async def add_orientiks_from_playtime(user_dto: UserDTO, minutes: int) -> None:
     async with database_helper.session_factory() as db_session:
-        role_ids = (await discord.get_guild_profile(await discord_auth.get_discord_user_id_by_user_id(user_id)))[
-            "roles"]
-        role_ids = (int(role_id) for role_id in role_ids)
-        await transactions.add_transaction(db_session, user_id,
-                                           minutes * await role_time_coefficients.get_coefficients_by_roles(db_session,
-                                                                                                            role_ids),
+        if user_dto is None:
+            return
+
+        profile = await discord.get_guild_profile(user_dto.discord_user_id)
+        role_ids = (int(role_id) for role_id in profile["roles"]) if profile else (0,)
+        coefficient = await role_time_coefficients.get_coefficients_by_roles(db_session, role_ids)
+
+        if coefficient == 0:
+            return
+
+        await transactions.add_transaction(db_session, user_dto.user_id, minutes * coefficient,
                                            TransactionType.Playtime, )
 
 
