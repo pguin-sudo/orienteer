@@ -32,8 +32,11 @@ class Sponsors(commands.Cog):
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def set_color(self, interaction: CommandInteraction,
-            color: str = commands.Param(min_length=6, max_length=6), ):
+    async def set_color(
+        self,
+        interaction: CommandInteraction,
+        color: str = commands.Param(min_length=6, max_length=6),
+    ):
         """
         Меняет цвет спонсора.
 
@@ -45,7 +48,9 @@ class Sponsors(commands.Cog):
 
         user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
         if user_dto is None:
-            await interaction.send(embed=embeds.error_message(Errors.no_user_id_with_discord.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.no_user_id_with_discord.value)
+            )
 
         async with sponsor.SetColor(interaction) as call:
             await call(user_dto, color)
@@ -64,7 +69,9 @@ class Sponsors(commands.Cog):
 
         user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
         if user_dto is None:
-            await interaction.send(embed=embeds.error_message(Errors.no_user_id_with_discord.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.no_user_id_with_discord.value)
+            )
 
         async with sponsor.Ask(interaction) as call:
             await call(user_dto, question)

@@ -2,9 +2,20 @@ from orienteer.bot.calls.abstract import AbstractCall
 from orienteer.bot.utils import embeds
 from orienteer.bot.utils.content_locale import Errors, Results
 from orienteer.general.config import CURRENCY_SIGN
-from orienteer.general.data.orienteer.services import (promo, sponsors, transactions, )
+from orienteer.general.data.orienteer.services import (
+    promo,
+    sponsors,
+    transactions,
+)
 from orienteer.general.data.requests import hub
-from orienteer.general.data.ss14.services import (playtime, bans, seen_time, admin_rank, whitelist, chars, )
+from orienteer.general.data.ss14.services import (
+    playtime,
+    bans,
+    seen_time,
+    admin_rank,
+    whitelist,
+    chars,
+)
 from orienteer.general.formatting.player import ping
 from orienteer.general.formatting.time import *
 from orienteer.general.utils.dtos import UserDTO
@@ -16,16 +27,24 @@ class Status(AbstractCall):
 
         if server_data is None:
             await self.interaction.edit_original_message(
-                embed=embeds.result_message('Статус "Amadis ⚔️" - <:beer:1180521543390986324>:', "**Нет данных**",
-                                            0xEB0C17, ))
+                embed=embeds.result_message(
+                    'Статус "Amadis ⚔️" - <:beer:1180521543390986324>:',
+                    "**Нет данных**",
+                    0xEB0C17,
+                )
+            )
             return
 
         preset = server_data["preset"]
-        hidden_preset = (preset if preset not in ("Ядерные оперативники", "Предатели") else "Секрет")
+        hidden_preset = (
+            preset if preset not in ("Ядерные оперативники", "Предатели") else "Секрет"
+        )
 
-        text = (f"**Режим:** {hidden_preset}\n"
-                f'**Игроки:** {server_data["players"]}/{server_data["soft_max_players"]}\n'
-                f'**Раунд №** {server_data["round_id"]}')
+        text = (
+            f"**Режим:** {hidden_preset}\n"
+            f'**Игроки:** {server_data["players"]}/{server_data["soft_max_players"]}\n'
+            f'**Раунд №** {server_data["round_id"]}'
+        )
 
         run_level = server_data["run_level"]
         if run_level == 0:
@@ -50,7 +69,10 @@ class Status(AbstractCall):
             color = 0xEB0C17
 
         await self.interaction.edit_original_message(
-            embed=embeds.result_message('Статус "Amadis ⚔️" - <:nobeer:1180521621212114995>:', text, color))
+            embed=embeds.result_message(
+                'Статус "Amadis ⚔️" - <:nobeer:1180521621212114995>:', text, color
+            )
+        )
 
 
 class Roles(AbstractCall):
@@ -60,28 +82,87 @@ class Roles(AbstractCall):
             embed = embeds.error_message(content=Errors.no_playtime_info.value)
             await self.interaction.edit_original_message(embed=embed)
 
-        embed = embeds.result_message(f"Наигранное время {user_dto.ckey}:", f"Общее: {all_roles[10]}")
+        embed = embeds.result_message(
+            f"Наигранное время {user_dto.ckey}:", f"Общее: {all_roles[10]}"
+        )
 
-        ("" if all_roles[0] == "" else embed.add_field(name="Сервисный отдел:", value=all_roles[0], inline=False))
-        ("" if all_roles[1] == "" else embed.add_field(name="Инженерный отдел:", value=all_roles[1], inline=False))
-        ("" if all_roles[2] == "" else embed.add_field(name="Медицинский отдел:", value=all_roles[2], inline=False))
-        ("" if all_roles[3] == "" else embed.add_field(name="Служба безопасности:", value=all_roles[3], inline=False))
-        ("" if all_roles[4] == "" else embed.add_field(name="Отдел снабжения:", value=all_roles[4], inline=False))
-        ("" if all_roles[5] == "" else embed.add_field(name="Научный отдел:", value=all_roles[5], inline=False))
-        ("" if all_roles[6] == "" else embed.add_field(name="Синтеты:", value=all_roles[6], inline=False))
-        ("" if all_roles[7] == "" else embed.add_field(name="Отдел командования:", value=all_roles[7], inline=False))
-        ("" if all_roles[8] == "" else embed.add_field(name="ЦентКом:", value=all_roles[8], inline=False))
-        ("" if all_roles[9] == "" else embed.add_field(name="Другое:", value=all_roles[9], inline=False))
+        (
+            ""
+            if all_roles[0] == ""
+            else embed.add_field(
+                name="Сервисный отдел:", value=all_roles[0], inline=False
+            )
+        )
+        (
+            ""
+            if all_roles[1] == ""
+            else embed.add_field(
+                name="Инженерный отдел:", value=all_roles[1], inline=False
+            )
+        )
+        (
+            ""
+            if all_roles[2] == ""
+            else embed.add_field(
+                name="Медицинский отдел:", value=all_roles[2], inline=False
+            )
+        )
+        (
+            ""
+            if all_roles[3] == ""
+            else embed.add_field(
+                name="Служба безопасности:", value=all_roles[3], inline=False
+            )
+        )
+        (
+            ""
+            if all_roles[4] == ""
+            else embed.add_field(
+                name="Отдел снабжения:", value=all_roles[4], inline=False
+            )
+        )
+        (
+            ""
+            if all_roles[5] == ""
+            else embed.add_field(
+                name="Научный отдел:", value=all_roles[5], inline=False
+            )
+        )
+        (
+            ""
+            if all_roles[6] == ""
+            else embed.add_field(name="Синтеты:", value=all_roles[6], inline=False)
+        )
+        (
+            ""
+            if all_roles[7] == ""
+            else embed.add_field(
+                name="Отдел командования:", value=all_roles[7], inline=False
+            )
+        )
+        (
+            ""
+            if all_roles[8] == ""
+            else embed.add_field(name="ЦентКом:", value=all_roles[8], inline=False)
+        )
+        (
+            ""
+            if all_roles[9] == ""
+            else embed.add_field(name="Другое:", value=all_roles[9], inline=False)
+        )
 
         await self.interaction.edit_original_message(embed=embed)
 
 
 class Bans(AbstractCall):
     async def __call__(self, user_dto: UserDTO) -> None:
-        all_bans, total_time, total_fine = (await bans.get_formatted_bans_and_total_stats(user_dto.user_id))
+        all_bans, total_time, total_fine = (
+            await bans.get_formatted_bans_and_total_stats(user_dto.user_id)
+        )
         if all_bans is None:
             await self.interaction.edit_original_message(
-                embed=embeds.result_message(content=Results.no_bans_info.value))
+                embed=embeds.result_message(content=Results.no_bans_info.value)
+            )
             return
 
         if len(all_bans) > 15:
@@ -105,14 +186,18 @@ class Profile(AbstractCall):
         if user_dto.discord_user_id is None:
             ping_statement = "Аккаунт не верифицирован 😶‍🌫️"
         else:
-            ping_statement = f"Аккаунт верифицирован, как {ping(user_dto.discord_user_id)} ✅"
+            ping_statement = (
+                f"Аккаунт верифицирован, как {ping(user_dto.discord_user_id)} ✅"
+            )
 
         creator = await promo.get_creator_code(user_dto.user_id)
         first_seen = await seen_time.get_formatted_first_seen_time(user_dto.user_id)
         last_seen = await seen_time.get_formatted_last_seen_time(user_dto.user_id)
         all_roles = await playtime.get_formatted_grouped_trackers(user_dto.user_id)
         most_popular_role = await playtime.get_most_popular_role_name(user_dto.user_id)
-        sponsor_level, color = await sponsors.get_sponsor_status_and_color(user_dto.user_id)
+        sponsor_level, color = await sponsors.get_sponsor_status_and_color(
+            user_dto.user_id
+        )
 
         a_rank = await admin_rank.get_admin_rank_name_and_time(user_dto.user_id)
 
@@ -120,8 +205,11 @@ class Profile(AbstractCall):
         balance_info = await transactions.get_balance(user_dto.user_id)
         ban_status = await bans.get_last_ban_status(user_dto.user_id)
 
-        embed = embeds.result_message(title=f"Профиль {user_dto.ckey}:", content=f"Первое появление: {first_seen}\n"
-                                                                                 f"Последнее появление: {last_seen}", )
+        embed = embeds.result_message(
+            title=f"Профиль {user_dto.ckey}:",
+            content=f"Первое появление: {first_seen}\n"
+            f"Последнее появление: {last_seen}",
+        )
 
         if color is None:
             if ban_status == 0:
@@ -147,20 +235,33 @@ class Profile(AbstractCall):
         if creator is not None:
             embed.add_field(name="Код пригласителя:", value=f"{creator}", inline=False)
         if all_roles is not None:
-            embed.add_field(name="Наигранное время:", value=f"Общее: {all_roles[10]}", inline=False)
+            embed.add_field(
+                name="Наигранное время:", value=f"Общее: {all_roles[10]}", inline=False
+            )
         if most_popular_role is not None:
-            embed.add_field(name="Любимая роль:", value=f"{most_popular_role}", inline=False)
+            embed.add_field(
+                name="Любимая роль:", value=f"{most_popular_role}", inline=False
+            )
         if sponsor_level is not None:
             embed.add_field(name="Статус спонсора:", value=sponsor_level, inline=False)
         if a_rank is not None:
-            embed.add_field(name="Ранг администратора:",
-                            value=f"{a_rank[0]}, стаж: {get_formatted_timedelta(a_rank[1])}", inline=False, )
+            embed.add_field(
+                name="Ранг администратора:",
+                value=f"{a_rank[0]}, стаж: {get_formatted_timedelta(a_rank[1])}",
+                inline=False,
+            )
         if is_in_whitelist:
             embed.add_field(name="Whitelist:", value="Есть! 😊", inline=False)
         else:
-            embed.add_field(name="Whitelist:", value="Нет   <:EDGEHOG:1106583346835898399>", inline=False, )
+            embed.add_field(
+                name="Whitelist:",
+                value="Нет   <:EDGEHOG:1106583346835898399>",
+                inline=False,
+            )
         if balance_info is not None:
-            embed.add_field(name="Баланс:", value=f"{balance_info} {CURRENCY_SIGN}", inline=False)
+            embed.add_field(
+                name="Баланс:", value=f"{balance_info} {CURRENCY_SIGN}", inline=False
+            )
 
         await self.interaction.edit_original_message(embed=embed)
 
@@ -170,11 +271,14 @@ class Chars(AbstractCall):
         all_chars = await chars.get_formatted_chars(user_dto.user_id)
         if all_chars is None:
             await self.interaction.edit_original_message(
-                embed=embeds.result_message(content=Results.no_bans_info.value))
+                embed=embeds.result_message(content=Results.no_bans_info.value)
+            )
             return
 
         embed_array = []
         for char in all_chars:
             embed_array.append(embeds.char_embed(*char))
 
-        await self.interaction.edit_original_message(content=f"## Персонажи {user_dto.ckey}", embeds=embed_array)
+        await self.interaction.edit_original_message(
+            content=f"## Персонажи {user_dto.ckey}", embeds=embed_array
+        )

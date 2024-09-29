@@ -19,8 +19,12 @@ class Orientiks(commands.Cog):
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def balance(self, interaction: CommandInteraction, discord: Member | None = None,
-                      ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None)):
+    async def balance(
+        self,
+        interaction: CommandInteraction,
+        discord: Member | None = None,
+        ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None),
+    ):
         """
         Выводит баланс ориентиков.
 
@@ -34,14 +38,24 @@ class Orientiks(commands.Cog):
         if not ckey and not discord:
             user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
             if user_dto is None:
-                await interaction.send(embed=embeds.error_message(Errors.no_user_id_with_discord.value))
+                await interaction.send(
+                    embed=embeds.error_message(Errors.no_user_id_with_discord.value)
+                )
                 return
         if ckey and discord:
-            await interaction.send(embed=embeds.error_message(Errors.ckey_and_discord.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.ckey_and_discord.value)
+            )
             return
-        user_dto = await UserDTO.from_ckey(ckey) if ckey else await UserDTO.from_discord_user_id(discord.id)
+        user_dto = (
+            await UserDTO.from_ckey(ckey)
+            if ckey
+            else await UserDTO.from_discord_user_id(discord.id)
+        )
         if user_dto is None:
-            await interaction.send(embed=embeds.error_message(Errors.unknown_user.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.unknown_user.value)
+            )
             return
 
         async with orientiks.Balance(interaction) as call:
@@ -49,8 +63,13 @@ class Orientiks(commands.Cog):
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def transfer(self, interaction: CommandInteraction, amount: int, recipient_discord: Member | None = None,
-                       recipient_ckey: str = commands.Param(autocomplete=autocomplete_ckey), ):
+    async def transfer(
+        self,
+        interaction: CommandInteraction,
+        amount: int,
+        recipient_discord: Member | None = None,
+        recipient_ckey: str = commands.Param(autocomplete=autocomplete_ckey),
+    ):
         """
         Перечисляет ориентики указанному пользователю.
 
@@ -63,19 +82,30 @@ class Orientiks(commands.Cog):
         """
 
         if not recipient_ckey and not recipient_discord:
-            await interaction.send(embed=embeds.error_message(Errors.no_ckey_or_discord.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.no_ckey_or_discord.value)
+            )
             return
         if recipient_ckey and recipient_discord:
-            await interaction.send(embed=embeds.error_message(Errors.ckey_and_discord.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.ckey_and_discord.value)
+            )
             return
-        recipient_user_dto = await UserDTO.from_ckey(
-            recipient_ckey) if recipient_ckey else UserDTO.from_discord_user_id(recipient_discord.id)
+        recipient_user_dto = (
+            await UserDTO.from_ckey(recipient_ckey)
+            if recipient_ckey
+            else UserDTO.from_discord_user_id(recipient_discord.id)
+        )
         if recipient_user_dto is None:
-            await interaction.send(embed=embeds.error_message(Errors.unknown_user.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.unknown_user.value)
+            )
 
         sender_user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
         if sender_user_dto is None:
-            await interaction.send(embed=embeds.error_message(Errors.no_user_id_with_discord.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.no_user_id_with_discord.value)
+            )
             return
 
         async with orientiks.Transfer(interaction) as call:
@@ -94,7 +124,9 @@ class Orientiks(commands.Cog):
 
         user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
         if user_dto is None:
-            await interaction.send(embed=embeds.error_message(Errors.no_user_id_with_discord.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.no_user_id_with_discord.value)
+            )
 
         async with orientiks.Shop(interaction) as call:
             await call(user_dto)

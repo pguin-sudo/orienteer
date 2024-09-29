@@ -30,7 +30,9 @@ class Promo(commands.Cog):
 
         user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
         if user_dto is None:
-            await interaction.send(embed=embeds.error_message(Errors.no_user_id_with_discord.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.no_user_id_with_discord.value)
+            )
 
         async with promo.Promo(interaction, True) as call:
             await call(user_dto, code)

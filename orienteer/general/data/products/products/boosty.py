@@ -175,4 +175,11 @@ class NewItems(AbstractProduct):
         logger.info(f"Возврат {BoostyRole.name}")
         logger.error("Бля, мне лень делать имплементацию выдачи времени")
 
-all_: tuple[AbstractProduct] = (Orientiks10, Whitelist, BoostyRole, AllRoles, NewItems)  # noqa
+
+all_: tuple[AbstractProduct] = (
+    Orientiks10,
+    Whitelist,
+    BoostyRole,
+    AllRoles,
+    NewItems,
+)  # noqa

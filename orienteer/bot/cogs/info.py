@@ -33,8 +33,12 @@ class Info(commands.Cog):
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def roles(self, interaction: CommandInteraction, discord: Member | None = None,
-                    ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None)):
+    async def roles(
+        self,
+        interaction: CommandInteraction,
+        discord: Member | None = None,
+        ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None),
+    ):
         """
         Выводит время, наигранное на разных ролях.
 
@@ -49,23 +53,36 @@ class Info(commands.Cog):
             user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
             if user_dto is None:
                 await interaction.send(
-                    embed=embeds.error_message(Errors.no_user_id_with_discord.value))
+                    embed=embeds.error_message(Errors.no_user_id_with_discord.value)
+                )
                 return
         if ckey and discord:
-            await interaction.send(embed=embeds.error_message(Errors.ckey_and_discord.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.ckey_and_discord.value)
+            )
             return
-        user_dto = await UserDTO.from_ckey(ckey) if ckey else await UserDTO.from_discord_user_id(discord.id)
+        user_dto = (
+            await UserDTO.from_ckey(ckey)
+            if ckey
+            else await UserDTO.from_discord_user_id(discord.id)
+        )
         if user_dto is None:
-            await interaction.send(embed=embeds.error_message(Errors.unknown_user.value))
-            return 
+            await interaction.send(
+                embed=embeds.error_message(Errors.unknown_user.value)
+            )
+            return
 
         async with info.Roles(interaction) as call:
             await call(user_dto)
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def bans(self, interaction: CommandInteraction, discord: Member | None = None,
-                   ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None)):
+    async def bans(
+        self,
+        interaction: CommandInteraction,
+        discord: Member | None = None,
+        ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None),
+    ):
         """
         Выводит все полученные на сервере баны и общий штраф за них.
 
@@ -80,23 +97,36 @@ class Info(commands.Cog):
             user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
             if user_dto is None:
                 await interaction.send(
-                    embed=embeds.error_message(Errors.no_user_id_with_discord.value))
+                    embed=embeds.error_message(Errors.no_user_id_with_discord.value)
+                )
                 return
         if ckey and discord:
-            await interaction.send(embed=embeds.error_message(Errors.ckey_and_discord.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.ckey_and_discord.value)
+            )
             return
-        user_dto = await UserDTO.from_ckey(ckey) if ckey else await UserDTO.from_discord_user_id(discord.id)
+        user_dto = (
+            await UserDTO.from_ckey(ckey)
+            if ckey
+            else await UserDTO.from_discord_user_id(discord.id)
+        )
         if user_dto is None:
-            await interaction.send(embed=embeds.error_message(Errors.unknown_user.value))
-            return 
+            await interaction.send(
+                embed=embeds.error_message(Errors.unknown_user.value)
+            )
+            return
 
         async with info.Bans(interaction) as call:
             await call(user_dto)
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def profile(self, interaction: CommandInteraction, discord: Member | None = None,
-                      ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None), ):
+    async def profile(
+        self,
+        interaction: CommandInteraction,
+        discord: Member | None = None,
+        ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None),
+    ):
         """
         Выводит  информацию, связанную с игровым аккаунтом.
 
@@ -111,23 +141,36 @@ class Info(commands.Cog):
             user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
             if user_dto is None:
                 await interaction.send(
-                    embed=embeds.error_message(Errors.no_user_id_with_discord.value))
+                    embed=embeds.error_message(Errors.no_user_id_with_discord.value)
+                )
                 return
         if ckey and discord:
-            await interaction.send(embed=embeds.error_message(Errors.ckey_and_discord.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.ckey_and_discord.value)
+            )
             return
-        user_dto = await UserDTO.from_ckey(ckey) if ckey else await UserDTO.from_discord_user_id(discord.id)
+        user_dto = (
+            await UserDTO.from_ckey(ckey)
+            if ckey
+            else await UserDTO.from_discord_user_id(discord.id)
+        )
         if user_dto is None:
-            await interaction.send(embed=embeds.error_message(Errors.unknown_user.value))
-            return 
+            await interaction.send(
+                embed=embeds.error_message(Errors.unknown_user.value)
+            )
+            return
 
         async with info.Profile(interaction) as call:
             await call(user_dto)
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def chars(self, interaction: CommandInteraction, discord: Member | None = None,
-                    ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None), ):
+    async def chars(
+        self,
+        interaction: CommandInteraction,
+        discord: Member | None = None,
+        ckey: str | None = commands.Param(autocomplete=autocomplete_ckey, default=None),
+    ):
         """
         Выводит общую информацию о персонажах игрока.
 
@@ -142,15 +185,24 @@ class Info(commands.Cog):
             user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
             if user_dto is None:
                 await interaction.send(
-                    embed=embeds.error_message(Errors.no_user_id_with_discord.value))
+                    embed=embeds.error_message(Errors.no_user_id_with_discord.value)
+                )
                 return
         if ckey and discord:
-            await interaction.send(embed=embeds.error_message(Errors.ckey_and_discord.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.ckey_and_discord.value)
+            )
             return
-        user_dto = await UserDTO.from_ckey(ckey) if ckey else await UserDTO.from_discord_user_id(discord.id)
+        user_dto = (
+            await UserDTO.from_ckey(ckey)
+            if ckey
+            else await UserDTO.from_discord_user_id(discord.id)
+        )
         if user_dto is None:
-            await interaction.send(embed=embeds.error_message(Errors.unknown_user.value))
-            return 
+            await interaction.send(
+                embed=embeds.error_message(Errors.unknown_user.value)
+            )
+            return
 
         async with info.Chars(interaction) as call:
             await call(user_dto)

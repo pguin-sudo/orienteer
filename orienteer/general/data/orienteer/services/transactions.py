@@ -28,12 +28,24 @@ async def get_balance(user_id: UUID) -> int:
     return int(balance - fine)
 
 
-async def do_transfer(sender_user_id: UUID, recipient_user_id: UUID, amount: int) -> None:
+async def do_transfer(
+    sender_user_id: UUID, recipient_user_id: UUID, amount: int
+) -> None:
     async with database_helper.session_factory() as db_session:
-        await transactions.add_transaction(db_session, sender_user_id, -amount, TransactionType.Transfer,
-                                           f'Transfer to "{await player.get_ckey(recipient_user_id)}"', )
-        await transactions.add_transaction(db_session, recipient_user_id, amount, TransactionType.Transfer,
-                                           f'Transfer from "{await player.get_ckey(recipient_user_id)}"', )
+        await transactions.add_transaction(
+            db_session,
+            sender_user_id,
+            -amount,
+            TransactionType.Transfer,
+            f'Transfer to "{await player.get_ckey(recipient_user_id)}"',
+        )
+        await transactions.add_transaction(
+            db_session,
+            recipient_user_id,
+            amount,
+            TransactionType.Transfer,
+            f'Transfer from "{await player.get_ckey(recipient_user_id)}"',
+        )
 
 
 async def add_orientiks_from_playtime(user_dto: UserDTO, minutes: int) -> None:
@@ -43,28 +55,40 @@ async def add_orientiks_from_playtime(user_dto: UserDTO, minutes: int) -> None:
 
         profile = await discord.get_guild_profile(user_dto.discord_user_id)
         role_ids = (int(role_id) for role_id in profile["roles"]) if profile else (0,)
-        coefficient = await role_time_coefficients.get_coefficients_by_roles(db_session, role_ids)
+        coefficient = await role_time_coefficients.get_coefficients_by_roles(
+            db_session, role_ids
+        )
 
         if coefficient == 0:
             return
 
-        await transactions.add_transaction(db_session, user_dto.user_id, minutes * coefficient,
-                                           TransactionType.Playtime, )
+        await transactions.add_transaction(
+            db_session,
+            user_dto.user_id,
+            minutes * coefficient,
+            TransactionType.Playtime,
+        )
 
 
 async def add_orientiks_from_boosty(user_id: UUID, amount: int) -> None:
     async with database_helper.session_factory() as db_session:
-        await transactions.add_transaction(db_session, user_id, amount, TransactionType.Boosty)
+        await transactions.add_transaction(
+            db_session, user_id, amount, TransactionType.Boosty
+        )
 
 
 async def add_orientiks_from_tip(user_id: UUID, amount: int, name: str) -> None:
     async with database_helper.session_factory() as db_session:
-        await transactions.add_transaction(db_session, user_id, amount, TransactionType.Tip, name)
+        await transactions.add_transaction(
+            db_session, user_id, amount, TransactionType.Tip, name
+        )
 
 
 async def add_orientiks_from_other(user_id: UUID, amount: int, name: str) -> None:
     async with database_helper.session_factory() as db_session:
-        await transactions.add_transaction(db_session, user_id, amount, TransactionType.Other, name)
+        await transactions.add_transaction(
+            db_session, user_id, amount, TransactionType.Other, name
+        )
 
 
 async def spend(user_id: UUID, amount: int) -> None:
@@ -73,8 +97,9 @@ async def spend(user_id: UUID, amount: int) -> None:
 
 
 # @deprecated
-async def get_cached_info_range(start: datetime | None = None, end: datetime | None = None) -> tuple[
-    OrientiksCachedInfo, ...]:
+async def get_cached_info_range(
+    start: datetime | None = None, end: datetime | None = None
+) -> tuple[OrientiksCachedInfo, ...]:
     async with database_helper.session_factory() as db_session:
         return await transactions.get_cached_info_range(db_session)
 
@@ -94,11 +119,19 @@ async def get_price(buy: bool, timestamp: datetime | None = None) -> float:
 
         numerator = math.log(cached_info.total_fine + cached_info.total_spent + 1)
         denominator = math.log(
-            cached_info.total_from_time - cached_info.total_time_balancing + cached_info.total_sponsorship + 1)
+            cached_info.total_from_time
+            - cached_info.total_time_balancing
+            + cached_info.total_sponsorship
+            + 1
+        )
 
         clean_price = (numerator / denominator) * ORIENTIKS_PRICE_COEFFICIENT
 
-        price = (clean_price * (1 + ORIENTIKS_MARGIN) if buy else clean_price * (1 - ORIENTIKS_MARGIN))
+        price = (
+            clean_price * (1 + ORIENTIKS_MARGIN)
+            if buy
+            else clean_price * (1 - ORIENTIKS_MARGIN)
+        )
         return round(price, 2)
 
 
@@ -112,7 +145,9 @@ async def get_leaderboard(depth: int = 27) -> tuple[tuple[UserDTO, Any], ...]:
             if await bans.get_last_ban_status(user_id) == 2:
                 continue
 
-            leaderboard.append((await UserDTO.from_user_id(user_id), await get_balance(user_id)))
+            leaderboard.append(
+                (await UserDTO.from_user_id(user_id), await get_balance(user_id))
+            )
 
     leaderboard.sort(key=lambda x: x[1], reverse=True)
 

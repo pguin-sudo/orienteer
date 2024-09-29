@@ -264,5 +264,12 @@ class SevenOrientiks(AbstractProduct):
         await transactions.add_orientiks_for_other(user_id, -21, "Возврат по кредиту")
 
 
-all_: tuple[AbstractProduct] = (ColoredNick, GigachatAccess, PriorityQueue, Orientalink, # noqa
-                                BanAnnulment, SevenNewSlots, SevenOrientiks,)
+all_: tuple[AbstractProduct] = (
+    ColoredNick,
+    GigachatAccess,
+    PriorityQueue,
+    Orientalink,  # noqa
+    BanAnnulment,
+    SevenNewSlots,
+    SevenOrientiks,
+)

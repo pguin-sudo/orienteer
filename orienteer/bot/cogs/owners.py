@@ -35,8 +35,13 @@ class Owners(commands.Cog):
     @commands.slash_command()
     @commands.is_owner()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def reward(self, interaction: CommandInteraction, amount: int, discord: Member | None = None,
-            ckey: str = commands.Param(autocomplete=autocomplete_ckey), ):
+    async def reward(
+        self,
+        interaction: CommandInteraction,
+        amount: int,
+        discord: Member | None = None,
+        ckey: str = commands.Param(autocomplete=autocomplete_ckey),
+    ):
         """
         Выдает указанное кол-во ориентиков определенному игроку.
 
@@ -51,14 +56,24 @@ class Owners(commands.Cog):
         if not ckey and not discord:
             user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
             if user_dto is None:
-                await interaction.send(embed=embeds.error_message(Errors.no_user_id_with_discord.value))
+                await interaction.send(
+                    embed=embeds.error_message(Errors.no_user_id_with_discord.value)
+                )
                 return
         if ckey and discord:
-            await interaction.send(embed=embeds.error_message(Errors.ckey_and_discord.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.ckey_and_discord.value)
+            )
             return
-        user_dto = await UserDTO.from_ckey(ckey) if ckey else await UserDTO.from_discord_user_id(discord.id)
+        user_dto = (
+            await UserDTO.from_ckey(ckey)
+            if ckey
+            else await UserDTO.from_discord_user_id(discord.id)
+        )
         if user_dto is None:
-            await interaction.send(embed=embeds.error_message(Errors.unknown_user.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.unknown_user.value)
+            )
             return
 
         async with owners.Reward(interaction) as call:
@@ -67,9 +82,13 @@ class Owners(commands.Cog):
     @commands.slash_command()
     @commands.is_owner()
     @commands.cooldown(1, 5.0, BucketType.user)
-    async def new_sponsor(self, interaction: CommandInteraction, discord: Member | None = None,
-            ckey: str = commands.Param(autocomplete=autocomplete_ckey),
-            boosty_level: str = commands.Param(autocomplete=autocomplete_boosty_level), ):
+    async def new_sponsor(
+        self,
+        interaction: CommandInteraction,
+        discord: Member | None = None,
+        ckey: str = commands.Param(autocomplete=autocomplete_ckey),
+        boosty_level: str = commands.Param(autocomplete=autocomplete_boosty_level),
+    ):
         """
         Выдает указанный уровень подписки определенному игроку.
 
@@ -84,14 +103,24 @@ class Owners(commands.Cog):
         if not ckey and not discord:
             user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
             if user_dto is None:
-                await interaction.send(embed=embeds.error_message(Errors.no_user_id_with_discord.value))
+                await interaction.send(
+                    embed=embeds.error_message(Errors.no_user_id_with_discord.value)
+                )
                 return
         if ckey and discord:
-            await interaction.send(embed=embeds.error_message(Errors.ckey_and_discord.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.ckey_and_discord.value)
+            )
             return
-        user_dto = await UserDTO.from_ckey(ckey) if ckey else await UserDTO.from_discord_user_id(discord.id)
+        user_dto = (
+            await UserDTO.from_ckey(ckey)
+            if ckey
+            else await UserDTO.from_discord_user_id(discord.id)
+        )
         if user_dto is None:
-            await interaction.send(embed=embeds.error_message(Errors.unknown_user.value))
+            await interaction.send(
+                embed=embeds.error_message(Errors.unknown_user.value)
+            )
             return
 
         async with owners.NewSponsor(interaction) as call:
