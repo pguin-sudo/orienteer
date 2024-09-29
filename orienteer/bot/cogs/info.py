@@ -56,21 +56,29 @@ class Info(commands.Cog):
                     embed=embeds.error_message(Errors.no_user_id_with_discord.value)
                 )
                 return
-        if ckey and discord:
+        elif ckey and discord:
             await interaction.send(
                 embed=embeds.error_message(Errors.ckey_and_discord.value)
             )
             return
-        user_dto = (
-            await UserDTO.from_ckey(ckey)
-            if ckey
-            else await UserDTO.from_discord_user_id(discord.id)
-        )
-        if user_dto is None:
-            await interaction.send(
-                embed=embeds.error_message(Errors.unknown_user.value)
+        elif ckey:
+            user_dto = (
+                await UserDTO.from_ckey(ckey)
             )
-            return
+            if user_dto is None:
+                await interaction.send(
+                    embed=embeds.error_message(Errors.unknown_user.value)
+                )
+                return
+        else:
+            user_dto = (
+                await UserDTO.from_discord_user_id(discord.id)
+            )
+            if user_dto is None:
+                await interaction.send(
+                    embed=embeds.error_message(Errors.unknown_user.value)
+                )
+                return
 
         async with info.Roles(interaction) as call:
             await call(user_dto)
@@ -100,21 +108,29 @@ class Info(commands.Cog):
                     embed=embeds.error_message(Errors.no_user_id_with_discord.value)
                 )
                 return
-        if ckey and discord:
+        elif ckey and discord:
             await interaction.send(
                 embed=embeds.error_message(Errors.ckey_and_discord.value)
             )
             return
-        user_dto = (
-            await UserDTO.from_ckey(ckey)
-            if ckey
-            else await UserDTO.from_discord_user_id(discord.id)
-        )
-        if user_dto is None:
-            await interaction.send(
-                embed=embeds.error_message(Errors.unknown_user.value)
+        elif ckey:
+            user_dto = (
+                await UserDTO.from_ckey(ckey)
             )
-            return
+            if user_dto is None:
+                await interaction.send(
+                    embed=embeds.error_message(Errors.unknown_user.value)
+                )
+                return
+        else:
+            user_dto = (
+                await UserDTO.from_discord_user_id(discord.id)
+            )
+            if user_dto is None:
+                await interaction.send(
+                    embed=embeds.error_message(Errors.unknown_user.value)
+                )
+                return
 
         async with info.Bans(interaction) as call:
             await call(user_dto)
@@ -144,21 +160,29 @@ class Info(commands.Cog):
                     embed=embeds.error_message(Errors.no_user_id_with_discord.value)
                 )
                 return
-        if ckey and discord:
+        elif ckey and discord:
             await interaction.send(
                 embed=embeds.error_message(Errors.ckey_and_discord.value)
             )
             return
-        user_dto = (
-            await UserDTO.from_ckey(ckey)
-            if ckey
-            else await UserDTO.from_discord_user_id(discord.id)
-        )
-        if user_dto is None:
-            await interaction.send(
-                embed=embeds.error_message(Errors.unknown_user.value)
+        elif ckey:
+            user_dto = (
+                await UserDTO.from_ckey(ckey)
             )
-            return
+            if user_dto is None:
+                await interaction.send(
+                    embed=embeds.error_message(Errors.unknown_user.value)
+                )
+                return
+        else:
+            user_dto = (
+                await UserDTO.from_discord_user_id(discord.id)
+            )
+            if user_dto is None:
+                await interaction.send(
+                    embed=embeds.error_message(Errors.unknown_user.value)
+                )
+                return
 
         async with info.Profile(interaction) as call:
             await call(user_dto)
@@ -188,21 +212,29 @@ class Info(commands.Cog):
                     embed=embeds.error_message(Errors.no_user_id_with_discord.value)
                 )
                 return
-        if ckey and discord:
+        elif ckey and discord:
             await interaction.send(
                 embed=embeds.error_message(Errors.ckey_and_discord.value)
             )
             return
-        user_dto = (
-            await UserDTO.from_ckey(ckey)
-            if ckey
-            else await UserDTO.from_discord_user_id(discord.id)
-        )
-        if user_dto is None:
-            await interaction.send(
-                embed=embeds.error_message(Errors.unknown_user.value)
+        elif ckey:
+            user_dto = (
+                await UserDTO.from_ckey(ckey)
             )
-            return
+            if user_dto is None:
+                await interaction.send(
+                    embed=embeds.error_message(Errors.unknown_user.value)
+                )
+                return
+        else:
+            user_dto = (
+                await UserDTO.from_discord_user_id(discord.id)
+            )
+            if user_dto is None:
+                await interaction.send(
+                    embed=embeds.error_message(Errors.unknown_user.value)
+                )
+                return
 
         async with info.Chars(interaction) as call:
             await call(user_dto)
