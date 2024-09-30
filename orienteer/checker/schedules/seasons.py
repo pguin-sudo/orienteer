@@ -20,7 +20,7 @@ USERNAME = "Менеджер сезонов"
 
 
 async def check_season_and_update():
-    season = await seasons.get_current_season()
+    season = await seasons.get_season_by_date(datetime.now(timezone.utc))
     leaderboard = await seasons_cached_playtime.get_leaderboard(
         season.season_id, depth=7
     )

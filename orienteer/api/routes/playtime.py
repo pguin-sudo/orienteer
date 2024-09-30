@@ -5,7 +5,7 @@ from fastapi.responses import Response
 
 from orienteer.general.data.orienteer.services import transactions
 from orienteer.general.utils.dtos import UserDTO
-from orienteer.general.config import PLAYTIME_TOKEN
+from orienteer.general.config import TOKEN_PLAYTIME
 
 router = APIRouter()
 
@@ -14,7 +14,7 @@ router = APIRouter()
 async def sponsor_info_handler_route(request: Request):
     request = await request.json()
 
-    if request["token"] != PLAYTIME_TOKEN:
+    if request["token"] != TOKEN_PLAYTIME:
         return Response(status_code=401)
 
     await transactions.add_orientiks_from_playtime(

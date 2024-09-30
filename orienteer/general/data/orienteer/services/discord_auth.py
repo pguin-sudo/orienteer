@@ -10,7 +10,7 @@ from ..repositories import discord_auth
 
 @cached(ttl=3600, serializer=PickleSerializer())
 async def is_discord_linked(user_id: UUID) -> bool:
-    async with database_helper() as db_session:
+    async with database_helper.session_factory() as db_session:
         return await discord_auth.is_discord_linked(db_session, user_id)
 
 
@@ -18,7 +18,7 @@ async def is_discord_linked(user_id: UUID) -> bool:
 async def link_discord(
     user_id: UUID, discord_user_id: int, discord_username: str
 ) -> None:
-    async with database_helper() as db_session:
+    async with database_helper.session_factory() as db_session:
         await discord_auth.link_discord(
             db_session, user_id, discord_user_id, discord_username
         )
