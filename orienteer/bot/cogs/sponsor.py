@@ -27,8 +27,15 @@ class Sponsors(commands.Cog):
         interaction: Disnake interaction
         """
 
+        user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
+        if user_dto is None:
+            await interaction.send(
+                embed=embeds.error_message(Errors.no_user_id_with_discord.value)
+            )
+            return
+
         async with sponsor.SponsorInfo(interaction) as call:
-            await call()
+            await call(user_dto)
 
     @commands.slash_command()
     @commands.cooldown(1, 5.0, BucketType.user)
@@ -51,6 +58,7 @@ class Sponsors(commands.Cog):
             await interaction.send(
                 embed=embeds.error_message(Errors.no_user_id_with_discord.value)
             )
+            return
 
         async with sponsor.SetColor(interaction) as call:
             await call(user_dto, color)
@@ -72,6 +80,7 @@ class Sponsors(commands.Cog):
             await interaction.send(
                 embed=embeds.error_message(Errors.no_user_id_with_discord.value)
             )
+            return
 
         async with sponsor.Ask(interaction) as call:
             await call(user_dto, question)

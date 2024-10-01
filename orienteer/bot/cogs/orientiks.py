@@ -135,6 +135,7 @@ class Orientiks(commands.Cog):
             await interaction.send(
                 embed=embeds.error_message(Errors.no_user_id_with_discord.value)
             )
+            return
 
         async with orientiks.Shop(interaction) as call:
             await call(user_dto)

@@ -33,6 +33,7 @@ class Promo(commands.Cog):
             await interaction.send(
                 embed=embeds.error_message(Errors.no_user_id_with_discord.value)
             )
+            return
 
         async with promo.Promo(interaction, True) as call:
             await call(user_dto, code)
