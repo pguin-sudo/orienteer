@@ -28,6 +28,7 @@ async def get_season(db_session: AsyncSession, date: datetime) -> Season:
         select(Season)
         .where(Season.start_date <= date)
         .order_by(Season.start_date.desc())
+        .limit(1)
     )
     return season.scalar_one_or_none()
 
