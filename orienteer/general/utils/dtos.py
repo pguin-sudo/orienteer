@@ -44,3 +44,10 @@ class UserDTO:
         self.discord_user_id = discord_user_id
         self.ckey = await player.get_ckey(self.user_id)
         return self
+        
+    def __eq__(self, other):
+        if isinstance(other, UserDTO):
+            return (self.user_id == other.user_id and
+                    self.discord_user_id == other.discord_user_id)
+        return NotImplemented
+
