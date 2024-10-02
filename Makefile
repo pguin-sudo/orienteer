@@ -4,9 +4,11 @@ update:
 	git fetch --all
 	git stash
 	git reset --hard origin/master
-	poetry update
 	git stash pop
 
+.PHONY: poetry-venv
+poetry-venv:
+	poetry update
 
 # modules
 .PHONY: orienteer
