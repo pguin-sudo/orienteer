@@ -32,17 +32,6 @@ async def get_creator_code(db_session: AsyncSession, user_id: UUID) -> str | Non
     return None
 
 
-async def check_promo_already_used_discord(
-    db_session: AsyncSession, discord_user_id: int, code: str
-) -> bool:
-    result = await db_session.execute(
-        select(PromotionalCodeUsages).filter_by(
-            discord_user_id=discord_user_id, promotional_code=code
-        )
-    )
-    return bool(result.scalars().first())
-
-
 async def check_promo_already_used_ss14(
     db_session: AsyncSession, user_id: UUID, code: str
 ) -> bool:
@@ -53,11 +42,11 @@ async def check_promo_already_used_ss14(
 
 
 async def mark_promo_as_used(
-    db_session: AsyncSession, user_id: UUID, discord_user_id: int, code: str
+    db_session: AsyncSession, user_id: UUID, code: str
 ):
     db_session.add(
         PromotionalCodeUsages(
-            user_id=user_id, discord_user_id=discord_user_id, promotional_code=code
+            user_id=user_id, promotional_code=code
         )
     )
     await db_session.commit()

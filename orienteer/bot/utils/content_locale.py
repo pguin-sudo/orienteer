@@ -36,7 +36,7 @@ class Errors(Enum):
     promo_used_discord_account = (
         "Промокод уже был использован от имени этого пользователя!"
     )
-    promo_used_ss14_account = "Промокод уже был использован для этого ckey!"
+    promo_used_ss14_account = "Промокод уже был использован!"
     creator_promo_used = "Промокод креатора уже был использован!"
 
     # Sponsors

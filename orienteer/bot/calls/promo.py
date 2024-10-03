@@ -14,7 +14,7 @@ class Promo(AbstractCall):
             return
 
         success, content = await promo.try_promo(
-            self.interaction.user.id, user_dto.user_id, code
+            user_dto.user_id, code
         )
 
         await self.interaction.edit_original_message(

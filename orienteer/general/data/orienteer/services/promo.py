@@ -14,7 +14,7 @@ async def get_creator_code(user_id) -> str | None:
         return await promo.get_creator_code(db_session, user_id)
 
 
-async def try_promo(discord_user_id: int, user_id: UUID, code: str) -> tuple[bool, str]:
+async def try_promo(user_id: UUID, code: str) -> tuple[bool, str]:
     # TODO: Lower only to official promos
     code = code.lower()
 
@@ -36,11 +36,6 @@ async def try_promo(discord_user_id: int, user_id: UUID, code: str) -> tuple[boo
         if data.expiration_date < datetime.now(timezone.utc):
             return False, Errors.promo_overdue.value
 
-        if await promo.check_promo_already_used_discord(
-            db_session, discord_user_id, code
-        ):
-            return False, Errors.promo_used_discord_account.value
-
         if await promo.check_promo_already_used_ss14(db_session, user_id, code):
             return False, Errors.promo_used_ss14_account.value
 
@@ -57,7 +52,7 @@ async def try_promo(discord_user_id: int, user_id: UUID, code: str) -> tuple[boo
             roles_text += (f"- **{get_job_group_and_name(tracker)[1]}**: "
                            f"{get_formatted_timedelta(timedelta(minutes=minutes))}\n")
 
-        await promo.mark_promo_as_used(db_session, user_id, discord_user_id, code)
+        await promo.mark_promo_as_used(db_session, user_id, code)
         await promo.decrease_promo_usages(db_session, code)
 
         return (
