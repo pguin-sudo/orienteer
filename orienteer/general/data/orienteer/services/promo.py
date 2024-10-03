@@ -54,7 +54,8 @@ async def try_promo(discord_user_id: int, user_id: UUID, code: str) -> tuple[boo
 
         for tracker, minutes in data.jobs.items():
             await playtime.add_playtime(user_id, tracker, minutes)
-            roles_text = f"**{get_job_group_and_name(tracker)[1]}**: {get_formatted_timedelta(timedelta(minutes=minutes))}"
+            roles_text += (f"- **{get_job_group_and_name(tracker)[1]}**: "
+                           f"{get_formatted_timedelta(timedelta(minutes=minutes))}\n")
 
         await promo.mark_promo_as_used(db_session, user_id, discord_user_id, code)
         await promo.decrease_promo_usages(db_session, code)
@@ -62,7 +63,7 @@ async def try_promo(discord_user_id: int, user_id: UUID, code: str) -> tuple[boo
         return (
             True,
             (
-                f"{Results.you_have_received.value} {roles_text}\n"
+                f"{Results.you_have_received.value}\n{roles_text}\n"
                 f'{Results.now_you_have_support_creator.value} "{code}"'
                 if is_creators_code
                 else ""
