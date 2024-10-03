@@ -1,8 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from uuid import UUID
 
-import pytz
-
 from orienteer.bot.utils.content_locale import Errors, Results
 from orienteer.general.data.ss14.repositories import playtime
 from orienteer.general.formatting.playtime import get_job_group_and_name
@@ -35,7 +33,7 @@ async def try_promo(discord_user_id: int, user_id: UUID, code: str) -> tuple[boo
             elif time.total_seconds() / 60 < time_needed:
                 return False, Errors.not_enough_playtime.value
 
-        if pytz.UTC.localize(data.expiration_date) < datetime.now(timezone.utc):
+        if data.expiration_date < datetime.now(timezone.utc):
             return False, Errors.promo_overdue.value
 
         if await promo.check_promo_already_used_discord(
