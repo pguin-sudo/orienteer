@@ -13,7 +13,6 @@ async def is_discord_linked(user_id: UUID) -> bool:
         return await discord_auth.is_discord_linked(db_session, user_id)
 
 
-@cached(ttl=3600, serializer=PickleSerializer())
 async def link_discord(
     user_id: UUID, discord_user_id: int, discord_username: str
 ) -> None:
@@ -23,13 +22,11 @@ async def link_discord(
         )
 
 
-@cached(ttl=3600, serializer=PickleSerializer())
 async def get_discord_user_id_by_user_id(user_id: UUID) -> int | None:
     async with database_helper.session_factory() as db_session:
         return await discord_auth.get_discord_user_id_by_user_id(db_session, user_id)
 
 
-@cached(ttl=3600, serializer=PickleSerializer())
 async def get_user_id_by_discord_user_id(discord_user_id: int) -> UUID | None:
     async with database_helper.session_factory() as db_session:
         return await discord_auth.get_user_id_by_discord_user_id(

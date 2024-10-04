@@ -10,6 +10,7 @@ from orienteer.api.utils.authentication import (
     discord_auth_redirect,
     generate_auth_data,
 )
+from orienteer.general.utils.dtos import UserDTO
 
 router = APIRouter()
 
@@ -43,4 +44,4 @@ async def generate_auth_data_route(user_id: UUID, key: str = Query(...)):
 
 @router.get("/api/auth/{user_id}")
 async def check_linked_route(user_id: UUID):
-    return JSONResponse(content=await check_linked(user_id))
+    return JSONResponse(content=await check_linked(await UserDTO.from_user_id(user_id)))
