@@ -36,8 +36,11 @@ async def get_guild_profile(
 
     async with aiohttp.ClientSession() as session:
         async with session.get(url, headers=headers) as response:
-            if response.status // 100 == 4:
-                return await response.json()
+            if response.status // 100 != 4:
+                data = await response.json()
+                if data.get("message", None) == "Unknown member":
+                    return None
+                return data
             else:
                 return None
 

@@ -4,6 +4,7 @@ from typing import Any
 from uuid import UUID
 
 from aiocache import cached
+from loguru import logger
 from aiocache.serializers import PickleSerializer
 
 from orienteer.general.config import ORIENTIKS_MARGIN, ORIENTIKS_PRICE_COEFFICIENT
@@ -53,21 +54,24 @@ async def add_orientiks_from_playtime(user_dto: UserDTO, minutes: int) -> None:
         if user_dto is None:
             return
 
-        profile = await discord.get_guild_profile(user_dto.discord_user_id)
-        role_ids = (int(role_id) for role_id in profile["roles"]) if profile else (0,)
-        coefficient = await role_time_coefficients.get_coefficients_by_roles(
-            db_session, role_ids
-        )
+        try:
+            profile = await discord.get_guild_profile(user_dto.discord_user_id)
+            role_ids = (int(role_id) for role_id in profile["roles"]) if profile else (0,)
+            coefficient = await role_time_coefficients.get_coefficients_by_roles(
+                db_session, role_ids
+            )
 
-        if coefficient == 0:
-            return
+            if coefficient == 0:
+                return
 
-        await transactions.add_transaction(
-            db_session,
-            user_dto.user_id,
-            minutes * coefficient,
-            TransactionType.Playtime,
-        )
+            await transactions.add_transaction(
+                db_session,
+                user_dto.user_id,
+                minutes * coefficient,
+                TransactionType.Playtime,
+            )
+        except Exception as e:
+            logger.debug(f"{e}\n\n{profile}")
 
 
 async def add_orientiks_from_boosty(user_id: UUID, amount: int) -> None:
