@@ -8,7 +8,6 @@ from ..models.discord_auth import DiscordAuth
 from ..repositories import discord_auth
 
 
-@cached(ttl=3600, serializer=PickleSerializer())
 async def is_discord_linked(user_id: UUID) -> bool:
     async with database_helper.session_factory() as db_session:
         return await discord_auth.is_discord_linked(db_session, user_id)

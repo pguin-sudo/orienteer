@@ -2,6 +2,7 @@ import os
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi.responses import JSONResponse
 from fastapi.templating import Jinja2Templates
 
 from orienteer.api.utils.authentication import (
@@ -37,9 +38,9 @@ async def discord_auth_redirect_route(
 
 @router.post("/api/auth/{user_id}")
 async def generate_auth_data_route(user_id: UUID, key: str = Query(...)):
-    return await generate_auth_data(user_id, key)
+    return JSONResponse(content=await generate_auth_data(user_id, key))
 
 
 @router.get("/api/auth/{user_id}")
 async def check_linked_route(user_id: UUID):
-    return await check_linked(user_id)
+    return JSONResponse(content=await check_linked(user_id))
