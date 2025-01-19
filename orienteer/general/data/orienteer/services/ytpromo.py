@@ -6,7 +6,6 @@ from ..database import database_helper
 from orienteer.general.data.ss14.repositories import playtime
 from orienteer.general.formatting.playtime import get_job_group_and_name
 from orienteer.general.formatting.time import get_formatted_timedelta
-from loguru import logger
 
 
 async def validate_ytpromo_code(db_session, code: str):

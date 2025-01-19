@@ -7,10 +7,9 @@ from orienteer.general.data.orienteer.models.ytpromo_code_usages import YTPromot
 
 async def check_ytpromo_code_validity(db_session: AsyncSession, code: str) -> ChoosingPromo:
     """
-    Проверяет, существует ли промокод с данным кодом, не истёк ли его срок действия,
-    и активен ли он.
+    Проверяет, существует ли промокод с данным кодом и активен ли он.
     """
-    query = select(ChoosingPromo).filter_by(code=code, active=True).filter(ChoosingPromo.end_time > datetime.utcnow())
+    query = select(ChoosingPromo).filter_by(code=code, active=True)
 
     result = await db_session.execute(query)
     check_promo = result.scalars().first()

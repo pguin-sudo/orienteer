@@ -30,15 +30,16 @@ class Youtubelist(ui.StringSelect):
             await interaction.response.edit_message("Вы не можете использовать этот промокод.", ephemeral=True)
             return
 
+        # Сохраняем выбранный отдел и обрабатываем промокод
+        self.selected_department = self.values[0]
+
         # Блокируем выбор после использования
         for item in self.view.children:
             if isinstance(item, ui.StringSelect):
                 item.disabled = True  # Блокируем выпадающий список
 
-        await interaction.response.edit_message(content=f"Проверка...", view=self.view)
+        await interaction.response.edit_message(content="Проверка...", view=None)
 
-        # Сохраняем выбранный отдел и обрабатываем промокод
-        self.selected_department = self.values[0]
         async with database_helper.session_factory() as db_session:
             user_dto = await UserDTO.from_discord_user_id(interaction.user.id)
             if user_dto:
