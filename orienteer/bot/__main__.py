@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from disnake import Activity, ActivityType
+from disnake import Activity, ActivityType, CommandInteraction
 from disnake.ext import commands
 from loguru import logger
 from loguru_discord import DiscordSink

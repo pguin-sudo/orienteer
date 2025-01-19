@@ -7,6 +7,9 @@ from orienteer.general.data.orienteer.models.promotional_code import Promotional
 from orienteer.general.data.orienteer.models.promotional_code_usages import (
     PromotionalCodeUsages,
 )
+from orienteer.general.data.orienteer.models.ytpromo_code_usages import (
+    YTPromotionalCodeUsages,
+)
 
 
 async def get_promo_data(db_session: AsyncSession, code: str) -> PromotionalCode:
@@ -37,6 +40,14 @@ async def check_promo_already_used_ss14(
 ) -> bool:
     result = await db_session.execute(
         select(PromotionalCodeUsages).filter_by(user_id=user_id, promotional_code=code)
+    )
+    return bool(result.scalars().first())
+
+async def check_ytpromo_already_used_ss14(
+    db_session: AsyncSession, user_id: UUID, code: str
+) -> bool:
+    result = await db_session.execute(
+        select(YTPromotionalCodeUsages).filter_by(user_id=user_id, promotional_code=code)
     )
     return bool(result.scalars().first())
 

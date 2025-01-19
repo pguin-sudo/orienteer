@@ -6,6 +6,7 @@ class Extensions:
         {"package": "orienteer.bot.cogs", "name": "orientiks"},
         {"package": "orienteer.bot.cogs", "name": "sponsor"},
         {"package": "orienteer.bot.cogs", "name": "owners"},
+        {"package": "orienteer.bot.cogs", "name": "ytpromo"},
     ]
 
     @staticmethod
