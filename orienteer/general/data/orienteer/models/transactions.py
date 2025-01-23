@@ -14,7 +14,6 @@ class TransactionType(enum.Enum):
     Pardon = "Pardon"
     Transfer = "Transfer"
     Promo = "Promo"
-    YoutubePromo = "YoutubePromo"
     Boosty = "Boosty"
     Tip = "Tip"
     Playtime = "Playtime"

@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from uuid import UUID
-from ..repositories import ytpromo, promo
+from ..repositories import ytpromo
 from orienteer.bot.utils.content_locale import Errors, Results
 from ..database import database_helper
 from orienteer.general.data.ss14.repositories import playtime
@@ -23,7 +23,7 @@ async def try_ytpromo(user_id: UUID, code: str, selected_department: str) -> tup
         if data.end_time.replace(tzinfo=timezone.utc) < datetime.now(timezone.utc):
             return False, Errors.promo_overdue.value
 
-        if await promo.check_ytpromo_already_used_ss14(db_session, user_id, code):
+        if await ytpromo.check_ytpromo_already_used_ss14(db_session, user_id, code):
             return False, Errors.promo_used_ss14_account.value
 
         roles_text_all = {

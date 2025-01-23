@@ -1,5 +1,8 @@
-import disnake
+from disnake import ui
+from orienteer.bot.cogs.ytpromo import Youtubelist
 
-def error_message(message: str) -> disnake.Embed:
-    embed = disnake.Embed(title="Ошибка", description=message, color=disnake.Color.red())
-    return embed
+
+# class DropDownView(ui.View):
+#     def __init__(self, user_id: int, ytpromo_code: str):
+#         super().__init__()
+#         self.add_item(Youtubelist(user_id, ytpromo_code))

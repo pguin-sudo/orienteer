@@ -16,6 +16,15 @@ async def check_ytpromo_code_validity(db_session: AsyncSession, code: str) -> Ch
 
     return check_promo
 
+async def check_ytpromo_already_used_ss14(
+    db_session: AsyncSession, user_id: UUID, code: str
+) -> bool:
+    result = await db_session.execute(
+        select(YTPromotionalCodeUsages).filter_by(user_id=user_id, promotional_code=code)
+    )
+    return bool(result.scalars().first())
+
+
 async def mark_ytpromo_as_used(db_session: AsyncSession, user_id: UUID, code: str):
     """
     Добавляет использование промокода пользователем в таблицу 'promotional_code_usages'

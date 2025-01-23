@@ -4,7 +4,6 @@ from orienteer.bot.utils.content_locale import Errors, Results
 from orienteer.general.config import CURRENCY_SIGN
 from orienteer.general.data.orienteer.services import (
     promo,
-    ytpromo,
     sponsors,
     transactions,
 )
