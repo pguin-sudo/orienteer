@@ -51,7 +51,7 @@ async def try_ytpromo(user_id: UUID, code: str, selected_department: str) -> tup
                 "JobScientist": 300,
             },
             "Синтетики": {
-                "Overall": 300,
+                "Overall": 900,
                 "JobBorg": 600,
             },
             "Сервисный отдел": {
