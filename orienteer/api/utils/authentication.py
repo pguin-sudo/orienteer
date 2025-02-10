@@ -44,7 +44,7 @@ async def generate_auth_data(user_id: UUID, key: str):
 
 async def check_linked(user_dto: UserDTO):
     return {"IsLinked": await discord_auth.is_discord_linked(user_dto.user_id) and await discord.get_guild_profile(
-        user_dto.discord_user_id) is None}
+        user_dto.discord_user_id) is not None}
 
 
 async def discord_auth_redirect(code: str, state: str) -> dict:
