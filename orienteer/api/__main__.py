@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from loguru import logger
 from loguru_discord import DiscordSink
 
-from orienteer.api.routes import authentication, playtime, sponsors
+from orienteer.api.routes import authentication, playtime, sponsors, purchases
 from orienteer.api.utils.authentication import generate_link
 from orienteer.general.config import WEBHOOKS_LOGS
 
@@ -18,6 +18,7 @@ app = FastAPI(template_dir=os.path.abspath("templates"))
 app.include_router(authentication.router)
 app.include_router(sponsors.router)
 app.include_router(playtime.router)
+app.include_router(purchases.router)
 
 if __name__ == "__main__":
     logger.success("<<<<<<<<<<<<<<<< API module is starting >>>>>>>>>>>>>>>>")

@@ -28,6 +28,7 @@ AUTH_API_ENDPOINT = "https://discord.com/api/v10"
 AUTH_CLIENT_SECRET = os.getenv("AUTH_CLIENT_SECRET")
 AUTH_REDIRECT_URI = os.getenv("AUTH_REDIRECT_URI")
 AUTH_API_KEY = os.getenv("AUTH_API_KEY")
+TOKEN_PURCHASE = os.getenv("TOKEN_PURCHASE")
 
 # Postgres settings for SS14
 POSTGRES_SS14_HOST = os.getenv("POSTGRES_SS14_HOST")
