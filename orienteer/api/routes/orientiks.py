@@ -1,15 +1,15 @@
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import JSONResponse
-from orienteer.general.config import TOKEN_PURCHASE
+from orienteer.general.config import TOKEN_ORIENTIKS
 from orienteer.general.data.orienteer.services.transactions import get_balance, spend
 from orienteer.general.data.ss14.repositories.player import get_user_id
 
 router = APIRouter()
 
-@router.post("/api/purchases")
+@router.post("/api/orientiks")
 async def handle_purchase(request: Request):
     token = request.headers.get("Authorization")
-    if not token or token != f"Bearer {TOKEN_PURCHASE}":
+    if not token or token != f"Bearer {TOKEN_ORIENTIKS}":
         raise HTTPException(status_code=401, detail="[purchases]: Wrong token")
 
     data = await request.json()
@@ -38,10 +38,10 @@ async def handle_purchase(request: Request):
         status_code=200
     )
 
-@router.post("/api/purchases/balance")
+@router.post("/api/orientiks/balance")
 async def get_balance_request(request: Request):
     token = request.headers.get("Authorization")
-    if not token or token != f"Bearer {TOKEN_PURCHASE}":
+    if not token or token != f"Bearer {TOKEN_ORIENTIKS}":
         raise HTTPException(status_code=401, detail="[balance]: Wrong token")
 
     data = await request.json()
