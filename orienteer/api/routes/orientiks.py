@@ -26,7 +26,7 @@ async def handle_purchase(request: Request):
     current_balance = await get_balance(user_id)
     if current_balance < price:
         return JSONResponse(
-            content={"success": False, "message": "Not enough money", "newBalance": current_balance},
+            content={"message": "Not enough money", "newBalance": current_balance},
             status_code=400
         )
 
@@ -34,7 +34,7 @@ async def handle_purchase(request: Request):
     new_balance = await get_balance(user_id)
 
     return JSONResponse(
-        content={"success": True, "message": "Purchase complete successfully!", "newBalance": new_balance},
+        content={"message": "Purchase completed successfully!", "newBalance": new_balance},
         status_code=200
     )
 
@@ -53,6 +53,6 @@ async def get_balance_request(ckey: str, request: Request):
 
     balance = await get_balance(user_id)
     return JSONResponse(
-        content={"success": True, "balance": balance},
+        content={"balance": balance},
         status_code=200
     )
