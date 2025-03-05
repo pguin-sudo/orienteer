@@ -7,7 +7,7 @@ from orienteer.general.data.ss14.repositories.player import get_user_id
 router = APIRouter()
 
 @router.post("/api/orientiks/purchases")
-async def handle_purchase(request: Request):
+async def add_purchase(request: Request):
     token = request.headers.get("Authorization")
     if not token or token != f"Bearer {ORIENTIKS_SECRET_KEY}":
         raise HTTPException(status_code=401, detail="[orientiks]: Wrong token")
@@ -39,7 +39,7 @@ async def handle_purchase(request: Request):
     )
 
 @router.get("/api/orientiks/balance")
-async def get_balance_request(ckey: str, request: Request):
+async def get_balance(ckey: str, request: Request):
     token = request.headers.get("Authorization")
     if not token or token != f"Bearer {ORIENTIKS_SECRET_KEY}":
         raise HTTPException(status_code=401, detail="[balance]: Wrong token")
