@@ -2,7 +2,8 @@ from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import JSONResponse
 
 from orienteer.general.config import ORIENTIKS_SECRET_KEY
-from orienteer.general.data.orienteer.services import transactions, player
+from orienteer.general.data.orienteer.services import transactions
+from orienteer.general.data.ss14.services import player
 
 router = APIRouter()
 
