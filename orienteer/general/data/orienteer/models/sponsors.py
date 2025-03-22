@@ -20,7 +20,7 @@ class Sponsor(Base):
     allowed_markings = mapped_column(ARRAY(String), nullable=False, default=[])
     loadouts = mapped_column(ARRAY(String), nullable=False, default=[])
     open_all_roles = mapped_column(Boolean, nullable=False, default=False)
-    ghost_theme = mapped_column(String, nullable=True, default=False)
+    ghost_theme = mapped_column(String, nullable=True, default=None)
 
     sponsor_chat = mapped_column(Boolean, nullable=False, default=False)
 
