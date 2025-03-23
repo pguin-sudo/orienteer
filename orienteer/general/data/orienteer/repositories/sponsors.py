@@ -14,7 +14,8 @@ async def try_create_empty_sponsor(db_session: AsyncSession, user_id) -> Sponsor
         await db_session.execute(select(Sponsor).filter_by(user_id=user_id))
     ).fetchone()
     if sponsor is None:
-        sponsor = Sponsor(user_id)
+        sponsor = Sponsor()
+        sponsor.user_id = user_id
         db_session.add(sponsor)
         await db_session.commit()
         await db_session.refresh(sponsor)

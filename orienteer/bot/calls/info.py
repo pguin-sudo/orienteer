@@ -23,7 +23,7 @@ from orienteer.general.utils.dtos import UserDTO
 
 class Status(AbstractCall):
     async def __call__(self) -> None:
-        server_data = await hub.find_server_data("ss14://amadis.orientacorp.ru:1313")
+        server_data = await hub.find_server_data("ss14://78.29.37.125:1212/")
 
         if server_data is None:
             await self.interaction.edit_original_message(
